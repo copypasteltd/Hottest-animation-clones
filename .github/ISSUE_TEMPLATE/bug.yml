@@ -1,0 +1,23 @@
+name: Bug report
+description: Report a reproducible repository, schema or implementation problem.
+title: '[Bug] '
+labels: ['bug']
+body:
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Include the relevant requirement ID when possible.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction and observed behavior
+      description: Use synthetic examples; do not upload private media, credentials or device logs.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Commit and Python version

@@ -1,0 +1,32 @@
+# Portable example only. Copy to project.local.toml (ignored) for real settings.
+[project]
+root = "."
+document_root = "docs"
+
+[paths]
+sources = "media/sources"
+catalog = "catalog"
+standard_assets = "standard-assets"
+action_assets = "assets"
+workflows = "workflows"
+models = "models"
+runs = "runs"
+indexes = "indexes"
+exports = "exports"
+outputs = "outputs"
+
+[execution]
+mode = "local"
+allow_network = false
+allow_remote_generation = false
+allow_model_download = false
+
+[secrets]
+# Resolve values at runtime; do not put actual credentials in a TOML file.
+remote_endpoint_env = "AI_MOTION_REMOTE_ENDPOINT"
+remote_token_env = "AI_MOTION_REMOTE_TOKEN"
+
+[scope]
+source_pose = "2d_body_and_both_hands"
+canonical_visual = "planned"
+three_dimensional_retargeting = false

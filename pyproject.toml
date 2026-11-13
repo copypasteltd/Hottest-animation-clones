@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-motion-library"
+version = "0.0.1"
+description = "Specification-first foundation for paired canonical-video and source-pose motion libraries"
+readme = "docs/README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "AI Motion Library contributors"}]
+dependencies = []
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+dev = ["jsonschema>=4.23,<5"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"ai_motion_library" = ["py.typed"]

@@ -1,0 +1,24 @@
+name: Requirement or design proposal
+description: Propose a bounded change to the motion-library design.
+title: '[Design] '
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem and current limitation
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed behavior, non-goals and requirement IDs
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Observable acceptance criteria
+      description: Separate product behavior from model-quality assumptions.
+    validations:
+      required: true

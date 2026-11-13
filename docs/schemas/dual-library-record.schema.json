@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ai-motion-library:dual-library-record:0.3.0",
+  "title": "Dual-library record summary v0.3",
+  "description": "Summary record shape only. Business rules, numeric-array validity, actual files, time maps and review evidence must be checked separately.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "record_kind", "record_id", "action_ref", "collection_intent", "source", "occurrence", "semantic", "normalization", "standard_assets", "source_pose", "canonical_visual", "generated_pose_check", "alignment", "reviews", "execution"],
+  "properties": {
+    "schema_version": {"const": "0.3.0"},
+    "record_kind": {"enum": ["actual_record", "illustrative_example"]},
+    "record_id": {"type": "string", "minLength": 1},
+    "action_ref": {"$ref": "#/$defs/versionRef"},
+    "collection_intent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["plan_ref", "desired_name", "required_scope", "desired_events", "target_beat_count", "note"],
+      "properties": {
+        "plan_ref": {"$ref": "#/$defs/versionRef"},
+        "desired_name": {"type": "string"},
+        "required_scope": {"$ref": "#/$defs/stringList"},
+        "desired_events": {"$ref": "#/$defs/stringList"},
+        "target_beat_count": {"type": ["integer", "null"], "minimum": 1},
+        "note": {"type": "string"}
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_id", "artifact", "origin_group_id", "origin_relation_status", "independence_evidence", "rights_status", "mirror_status", "media"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "origin_group_id": {"type": ["string", "null"]},
+        "origin_relation_status": {"enum": ["same", "confirmed_independent", "unknown"]},
+        "independence_evidence": {"$ref": "#/$defs/stringList"},
+        "rights_status": {"enum": ["unknown", "verified", "restricted"]},
+        "mirror_status": {"enum": ["mirrored", "unmirrored", "unknown"]},
+        "media": {
+          "type": "object", "additionalProperties": false,
+          "required": ["measurement_status", "duration_us", "video_start_us", "audio_start_us", "fps_num", "fps_den", "pts_map"],
+          "properties": {
+            "measurement_status": {"enum": ["not_run", "measured", "illustrative"]},
+            "duration_us": {"type": ["integer", "null"], "minimum": 1},
+            "video_start_us": {"type": ["integer", "null"]},
+            "audio_start_us": {"type": ["integer", "null"]},
+            "fps_num": {"type": ["integer", "null"], "minimum": 1},
+            "fps_den": {"type": ["integer", "null"], "minimum": 1},
+            "pts_map": {"$ref": "#/$defs/artifact"}
+          }
+        }
+      }
+    },
+    "occurrence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ref", "source_id", "granularity", "core_range_us", "context_range_us", "performer_track", "required_scope"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/versionRef"},
+        "source_id": {"type": "string"},
+        "granularity": {"enum": ["primitive", "phrase", "routine"]},
+        "core_range_us": {"$ref": "#/$defs/timeRange"},
+        "context_range_us": {"$ref": "#/$defs/timeRange"},
+        "performer_track": {"type": ["string", "null"]},
+        "required_scope": {"$ref": "#/$defs/stringList"}
+      }
+    },
+    "semantic": {
+      "type": "object", "additionalProperties": false,
+      "required": ["eventset_ref", "observation_status", "observed_events", "independent_origin_count", "consensus_state", "beat_status", "measured_bpm", "uncertainties"],
+      "properties": {
+        "eventset_ref": {"$ref": "#/$defs/versionRef"},
+        "observation_status": {"enum": ["not_run", "candidate", "reviewed"]},
+        "observed_events": {"type": "array", "items": {"$ref": "#/$defs/event"}},
+        "independent_origin_count": {"type": "integer", "minimum": 0},
+        "consensus_state": {"enum": ["unverified", "single_source_tentative", "multi_source_confirmed"]},
+        "beat_status": {"enum": ["absent", "unknown", "estimated", "verified"]},
+        "measured_bpm": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "uncertainties": {"$ref": "#/$defs/stringList"}
+      },
+      "allOf": [{"if": {"properties": {"beat_status": {"enum": ["absent", "unknown"]}}}, "then": {"properties": {"measured_bpm": {"type": "null"}}}}]
+    },
+    "normalization": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ref", "state", "body_anchor", "scale_method", "mirror_transform", "time_transform", "preserve_root_and_orientation", "transforms"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/versionRef"},
+        "state": {"enum": ["planned", "computed", "invalid"]},
+        "body_anchor": {"type": ["string", "null"]},
+        "scale_method": {"type": ["string", "null"]},
+        "mirror_transform": {"enum": ["none", "derived_mirror", "unknown"]},
+        "time_transform": {"type": "string"},
+        "preserve_root_and_orientation": {"type": "boolean"},
+        "transforms": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "standard_assets": {
+      "type": "object", "additionalProperties": false,
+      "required": ["character_ref", "scene_ref", "framing_ref", "state"],
+      "properties": {
+        "character_ref": {"$ref": "#/$defs/versionRef"},
+        "scene_ref": {"$ref": "#/$defs/versionRef"},
+        "framing_ref": {"$ref": "#/$defs/versionRef"},
+        "state": {"enum": ["planned", "candidate", "approved"]}
+      }
+    },
+    "source_pose": {"allOf": [{"$ref": "#/$defs/pose"}, {"properties": {"origin_kind": {"const": "source"}, "generated_from_visual": {"type": "null"}}}]},
+    "canonical_visual": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ref", "source_occurrence_ref", "eventset_ref", "origin_kind", "state", "model_profile_ref", "workflow_hash", "attempt_refs", "output", "time_map"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/versionRef"},
+        "source_occurrence_ref": {"$ref": "#/$defs/versionRef"},
+        "eventset_ref": {"$ref": "#/$defs/versionRef"},
+        "origin_kind": {"const": "generated"},
+        "state": {"enum": ["not_run", "candidate", "failed", "present"]},
+        "model_profile_ref": {"$ref": "#/$defs/versionRef"},
+        "workflow_hash": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]},
+        "attempt_refs": {"$ref": "#/$defs/stringList"},
+        "output": {"$ref": "#/$defs/artifact"},
+        "time_map": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "generated_pose_check": {"anyOf": [{"type": "null"}, {"allOf": [{"$ref": "#/$defs/pose"}, {"properties": {"origin_kind": {"const": "generated"}, "generated_from_visual": {"$ref": "#/$defs/versionRef"}}}]}]},
+    "alignment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ref", "source_eventset_ref", "visual_ref", "state", "event_matches", "coordinate_comparability", "pass_contract_ref"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/versionRef"},
+        "source_eventset_ref": {"$ref": "#/$defs/versionRef"},
+        "visual_ref": {"$ref": "#/$defs/versionRef"},
+        "state": {"enum": ["not_run", "needs_review", "passed", "failed"]},
+        "event_matches": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["source_event_id", "generated_anchor_us", "status"], "properties": {"source_event_id": {"type": "string"}, "generated_anchor_us": {"type": ["integer", "null"], "minimum": 0}, "status": {"enum": ["matched", "missing", "reversed", "uncertain"]}}}},
+        "coordinate_comparability": {"enum": ["not_checked", "comparable", "not_comparable"]},
+        "pass_contract_ref": {"anyOf": [{"$ref": "#/$defs/versionRef"}, {"type": "null"}]}
+      }
+    },
+    "reviews": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source", "semantic", "body_pose", "hand_pose", "visual", "alignment", "target_model"],
+      "properties": {
+        "source": {"$ref": "#/$defs/review"}, "semantic": {"$ref": "#/$defs/review"},
+        "body_pose": {"$ref": "#/$defs/review"}, "hand_pose": {"$ref": "#/$defs/review"},
+        "visual": {"$ref": "#/$defs/review"}, "alignment": {"$ref": "#/$defs/review"},
+        "target_model": {"$ref": "#/$defs/review"}
+      }
+    },
+    "execution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["run_id", "state", "requested_operations", "attempt_refs", "external_receipt", "note"],
+      "properties": {
+        "run_id": {"type": ["string", "null"]},
+        "state": {"enum": ["not_run", "planned", "ready", "running", "waiting_input", "waiting_review", "completed", "partial", "failed", "cancelled", "unknown"]},
+        "requested_operations": {"$ref": "#/$defs/stringList"},
+        "attempt_refs": {"$ref": "#/$defs/stringList"},
+        "external_receipt": {"type": ["string", "null"]},
+        "note": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "stringList": {"type": "array", "items": {"type": "string"}},
+    "versionRef": {"type": "object", "additionalProperties": false, "required": ["id", "revision"], "properties": {"id": {"type": "string", "minLength": 1}, "revision": {"type": "integer", "minimum": 1}}},
+    "hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "timeRange": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}},
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_id", "role", "state", "path", "media_type", "hash", "bytes"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1},
+        "state": {"enum": ["planned", "present", "missing", "invalid"]},
+        "path": {"type": ["string", "null"]},
+        "media_type": {"type": "string"},
+        "hash": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]},
+        "bytes": {"type": ["integer", "null"], "minimum": 0}
+      },
+      "allOf": [{"if": {"properties": {"state": {"const": "present"}}}, "then": {"properties": {"path": {"type": "string", "minLength": 1}, "hash": {"$ref": "#/$defs/hash"}, "bytes": {"type": "integer", "minimum": 1}}}}]
+    },
+    "event": {
+      "type": "object", "additionalProperties": false,
+      "required": ["event_id", "source_range_us", "local_range_us", "anchor_definition", "anchor_us", "observation_state", "evidence_refs"],
+      "properties": {
+        "event_id": {"type": "string"},
+        "source_range_us": {"$ref": "#/$defs/timeRange"},
+        "local_range_us": {"$ref": "#/$defs/timeRange"},
+        "anchor_definition": {"type": "string"},
+        "anchor_us": {"type": ["integer", "null"], "minimum": 0},
+        "observation_state": {"enum": ["observed", "inferred", "manual_verified", "unknown"]},
+        "evidence_refs": {"$ref": "#/$defs/stringList"}
+      }
+    },
+    "pose": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ref", "origin_kind", "source_occurrence_ref", "generated_from_visual", "state", "adapter_profile_ref", "skeleton_id", "mapping_id", "dimension", "coordinate_space", "score_kind", "time_map", "native_track", "normalized_track", "preview"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/versionRef"},
+        "origin_kind": {"enum": ["source", "generated"]},
+        "source_occurrence_ref": {"$ref": "#/$defs/versionRef"},
+        "generated_from_visual": {"anyOf": [{"$ref": "#/$defs/versionRef"}, {"type": "null"}]},
+        "state": {"enum": ["not_run", "candidate", "failed", "present"]},
+        "adapter_profile_ref": {"$ref": "#/$defs/versionRef"},
+        "skeleton_id": {"type": ["string", "null"]},
+        "mapping_id": {"type": ["string", "null"]},
+        "dimension": {"enum": [2, 3, null]},
+        "coordinate_space": {"type": ["string", "null"]},
+        "score_kind": {"type": ["string", "null"]},
+        "time_map": {"$ref": "#/$defs/artifact"},
+        "native_track": {"$ref": "#/$defs/artifact"},
+        "normalized_track": {"$ref": "#/$defs/artifact"},
+        "preview": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "review": {
+      "type": "object", "additionalProperties": false,
+      "required": ["required", "status", "scope", "reviewer", "evidence_refs"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "status": {"enum": ["not_run", "needs_review", "passed", "failed", "not_applicable"]},
+        "scope": {"$ref": "#/$defs/stringList"},
+        "reviewer": {"type": ["string", "null"]},
+        "evidence_refs": {"$ref": "#/$defs/stringList"}
+      },
+      "allOf": [
+        {"if": {"properties": {"required": {"const": true}}}, "then": {"properties": {"status": {"not": {"const": "not_applicable"}}}}},
+        {"if": {"properties": {"status": {"const": "passed"}}}, "then": {"properties": {"reviewer": {"type": "string", "minLength": 1}, "evidence_refs": {"minItems": 1}}}}
+      ]
+    }
+  }
+}
