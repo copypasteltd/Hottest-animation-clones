@@ -1,5 +1,14 @@
 # 变更记录
 
+## Systematic bilingual README refresh — 2026-11-15
+
+- 系统重整中英文README为相同十部分：目标／架构、真实实现、安装／命令、人物与构图状态、计划生产流程、数据规则、目录、路线、文档索引、维护／权利。
+- 将用户批准、文件／人工视觉检查与待确认分开：SA02根图批准但新四视图待确认，BM01四视图已批准，F05/F06不伪填逐图用户批准；JK03退役和历史候选保留范围不变。
+- 说明公开克隆与私有工作区差异、角色锁预期失败及不检查范围、默认关闭外部动作的配置模板，避免将任务专用Sub2出图过程误写成公开生产CLI；补充阅读／使用顺序与最新明确决策优先于历史文字的规则。
+- 重整docs导航，保留完整规格／历史链接；仅修改文档，不重出图片、不改批准／角色清单、不新增代码或前端。
+- Reorganized both READMEs into matching architecture, capability, setup, asset-status, workflow, data, layout, roadmap, documentation and maintenance sections.
+- Clarified approved versus pending references, clean-clone behavior and the limits of checks. Updated the documentation index; no assets, approval states, production code or frontend were changed.
+
 ## SA02 supporting four-view candidate — 2026-11-15
 
 - 按用户要求以已批准SA02主图为唯一参考，经Sub2默认模型制作正面全身／90°侧面／背面全身／正脸近照四视图，保持栗发红白骑士服与2D画风。

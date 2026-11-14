@@ -1,26 +1,36 @@
 # AI动作迁移库 · 文档导航 / Documentation index
 
-[English project README](../README.md) · [中文项目README](../README.zh-CN.md) · [English solution and usage](en/solution-and-usage.md) · [发布与同步规范](18-开源发布与持续同步规范.md)
+[English overview](<../README.md>) · [中文概览](<../README.zh-CN.md>) · [Detailed English solution](<en/solution-and-usage.md>) · [更新说明](<CHANGELOG.md>)
 
-**固定样例角色＋白模场景的视觉动作参考库，与从原视频提取的身体/双手骨架库，同源并行建设。** 原片与动作标注为共同基础，两库独立审核、固定版本关联，供不同AI角色参考生成。
+## 1. 从哪里开始 / Reading paths
 
-## 当前状态
+| 目的 | 推荐阅读顺序 |
+|---|---|
+| 首次了解项目 | 根README → 项目总纲12 → 数据契约13 |
+| 安装并核查现有仓库 | 根README第3节 → 维护规范15 → 贡献指南 |
+| 使用当前人物／构图 | SA02及历史规则16 → S02规则17 → BM01与JK03退役规则19 |
+| 设计生产管线 | 总纲12 → 契约13 → 验收矩阵14 → 采集模板／Schema |
+| 维护和推送变更 | AGENTS → 发布规范18 → CONTRIBUTING → CHANGELOG |
 
-本项目当前仅提供需求／契约文档与Python维护工具，不包含前端、演示页面或预览服务。根目录[英文README](../README.md)和[中文README](../README.zh-CN.md)同步说明当前交付、本地设计资产、未实现能力及检查预期。此前额外创建的页面和配套媒体已移除；未经用户明确指示并给出要求约束，不得新建前端开发项。
+Begin with either root README for a complete overview and actual commands. The detailed documents retain requirement IDs, decision history and constraints; they are not an already implemented inference system.
 
-需求基线v0.3；Python包版本0.0.1，生产管线仍处于Planning阶段。当前角色选择仅为 **SA02（二次元，保持不变）＋BM01（蓝白鲸尾真人）**，当前约束见[BM01替换与JK03退役规则](19-BM01真实角色替换与JK03退役约束.md)。BM01已获用户明确批准四视图：固定面部、蓝灰长发、顶部发环、女仆头饰/鳍形侧发饰、蓝白服装与白围裙鲸鱼图案、蓝鲸尾饰和深蓝平底鞋，去除椰子/吸管，不混入原第三张照片的冬装细节。BM01年龄与厘米身高未指定，不继承退役JK03的高中生年龄或148cm设定。
+**阅读优先级**：当前用户明确决定与分项批准记录 → 当前角色／构图版本清单 → 对应详细规格 → README概览。历史文档中的旧状态不能覆盖较新的决定，维护文档也不能自行将待确认候选升级为已批准。Read the latest scoped decisions before using historical asset rules; this navigation does not grant generation, frontend or publication rights for private media.
 
-角色当前指针为`standard-assets/characters/current.json`→`selection.v2.json`；二次元任务默认SA02，明确真人任务默认BM01，未指定角色/类别仍询问，不读旧`selection.v1.json`作为当前。人物/四视图和机器锁仅在本地，不随开源仓分发。
+## 2. 当前状态 / Current state
 
-S02（纯白背景＋浅灰网格地面）保持不变；当前四图为保留的SA02 F01/F02与新BM01 F05/F06，见[当前场景与构图规范](17-S02场景定稿与四张构图母版规范.md)。合集指针为`standard-assets/framing/current.json`→`s02-master-set.v2.json`。F05/F06对应`ref-bm01-s02-knee@1`／`ref-bm01-s02-full@1`，均为1024×1536，已通过Sub2生成并由执行者查看检查，但尚未逐图获得用户确认，不能沿用四视图批准自动放行。
+- **公开实现**：需求／契约、虚构记录、Python初始化、文档检查、Git索引边界和本地角色锁。无前端、演示页面或预览服务。
+- **未实现**：通用源身体／双手推理、标准动作视频生产、可检索双库和下游A/B完整闭环。需求46项、产品案例29个均不代表已运行模型验收。
+- **SA02**：原正面根图已批准，红白服装及2D画风不变；新正／侧／背／脸部四视图已生成并查看，**待用户确认**，与根图／当前清单分开。
+- **BM01**：用户批准的蓝白鲸尾真人角色，关联正面与四视图已锁定，无椰子／吸管；不继承JK03年龄或148cm。
+- **S02与构图**：场景为纯白＋浅灰地面网格；当前F01/F02为保留SA02膝部／全身，F05/F06为BM01新膝部／全身，已查看但未逐张获用户确认。
+- **JK03**：正式角色／构图及重复交付产物已按用户选定范围删除，其他独立历史候选保留。旧清单仅历史，不恢复作当前输入。
+- **版本读取**：人物current→selection.v2，构图current→s02-master-set.v2。图片、真实清单和任务回执均在本地忽略区，不随公开源码分发。
 
-用户仅选择删除旧正式真人JK03及其F03/F04半身/全身资产，并移除含旧正式资产的合并图/包/旧画廊；SA02和其他独立历史casting候选保留。[文档16](16-定稿角色SA02与JK03使用约束.md)仅作历史选择及继续有效的SA02规则，不再指定真人当前角色。角色动作迁移、源骨架推理、完整双库和可安装skill仍未完成；一次既往H3试验只有[脱敏文字摘要](evidence/H3基础用例公开摘要.md)，不代表当前角色已完成动作测试。
+Approval of a still or four-view sheet does not approve every derived composition, motion, body/hand track, target model or redistribution right. The new SA02 sheet remains pending; this documentation update does not promote it.
 
-SA02已按用户要求补充正面全身、90°侧面、背面全身与正脸近照的一张四视图，1536×1024 PNG；该图已查看，待用户确认。它单独登记为辅助视图候选，不覆盖已锁定的根图、asset、selection.v2或现有S02构图。侧背编发与服装延续为生成补全，不能宣称已批准或精确3D结构。
+## 3. 现有命令 / Existing tools
 
-## 快速开始
-
-从项目根执行：
+从已安装Python 3.11+和Git的项目根执行；完整虚拟环境与安装说明见根README：
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -28,53 +38,47 @@ python scripts/bootstrap_workspace.py
 python scripts/check_project_docs.py
 python scripts/check_release.py
 python -m unittest discover -s tests -v
+python scripts/check_repository.py
 ```
 
-需要Python 3.11+。这些命令创建本地数据目录并检查公开文档/Schema与维护代码，不运行模型、不下载权重、不连接远程设备。`configs/project.example.toml`是无敏感模板；本地配置、媒体和真实产物默认不入Git。
+- 初始化仅创建本地忽略目录，不填充数据／模型。
+- 文档与测试不调用生成网关、不启动服务、不需要GPU或私有图片。
+- 索引检查要求非空Git索引；工作区修改需显式暂存后才能检查对应新内容。
+- `python scripts/check_character_lock.py`是私有资产校验，不包含在公开克隆必须通过的命令组。公开克隆缺文件应退出1并返回`stop_no_fallback_no_regeneration`，不能自动下载或生成替代品。
+- 当前角色锁检查已批准SA02／BM01及BM01四视图，不自动激活待确认SA02四视图，也不代替构图／视频视觉审核。
 
-## 需求与实现入口
+## 4. 核心规格与资产规则 / Specifications
 
-| 文档 | 内容 |
+| 文档 | 主要内容与定位 |
 |---|---|
-| [项目需求总纲](12-项目需求梳理与实现方案总纲.md) | 46项统一需求、范围、标准角色/白模、双库架构与风险 |
-| [数据与skill执行契约](13-双库数据契约与Skill执行规范.md) | 来源/版本、时间/坐标、轨迹、独立审核、发布、任务恢复和适配 |
-| [实施与验收矩阵](14-实施计划与验收矩阵.md) | M0/M1/v1、校准样本、29个计划TC、两角色A-B对照和成本预算 |
-| [路径结构与开源维护](15-项目路径结构与开源维护规范.md) | 公开源码/本地数据边界、Git分支与发布前检查 |
-| [BM01当前真人与JK03退役约束](19-BM01真实角色替换与JK03退役约束.md) | 用户批准蓝白鲸尾四视图、SA02＋BM01当前选择、受限删除范围与版本门禁 |
-| [历史SA02/JK03选择记录](16-定稿角色SA02与JK03使用约束.md) | 保留历史决策和SA02规则；JK03已退役，不作当前真人默认 |
-| [S02场景与当前四张构图母版](17-S02场景定稿与四张构图母版规范.md) | S02与SA02 F01/F02保持；BM01 F05/F06新图已查看、未逐图用户确认 |
-| [动作采集与入库模板](templates/动作采集与入库模板.md) | 待采目标、实际观测、双分支审核和下游回记 |
-| [虚构双库记录](examples/dual-library-record.example.json) | 明确未执行、无媒体或审批的契约示例 |
-| [JSON Schema草案](schemas/dual-library-record.schema.json) | 汇总记录形状，不替代真实媒体与业务验证 |
-| [English solution and usage](en/solution-and-usage.md) | 英文完整架构、真实命令、数据和审核使用逻辑 |
-| [发布与持续同步](18-开源发布与持续同步规范.md) | 用户指定GitHub仓库、任务范围与双语/更新说明同步规则 |
+| [12 · 项目总纲](<12-项目需求梳理与实现方案总纲.md>) | 项目范围、46项需求、双分支依赖与风险 |
+| [13 · 数据与skill契约](<13-双库数据契约与Skill执行规范.md>) | ID／版本、来源、时间／坐标、缺失、审核、执行恢复与适配 |
+| [14 · 实施与验收](<14-实施计划与验收矩阵.md>) | 校准／冻结评估、29个计划案例、两目标A/B与预算 |
+| [15 · 路径和开源维护](<15-项目路径结构与开源维护规范.md>) | 公开／私有目录、Git与发布前检查 |
+| [16 · SA02及历史选择](<16-定稿角色SA02与JK03使用约束.md>) | SA02根图约束、新待确认四视图及旧决策历史；不恢复JK03 |
+| [17 · S02与当前构图](<17-S02场景定稿与四张构图母版规范.md>) | 场景锁、F01/F02/F05/F06、取景与独立审核边界 |
+| [18 · 发布与持续同步](<18-开源发布与持续同步规范.md>) | 用户明确范围、双语同步、正常push与失败处理 |
+| [19 · BM01与JK03退役](<19-BM01真实角色替换与JK03退役约束.md>) | BM01批准范围、固定hash、删除边界与当前人物清单 |
+| [English solution and usage](<en/solution-and-usage.md>) | 完整英文架构、使用逻辑与限制 |
 
-## 核心处理关系
+文档16保留历史标题／文件名以维护旧链接；其顶部现行补充和文档19优先于历史JK03生产规则。角色、场景和构图分别版本化，任何新图都不能静默覆盖已冻结根图。
 
-```mermaid
-flowchart LR
-    A[用户采集与源视频] --> B[动作实例 语义和关键事件]
-    B --> C[源身体 双手轨迹]
-    B --> D[固定角色 白模场景视频]
-    C --> E[原生 归一化数据与预览]
-    D --> F[标准视觉参考]
-    E --> G[各分支独立审核与事件对齐]
-    F --> G
-    G --> H[双库检索与参考包]
-    H --> I[两目标角色 原片A 标准片B验证]
-```
+## 5. 模板、样例与证据 / Examples and evidence
 
-- 源骨架不依赖生成结果，生成片骨架只做质检；“并行”是独立依赖，同一GPU可顺序排队。
-- 首版2D身体＋双手是独立交付，3D绑定/IK与固定多视角渲染后续升级。
-- 身体、手部、视觉、对齐和下游验证分别判定，不能用视频success覆盖动作错误。
-- 保留原速、根位移、朝向、源起姿和unknown；白模化不清除来源和使用条件。
-- H3现有RGB参考路径没有结构化骨架提取；任何骨架条件控制需单独适配与实测。
-- 白模二次参考可能累积误差，不能默认比源片更好；必须做A-B对照。
+| 资料 | 用途与限制 |
+|---|---|
+| [动作采集模板](<templates/动作采集与入库模板.md>) | 区分采集意图与实际观测，填写核心事件、可见性和审核范围 |
+| [汇总JSON Schema](<schemas/dual-library-record.schema.json>) | 记录形状检查，不验证实际媒体／数值轨迹和业务通过 |
+| [虚构双库记录](<examples/dual-library-record.example.json>) | 明确未执行的结构示例，不能当真实来源或批准证据 |
+| [H3历史公开摘要](<evidence/H3基础用例公开摘要.md>) | 既往约13秒本地试验及偏差，不代表当前人物或通用管线已通过 |
+| [无敏感配置样例](<../configs/project.example.toml>) | 可移植字段模板；默认关闭联网、远程生成和模型下载 |
 
-## 维护与贡献
+源视频／语义是共同基础；源骨架直接来自原片，生成片骨架只作独立质检。保持原速、根位移、朝向和unknown，身体／手部／视觉／对齐／下游模型各自判定。标准片二次参考可能累积误差，必须通过原片A／标准片B的实际对照验证。
 
-[贡献指南](CONTRIBUTING.md) · [治理规则](GOVERNANCE.md) · [安全与隐私](SECURITY.md) · [变更记录](CHANGELOG.md) · [第三方边界](THIRD_PARTY_NOTICES.md)
+## 6. 维护与权利 / Maintenance and rights
 
-原创代码和文档采用MIT；真实媒体、模型权重、人体模型及第三方工作流不随仓库分发，也不被MIT自动授权。用户已授权将明确任务范围内的公开源码与文档同步至[指定GitHub仓库](https://github.com/copypasteltd/Hottest-animation-clones)；提交/推送/CI以实际回执为准，不包含私有媒体。
+[项目长期约束](<../AGENTS.md>) · [贡献指南](<CONTRIBUTING.md>) · [治理](<GOVERNANCE.md>) · [安全](<SECURITY.md>) · [第三方材料](<THIRD_PARTY_NOTICES.md>) · [更新说明](<CHANGELOG.md>)
 
-所有说明文档在docs中。旧调研、私人实验、源视频和生成产物在原项目内保留但被忽略，公开文档检查不依赖它们。角色静态样板已选定；下一步按本次角色锁补充所需视图候选、动作校准与预算，再准备独立评估素材。不把静态用户批准或文档检查通过描述为动作迁移质量已验证。
+**未经用户明确指示并给出要求与约束，不得构建前端、交互页、Dashboard或预览服务。** README、录制、发布与继续项目不包含自行开发界面的权限。文档维护不生成新媒体，不修改人物批准状态，不运行Docker／WSL或模型服务。
+
+授权变更需同步双语README与相关规格、样例／测试、更新说明；检查后正常提交推送，并核验远端commit。用户要求先审阅／暂不推送时优先遵守，不force、不泄露私有素材。源码MIT不自动授权第三方角色、音乐、视频、模型或人像再分发。所有实际同步／CI结果以执行证据为准，不预填成功。
