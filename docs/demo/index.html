@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Motion evidence workbench · AI Motion Library</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#overview" aria-label="AI Motion Library"><span class="brand-mark" aria-hidden="true">↗</span><span>AI MOTION LIBRARY<small>Hottest animation clones</small></span></a>
+    <nav aria-label="Main navigation"><a href="#workbench" data-i18n="nav.workbench">动作工作台</a><a href="#method" data-i18n="nav.method">处理方案</a><a href="https://github.com/copypasteltd/Hottest-animation-clones/blob/main/docs/README.md" data-i18n="nav.docs">项目文档</a><a href="https://github.com/copypasteltd/Hottest-animation-clones" rel="noreferrer">GitHub ↗</a></nav>
+    <div class="header-actions"><button id="tour" class="tour-button" type="button" data-i18n="tour.start">演示导览</button><div class="language" role="group" aria-label="Language"><button id="lang-zh" type="button" aria-pressed="true">中文</button><button id="lang-en" type="button" aria-pressed="false">EN</button></div></div>
+  </header>
+  <main>
+    <section class="hero" id="overview">
+      <div class="hero-title"><p class="eyebrow" data-i18n="hero.eyebrow">MOTION / EVIDENCE / REUSE</p><h1 data-i18n="hero.title">每个动作，都保留它的来源。</h1><p class="lede" data-i18n="hero.lede">一个动作身份，两条独立参考路径。先看清证据，再决定它能怎样复用。</p></div>
+      <aside class="scope-note"><span class="note-dot"></span><div><strong data-i18n="notice.title">交互文档演示 · 合成数据</strong><p data-i18n="notice.body">几何人物、轨迹和审核状态为人工构造。没有视频推理、真实角色图或模型生成结果。</p></div></aside>
+    </section>
+    <section class="workbench" id="workbench" aria-label="Synthetic motion asset workbench">
+      <aside class="library-panel">
+        <div class="panel-heading"><h2 data-i18n="library.title">动作实例</h2><span class="tiny-tag">DEMO</span></div>
+        <label class="search-label" for="search" data-i18n="library.search">名称、手型或动作顺序</label>
+        <div class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" autocomplete="off" placeholder="搜索动作 / Search motion"></div>
+        <div class="filter-row"><label for="scope-filter" data-i18n="library.scope">审核范围</label><select id="scope-filter"><option value="all" data-i18n="filter.all">全部实例</option><option value="paired" data-i18n="filter.paired">双库示例通过</option><option value="limited" data-i18n="filter.limited">受限 / 待审</option></select></div>
+        <p class="result-count" id="result-count" aria-live="polite"></p>
+        <div id="asset-list" class="asset-list"></div>
+        <div class="library-foot"><span class="file-icon" aria-hidden="true">{ }</span><div><strong data-i18n="library.synthetic">仅含合成示例</strong><p data-i18n="library.noUpload">不读取或上传本地媒体</p></div></div>
+      </aside>
+      <section class="stage-panel">
+        <header class="stage-heading"><div><p class="eyebrow" id="asset-ref"></p><h2 id="asset-title"></h2></div><span class="revision">r1 / DEMO</span></header>
+        <div class="mode-tabs" role="tablist" aria-label="Evidence view"><button id="tab-paired" role="tab" aria-selected="true" aria-controls="stage-content" data-mode="paired" data-i18n="mode.paired">来源与双库</button><button id="tab-pose" role="tab" aria-selected="false" aria-controls="stage-content" data-mode="pose" data-i18n="mode.pose">轨迹与事件</button><button id="tab-lineage" role="tab" aria-selected="false" aria-controls="stage-content" data-mode="lineage" data-i18n="mode.lineage">版本与来源</button></div>
+        <div id="stage-content" role="tabpanel" aria-labelledby="tab-paired"></div>
+        <div class="transport"><button id="play" type="button" aria-label="播放合成动作" data-i18n="play">播放</button><input id="timeline" type="range" min="0" max="1000" value="320" aria-label="Synthetic motion timeline"><output id="timecode" for="timeline">01.28 / 04.00 s</output><span class="speed">1×</span></div>
+        <div class="event-row" id="event-row"></div>
+        <p class="stage-caption" data-i18n="stage.caption">线条运动为演示代码构造；画面不是源视频分析、动作估计或角色迁移的效果证明。</p>
+      </section>
+      <aside class="inspector">
+        <div class="panel-heading"><h2 data-i18n="review.title">独立审核</h2><span class="tiny-tag">SCOPE</span></div>
+        <p class="inspector-lede" data-i18n="review.lede">一个分支通过，不会替其他分支放行。</p>
+        <div id="review-list" class="review-list"></div>
+        <section class="finding"><p class="eyebrow" data-i18n="review.finding">本例需要注意</p><p id="finding-text"></p></section>
+        <dl class="facts"><div><dt data-i18n="review.origin">轨迹来源</dt><dd id="origin-value">source / synthetic</dd></div><div><dt data-i18n="review.time">时间单位</dt><dd>µs → s</dd></div><div><dt data-i18n="review.missing">缺失策略</dt><dd data-i18n="review.mask">mask + unknown</dd></div></dl>
+        <button id="download" class="download" type="button" data-i18n="download">导出当前示例清单 ↓</button><p id="download-message" class="download-message" aria-live="polite"></p>
+      </aside>
+    </section>
+    <section class="method" id="method">
+      <div class="section-label"><p class="eyebrow">SOURCE → TWO BRANCHES</p><h2 data-i18n="method.title">共享来源，各自证明。</h2><p data-i18n="method.body">原视频是共同证据。生成片只作派生示范，不能反过来覆盖源骨架。</p></div>
+      <div class="flow"><div class="flow-source"><b data-i18n="flow.source">源视频 + 动作事件</b><small data-i18n="flow.sourceSub">固定源区间 / 原始时序</small></div><div class="flow-branches"><div><span class="branch-label">A</span><b data-i18n="flow.pose">源骨架参考库</b><small data-i18n="flow.poseSub">身体 / 双手 / 置信度 / 缺失</small></div><div><span class="branch-label">B</span><b data-i18n="flow.visual">标准视觉参考库</b><small data-i18n="flow.visualSub">角色 / 场景 / 构图 / 生成记录</small></div></div><div class="flow-end"><b data-i18n="flow.review">事件对齐 + 独立审核</b><small data-i18n="flow.reviewSub">通过范围明确后再参考生成</small></div></div>
+    </section>
+    <footer><p data-i18n="footer.scope">当前仓库：需求契约、维护工具与此静态演示。生产骨架提取和视频迁移尚未实现。</p><p><a href="https://github.com/copypasteltd/Hottest-animation-clones/blob/main/docs/en/solution-and-usage.md">English solution guide</a> · <a href="https://github.com/copypasteltd/Hottest-animation-clones/blob/main/docs/18-%E5%BC%80%E6%BA%90%E5%8F%91%E5%B8%83%E4%B8%8E%E6%8C%81%E7%BB%AD%E5%90%8C%E6%AD%A5%E8%A7%84%E8%8C%83.md" data-i18n="footer.update">维护与更新规范</a> · MIT</p></footer>
+  </main>
+</body>
+</html>

@@ -5,6 +5,9 @@
 !/.editorconfig
 !/LICENSE
 !/pyproject.toml
+!/README.md
+!/README.zh-CN.md
+!/AGENTS.md
 !/.github/
 !/src/
 !/tests/
@@ -19,6 +22,12 @@
 !/docs/13-双库数据契约与Skill执行规范.md
 !/docs/14-实施计划与验收矩阵.md
 !/docs/15-项目路径结构与开源维护规范.md
+!/docs/16-定稿角色SA02与JK03使用约束.md
+!/docs/17-S02场景定稿与四张构图母版规范.md
+!/docs/18-开源发布与持续同步规范.md
+!/docs/en/
+!/docs/demo/
+!/docs/assets/
 !/docs/CONTRIBUTING.md
 !/docs/SECURITY.md
 !/docs/CHANGELOG.md
@@ -94,3 +103,13 @@ Thumbs.db
 *credentials*.json
 *secrets*.json
 **/device.json
+
+# Exact exceptions: original synthetic-demo browser captures, not private media.
+/docs/assets/*
+!/docs/assets/README.md
+!/docs/assets/capture-manifest.json
+!/docs/assets/workbench-zh.png
+!/docs/assets/workbench-en.png
+!/docs/assets/workbench-mobile.png
+!/docs/assets/workbench-tour.mp4
+!/docs/assets/workbench-tour.gif

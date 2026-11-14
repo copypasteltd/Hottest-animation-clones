@@ -10,11 +10,15 @@
 *.toml text eol=lf
 *.yml text eol=lf
 *.yaml text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
 *.ps1 text eol=crlf
 *.cmd text eol=crlf
 *.bat text eol=crlf
 *.mp4 binary
 *.png binary
 *.jpg binary
+*.gif binary
 *.npz binary
 *.safetensors binary

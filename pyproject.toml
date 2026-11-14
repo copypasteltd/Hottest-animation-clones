@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "ai-motion-library"
 version = "0.0.1"
 description = "Specification-first foundation for paired canonical-video and source-pose motion libraries"
-readme = "docs/README.md"
+readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [{name = "AI Motion Library contributors"}]
