@@ -7,9 +7,16 @@
 > **Status: specification-first foundation, not a finished motion-transfer application.**
 > The working code provides project bootstrap, requirements/Schema checks, repository guards and a private character-anchor integrity check. No frontend, website, dashboard or preview server is included. General pose inference, canonical motion-video production, database search and downstream model integration are **not implemented**.
 
-## Scope boundary
+## Current delivery and scope
 
-This repository currently contains specifications, data contracts and maintenance scripts. The unsolicited frontend and its related pages, server, screenshots, recordings and GIFs have been removed at the user's request. **Do not create a frontend without an explicit user instruction and its requirements/constraints.** Improving a README or publishing code does not authorize creating a UI.
+| Area | Current state |
+|---|---|
+| Public repository | Bilingual specifications, data contracts, illustrative records and Python maintenance checks |
+| Local design assets | Selected SA02 and JK03 character roots, S02 scene and four static compositions; kept outside the public distribution |
+| Motion-processing product | Source-pose inference, production video transfer, search/export and downstream A/B integration remain unimplemented |
+| Frontend and public demo media | Removed; no page, dashboard, preview service, screenshot, recording or GIF is bundled |
+
+The repository has no browser-based startup step. Its current entry points are the Python maintenance commands below, not an application UI. **Do not create a frontend without an explicit user instruction and its requirements/constraints.** Organizing documentation, recording content, publishing code or continuing the project does not authorize creating a UI. See [project instructions](AGENTS.md).
 
 ## Why this project exists
 
@@ -73,7 +80,14 @@ python -m unittest discover -s tests -v
 python scripts/check_release.py
 ```
 
-After the first dependency installation, these checks operate locally. They do not install pose/video models or contact a generation service. `check_project_docs.py` reports document consistency; its 29 product cases are not 29 executed inference tests.
+After the first dependency installation, these checks operate locally. They do not install pose/video models, start a server or contact a generation service.
+
+| Check | Expected successful result | Scope limit |
+|---|---|---|
+| `check_project_docs.py` | JSON `status: passed`; 46 requirements, 29 planned cases and 10 invalid-record checks | The 29 cases are not executed inference tests |
+| `check_release.py` | JSON `status: passed`; bilingual text/link consistency | No page, media or model validation |
+| `unittest discover` | The current suite passes | Maintenance and contract behavior, not motion quality |
+| `check_repository.py` after staging | Indexed public paths/text pass the boundary guard | No model execution, automatic staging or upload |
 
 A clean public clone intentionally has no real character/media files:
 

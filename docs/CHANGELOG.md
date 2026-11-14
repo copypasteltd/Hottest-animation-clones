@@ -1,5 +1,12 @@
 # 变更记录
 
+## README synchronization after scope correction — 2026-11-14
+
+- 同步中英文README与文档导航：明确公开文档／维护工具、本地静态资产、未实现动作能力和已移除前端的边界。
+- 补充现有检查命令的预期结果与限制，明确无浏览器／预览服务启动步骤；未新增代码、页面或媒体。
+- Synchronized both root READMEs and the documentation index with the documentation-and-maintenance-only repository state.
+- Added expected check results and explicit limits; no code, frontend, preview service or media was added.
+
 ## Scope correction: remove unsolicited frontend — 2026-11-14
 
 - 按用户要求移除合成交互前端及相关页面、静态服务、截图、录屏、GIF、媒体清单、专用测试和本地临时副本。
