@@ -131,7 +131,7 @@ Historical `selection.v1.json` is not the current selection and must not be used
 
 | Current local reference | Purpose | Public distribution |
 |---|---|---|
-| `char-asuna-sa02@1` | Unchanged selected 2D anime character in the red/white outfit | Text rules and hash checker only; no character art |
+| `char-asuna-sa02@1` | Unchanged approved 2D anime root in the red/white outfit; a new front/side/back/face four-view sheet has been generated and inspected, pending user confirmation | Text rules and hash checker only; root and candidate images stay local |
 | `char-blue-maid-bm01@1` | User-approved live-action blue-and-white whale-tail character; face, blue-gray long hair, hair loop, maid headpiece/fin side ornaments, white whale apron, blue tail and navy flat shoes are fixed; no coconut or straw | Text constraints only; no private portrait, four-view sheet or real asset manifest |
 | `scene-s02-white-grid@1` | Unchanged plain white background + light-gray perspective floor grid, without a wall grid | Text specification; grid has no measured metric scale |
 | F01 / F02 | Preserved SA02 knee-level / full-body compositions | Local stills; no new motion approval |

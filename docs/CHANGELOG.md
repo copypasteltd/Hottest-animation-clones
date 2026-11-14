@@ -1,5 +1,11 @@
 # 变更记录
 
+## SA02 supporting four-view candidate — 2026-11-15
+
+- 按用户要求以已批准SA02主图为唯一参考，经Sub2默认模型制作正面全身／90°侧面／背面全身／正脸近照四视图，保持栗发红白骑士服与2D画风。
+- 新图为本地待确认辅助视图，已文件／人工视觉检查；侧背细节为保守生成补全，不预填用户批准。原锚点、asset、选择清单、BM01及现有S02构图均不改。
+- Generated and inspected a local SA02 four-view candidate from the frozen approved front root. User confirmation is still pending; no approved identity record or existing composition was overwritten, and no media or frontend is published.
+
 ## BM01 real-character approval and JK03 retirement — 2026-11-15
 
 - 用户批准蓝白鲸尾真人四视图作为BM01；冻结关联正面根图与批准四视图，真实角色映射改为BM01，二次元SA02保持不变。

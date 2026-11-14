@@ -77,7 +77,7 @@ A scene anchor defines the background and floor; a framing profile defines what 
 
 The current local selection has two independent character tracks, not two outfits of one person:
 
-- `char-asuna-sa02@1`: the unchanged 2D anime Asuna-inspired design in the selected red-and-white outfit; the default for an explicitly anime-character task.
+- `char-asuna-sa02@1`: the unchanged 2D anime Asuna-inspired design in the selected red-and-white outfit; the default for an explicitly anime-character task. A new front-full / 90° side / back-full / front-face sheet was generated directly from that frozen root and visually inspected. It remains a local supporting-view candidate pending user confirmation; neither its inferred back details nor its production use is automatically approved.
 - `char-blue-maid-bm01@1`: the user-approved live-action blue-and-white whale-tail character; the default for an explicitly real/live-action-character task.
 
 If no role or character is specified, ask rather than silently choosing. Resolve the current private character registry through `standard-assets/characters/current.json` → `selection.v2.json`. Historical `selection.v1.json` must not be treated as current or used to restore retired JK03.
