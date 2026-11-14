@@ -13,6 +13,7 @@
 - Current implementation consists of requirements/contracts and maintenance tools. Production source-pose inference and canonical motion-video skill do not yet exist. There is no bundled frontend.
 - Source observations and generated derivatives remain separate. Static character approval does not approve motion, pose, unseen views or rights.
 - Never replace a frozen local anchor silently. Run `python scripts/check_character_lock.py` before using locally provided character media. A public clone lacking it must fail clearly without downloading or regenerating replacements.
+- Current user-approved characters are SA02 (anime, unchanged) and BM01 (photographic blue/white whale-tail costume). BM01 replaces retired official JK03; only JK03's formal anchor/framing outputs were deleted, while unrelated historical candidates remain. Use `standard-assets/characters/current.json` → `selection.v2.json`, not historical v1. For an explicitly real character use BM01; if no role/character is specified, ask. Pin BM01's approved four-view as well as its front anchor; do not inherit JK03's age/148cm. See `docs/19-BM01真实角色替换与JK03退役约束.md`.
 
 ## File and publication boundaries
 

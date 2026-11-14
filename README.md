@@ -12,7 +12,7 @@
 | Area | Current state |
 |---|---|
 | Public repository | Bilingual specifications, data contracts, illustrative records and Python maintenance checks |
-| Local design assets | Selected SA02 and JK03 character roots, S02 scene and four static compositions; kept outside the public distribution |
+| Local design assets | Current SA02 anime and BM01 live-action character roots, S02 scene and four current static compositions; kept outside the public distribution |
 | Motion-processing product | Source-pose inference, production video transfer, search/export and downstream A/B integration remain unimplemented |
 | Frontend and public demo media | Removed; no page, dashboard, preview service, screenshot, recording or GIF is bundled |
 
@@ -57,7 +57,7 @@ This is the **target architecture**, not a list of implemented commands. “Para
 | `scripts/bootstrap_workspace.py` | Creates ignored project-local data directories; no downloads or inference |
 | `scripts/check_project_docs.py` | Checks 46 requirements, coverage by 29 **planned** product cases, a JSON Schema example and 10 invalid-record checks |
 | `scripts/check_repository.py` | Inspects the Git index, public path allow-list and accidental secret/device disclosure patterns |
-| `scripts/check_character_lock.py` | Checks exact locally held SA02/JK03 records and anchor hashes; explicitly fails when private files are absent |
+| `scripts/check_character_lock.py` | Checks the current local SA02/BM01 selection, records and anchor hashes; explicitly fails when private files are absent and must not treat historical selection v1 as current |
 | `scripts/check_release.py` | Checks bilingual documentation links, implementation claims and the documentation-only scope |
 | Repository tests | Exercise maintenance/contract behavior using synthetic data or mocked reads, not model accuracy |
 
@@ -120,16 +120,26 @@ These stages and the detailed data fields are specified in the [English solution
 
 ## Local character and scene decisions
 
-The development workspace has two independently selected static character roots and one scene:
+The current selection contains two independent character tracks: **SA02 for anime** and **BM01 for live action**. If a task does not identify a character or category, ask rather than silently choosing. The current private registries are resolved through explicit pointers:
 
-| Local reference | Purpose | Public distribution |
+```text
+standard-assets/characters/current.json -> selection.v2.json
+standard-assets/framing/current.json -> s02-master-set.v2.json
+```
+
+Historical `selection.v1.json` is not the current selection and must not be used as a fallback.
+
+| Current local reference | Purpose | Public distribution |
 |---|---|---|
-| `char-asuna-sa02@1` | Selected 2D anime character in a red/white outfit | Text rules and hash checker only; no character art |
-| `char-cn-jk03@1` | Selected fictional, age-appropriate Chinese high-school character in a cream-knit school outfit | No private portrait or real asset manifest |
-| `scene-s02-white-grid@1` | Plain white background + light-gray perspective grid on the floor only | Text specification; grid has no measured metric scale |
-| Four composition derivatives | Each character has head-to-knees and full-body views | Local stills, not publicly bundled or motion-validated |
+| `char-asuna-sa02@1` | Unchanged selected 2D anime character in the red/white outfit | Text rules and hash checker only; no character art |
+| `char-blue-maid-bm01@1` | User-approved live-action blue-and-white whale-tail character; face, blue-gray long hair, hair loop, maid headpiece/fin side ornaments, white whale apron, blue tail and navy flat shoes are fixed; no coconut or straw | Text constraints only; no private portrait, four-view sheet or real asset manifest |
+| `scene-s02-white-grid@1` | Unchanged plain white background + light-gray perspective floor grid, without a wall grid | Text specification; grid has no measured metric scale |
+| F01 / F02 | Preserved SA02 knee-level / full-body compositions | Local stills; no new motion approval |
+| F05 / F06 | New BM01 S02 compositions `ref-bm01-s02-knee@1` / `ref-bm01-s02-full@1`, 1024×1536 | Sub2-generated and visually checked; not yet individually confirmed by the user |
 
-The 148 cm character height is a design parameter, not a measurement from a picture. Static selection is not motion/skeleton approval, and it does not grant commercial or redistribution rights. Read [character constraints](docs/16-定稿角色SA02与JK03使用约束.md) and [scene/framing rules](docs/17-S02场景定稿与四张构图母版规范.md).
+The user approved BM01's four-view identity reference. The pinned front-anchor hash is `a8329f3f84a267e9bad2c283054b5547751bd96028563dbd018372f336bb9180`; the approved four-view hash is `1e911077dcee910ae9e5b31bf57997b1fff800140320bea18d9049f7290f70d0`. F05/F06 are pinned respectively to `838203a596e83ad2ed107b9208043a7d628f7b03a4f701dc29542fe172d66c7a` and `5e847ade47edda1c9c320ac24d306e158d87af3cc41560548a7ae9d200b7e012`; file identity is not user approval of those new compositions. No numeric age or centimeter height was specified for BM01; do not inherit the retired JK03 high-school-age or 148 cm assumptions. Keep its blue-white outfit from the first two source references, without the third photograph's winter collar or snowflake ornaments. Generation and static approval do not establish biometric identity, physical measurements, motion/skeleton quality, or commercial/redistribution rights.
+
+Only the old **formal JK03** character and its F03/F04 knee/full assets were retired and deleted under the user's explicit choice. Mixed comparison images, packages and old galleries containing those formal assets were removed; SA02 and other independent historical casting candidates remain. The old v1 decision is historical evidence, not a current production target. See [current BM01 and retirement constraints](docs/19-BM01真实角色替换与JK03退役约束.md), [historical selection / continuing SA02 rules](docs/16-定稿角色SA02与JK03使用约束.md), and [current scene/framing rules](docs/17-S02场景定稿与四张构图母版规范.md).
 
 An earlier local H3 experiment completed a roughly 13-second transfer but showed hand/timing/framing deviations. Its [public evidence summary](docs/evidence/H3基础用例公开摘要.md) explains the limits; neither that trial nor the static masters establish a reusable production pipeline.
 

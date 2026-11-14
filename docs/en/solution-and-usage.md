@@ -15,7 +15,7 @@ The English explanation below summarizes those decisions without replacing their
 | Local workspace bootstrap | Implemented | Creates project-local data directories without downloading models or running inference |
 | Requirements and JSON Schema checks | Implemented | Checks 46 requirement IDs, coverage by 29 planned acceptance cases, an illustrative record, and 10 invalid-record checks |
 | Repository boundary check | Implemented | Examines indexed filenames and text for accidental disclosure risks |
-| Local character hash lock | Implemented | Verifies the exact privately held SA02 and JK03 character records and anchors |
+| Local character hash lock | Implemented | Verifies the current privately held SA02/BM01 selection and its fixed records/anchors; historical selection v1 is not current |
 | Repository unit tests | Maintenance and contract tests | Exercises documentation and guard behavior using synthetic data or mocked reads; not model quality |
 | Selected static characters, scene, and four compositions | Produced locally | Private design assets with recorded references and versions; not distributed as open-source media |
 | Source body and hand pose extraction | Not implemented | No general source-pose inference command is provided |
@@ -75,30 +75,35 @@ A source occurrence identifies a particular performance interval, subject, and s
 A character anchor defines the selected face, hair, clothing, proportions, and rendering medium.
 A scene anchor defines the background and floor; a framing profile defines what must remain visible.
 
-The local project has two separately selected character roots:
+The current local selection has two independent character tracks, not two outfits of one person:
 
-- `char-asuna-sa02@1`: a 2D anime Asuna-inspired design in the selected red-and-white outfit.
-- `char-cn-jk03@1`: a fictional, photorealistic Chinese high-school character in the selected cream-knit school outfit.
+- `char-asuna-sa02@1`: the unchanged 2D anime Asuna-inspired design in the selected red-and-white outfit; the default for an explicitly anime-character task.
+- `char-blue-maid-bm01@1`: the user-approved live-action blue-and-white whale-tail character; the default for an explicitly real/live-action-character task.
 
-They are independent character tracks, not two outfits of the same person.
-The selected scene is `scene-s02-white-grid@1`: a plain white background and a subtle light-gray perspective grid on the floor only.
-The grid is a visual reference, not a calibrated measuring instrument.
-The stated 148 cm character height is a design parameter, not a measurement established by an isolated image or the generated floor grid.
+If no role or character is specified, ask rather than silently choosing. Resolve the current private character registry through `standard-assets/characters/current.json` → `selection.v2.json`. Historical `selection.v1.json` must not be treated as current or used to restore retired JK03.
 
-The [character lock rules](../16-定稿角色SA02与JK03使用约束.md) and [scene/framing specification](../17-S02场景定稿与四张构图母版规范.md) define these local decisions.
-Their images and real asset manifests are intentionally excluded from the public source distribution.
-No official character art, private portraits, generation credentials, or local device configuration is required to run the public documentation checks.
+BM01's face, blue-gray long hair, top hair loop, maid headpiece and fin-shaped side ornaments, blue-white clothing, white apron with whale motif, blue whale-tail accessory and navy flat shoes are fixed. Remove the coconut, straw and former holding pose. Keep the clothing from the first two source references; the third reference contributes facial detail only, not its winter collar, sweater or snowflake accessories.
+
+The user explicitly approved BM01's four-view reference. Its front anchor is pinned to SHA256 `a8329f3f84a267e9bad2c283054b5547751bd96028563dbd018372f336bb9180`, and the approved four-view sheet to `1e911077dcee910ae9e5b31bf57997b1fff800140320bea18d9049f7290f70d0`. No numeric age or centimeter height was specified for BM01. Do not inherit JK03's 16–17 high-school-age or 148 cm assumptions, and do not infer those values from a photograph or grid.
+
+The selected scene remains `scene-s02-white-grid@1`: a plain white background and subtle light-gray perspective grid on the floor only. It is a visual reference, not a calibrated measuring instrument.
+
+The user chose to delete only the old **formal JK03** character and its formal knee/full compositions F03/F04. Their mixed comparison images, packages and old galleries were removed. SA02 and other independent historical casting candidates remain; retained historical candidates do not become active production references.
+
+Use [current BM01 and JK03 retirement constraints](../19-BM01真实角色替换与JK03退役约束.md) for the live-action track, [the historical selection and continuing SA02 rules](../16-定稿角色SA02与JK03使用约束.md) for SA02/history, and [the current scene/framing specification](../17-S02场景定稿与四张构图母版规范.md) for current compositions. Their images and real asset manifests are intentionally excluded from the public source distribution. No official character art, private portraits, generation credentials or device configuration is required for public documentation checks.
 
 ## 5. The four static composition masters
 
-Four local compositions were produced from the selected character roots and scene reference:
+The current four-composition set is resolved through `standard-assets/framing/current.json` → `s02-master-set.v2.json`. SA02's two compositions are preserved, and BM01 supplies the two new live-action compositions:
 
-| Display ID | Character | Framing | Intended future reference use |
+| Display ID | Character | Pinned composition | Framing and intended future reference use |
 |---|---|---|---|
-| F01 | SA02 | Head to knees or upper shin | Upper-body and hand-gesture work |
-| F02 | SA02 | Complete head-to-shoe view | Movements requiring legs, steps, or wider spatial context |
-| F03 | JK03 | Head to knees or upper shin | Upper-body and hand-gesture work |
-| F04 | JK03 | Complete head-to-shoe view | Movements requiring full-body visibility |
+| F01 | SA02 | `ref-sa02-s02-knee@1` | Head to knees or upper shin; upper-body and hand-gesture work |
+| F02 | SA02 | `ref-sa02-s02-full@1` | Complete head-to-shoe view; movements requiring legs, steps or wider spatial context |
+| F05 | BM01 | `ref-bm01-s02-knee@1` | New 1024×1536 head-to-knees/upper-shin view; upper-body and hand-gesture work |
+| F06 | BM01 | `ref-bm01-s02-full@1` | New 1024×1536 complete head-to-shoe view; movements requiring full-body visibility |
+
+BM01 F05 and F06 were produced through Sub2 and visually checked, but the user has not yet individually confirmed these two generated outputs. Their hashes are `838203a596e83ad2ed107b9208043a7d628f7b03a4f701dc29542fe172d66c7a` and `5e847ade47edda1c9c320ac24d306e158d87af3cc41560548a7ae9d200b7e012`, respectively. Do not turn approval of BM01's four-view identity into approval of every later composition. Retired F03/F04 are not members of the current set.
 
 The “half-body” request was interpreted as a knee-level medium-long view, not a bust or waist-up portrait.
 Those closer views preserve the head, both hands, and the skirt outline, while the feet are intentionally outside the frame.
@@ -197,8 +202,8 @@ The repository tests cover maintenance guards, contracts and bilingual documenta
 python scripts/check_character_lock.py
 ```
 
-The [lock checker](../../scripts/check_character_lock.py) reads only the pinned local selection, asset records, and character anchors.
-With the authorized original local assets present, it verifies hashes, identities, PNG dimensions, and scoped approval metadata.
+The [lock checker](../../scripts/check_character_lock.py) resolves the current local pointer and pinned selection, asset records and character anchors. The active character registry is `current.json` → `selection.v2.json`, containing SA02 and BM01 only; historical v1 is not a current fallback.
+With the authorized local assets present, it verifies the applicable fixed hashes, character IDs, PNG dimensions and scoped approval metadata, including BM01's approved front and four-view references.
 It does not assess a face biometrically, detect video wardrobe drift, or validate the S02 compositions automatically.
 
 **A clean public clone is expected to fail this optional check**, because those private records and images are not distributed.
@@ -271,7 +276,7 @@ The [acceptance plan](../14-实施计划与验收矩阵.md) defines future evide
 Original repository code and documentation use the [MIT license](../../LICENSE).
 Source videos, music, characters, generated portraits, upstream models, weights, body models, and workflows retain their own rights and conditions.
 Selecting a character, generating a white-background image, or extracting coordinates does not grant commercial or redistribution rights.
-Private student-character designs require age-appropriate use; they are not a reason to distribute identifiable real student media.
+BM01 has no specified numeric age or centimeter height; do not assign the retired student-character metadata to it. Private reference images and derived portraits are not authorized for redistribution merely because the character was selected. Retained historical student-character candidates keep their own limitations and are not current defaults.
 See the [third-party boundary](../THIRD_PARTY_NOTICES.md) and [contribution guide](../CONTRIBUTING.md) before adding assets.
 
 For future updates, stay within the explicit user scope and keep both language entries, this usage explanation, requirements, Schema examples and tests consistent with the actual code.

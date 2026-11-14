@@ -24,6 +24,7 @@ PUBLIC_DOCS = (
     "README.md", MAIN, CONTRACT, ACCEPTANCE,
     "15-项目路径结构与开源维护规范.md", "16-定稿角色SA02与JK03使用约束.md",
     "17-S02场景定稿与四张构图母版规范.md", "18-开源发布与持续同步规范.md",
+    "19-BM01真实角色替换与JK03退役约束.md",
     "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md", "GOVERNANCE.md",
     "THIRD_PARTY_NOTICES.md", "templates/动作采集与入库模板.md",
     "evidence/H3基础用例公开摘要.md",

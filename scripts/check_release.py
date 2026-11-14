@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MARKDOWN_PATHS = (
     "README.md", "README.zh-CN.md", "AGENTS.md", "docs/README.md",
     "docs/18-开源发布与持续同步规范.md", "docs/en/solution-and-usage.md",
+    "docs/19-BM01真实角色替换与JK03退役约束.md",
     "docs/CONTRIBUTING.md", "docs/GOVERNANCE.md",
 )
 

@@ -1,4 +1,4 @@
-"""Read-only integrity check for the two explicitly approved local anchors.
+"""Read-only check of current approved SA02/BM01 anchors and BM01 four-view.
 
 No generation, downloads, biometric comparison or visual motion assessment.
 A public checkout intentionally lacks private media and returns a clear failure.
@@ -12,8 +12,11 @@ import struct
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-REGISTRY_PATH = "standard-assets/characters/selection.v1.json"
-REGISTRY_SHA256 = "4f68778bf5938fdf72e347b2e1ce27f4e4dea8255ca1dbf6d7bfb6b1edb44f86"
+CURRENT_PATH = "standard-assets/characters/current.json"
+CURRENT_SHA256 = "a40bea7fbf12ae3235a5af12e2f7e350d87affbe9fc1e450dee0df217dcf087a"
+REGISTRY_PATH = "standard-assets/characters/selection.v2.json"
+REGISTRY_SHA256 = "14e2eedcca5b2d6a1766f2e817fb04b528d719b5f22423699e0278a5626b35f8"
+REGISTRY_REVISION = 2
 EXPECTED = {
     "SA02": {
         "character_id": "char-asuna-sa02",
@@ -21,13 +24,23 @@ EXPECTED = {
         "asset_sha256": "fbf8771f287dbc929ae1c661bba74bba700c851960843ca7df085491b59d30e0",
         "medium": "2d_japanese_anime_sao2_reference_design",
     },
-    "JK03": {
-        "character_id": "char-cn-jk03",
-        "anchor_sha256": "20756e21f9e298863430287715d2a71545f3fc9970a9621070ee3f9146c93078",
-        "asset_sha256": "aca0775c8d35c784c16eb319c1d1e2026b1f3ae3d7bc9dd47daf3dc97e024003",
-        "medium": "photorealistic_fictional_chinese_high_school_student",
+    "BM01": {
+        "character_id": "char-blue-maid-bm01",
+        "anchor_sha256": "a8329f3f84a267e9bad2c283054b5547751bd96028563dbd018372f336bb9180",
+        "asset_sha256": "785b2ce3a27d72fdf153d3c322c985be3ae6adf47895efc175145c1fe26ce283",
+        "medium": "photorealistic_reference_conditioned_blue_maid",
+        "four_view_sha256": "1e911077dcee910ae9e5b31bf57997b1fff800140320bea18d9049f7290f70d0",
     },
 }
+ROLE_DEFAULTS = {"anime": "SA02", "real": "BM01"}
+RETIRED_OFFICIAL_FILES = (
+    "standard-assets/characters/char-cn-jk03/v1/asset.json",
+    "standard-assets/characters/char-cn-jk03/v1/front-full.png",
+    "standard-assets/framing/ref-jk03-s02-knee/v1/asset.json",
+    "standard-assets/framing/ref-jk03-s02-knee/v1/image.png",
+    "standard-assets/framing/ref-jk03-s02-full/v1/asset.json",
+    "standard-assets/framing/ref-jk03-s02-full/v1/image.png",
+)
 
 
 def require(condition: bool, message: str) -> None:
@@ -57,13 +70,17 @@ def png_size(raw: bytes) -> tuple[int, int]:
 
 
 def verify_lock(root: Path = ROOT) -> dict:
+    current = json.loads(verified_bytes(root, CURRENT_PATH, CURRENT_SHA256))
+    require(current["registry_path"] == REGISTRY_PATH and current["registry_sha256"] == REGISTRY_SHA256 and current["revision"] == REGISTRY_REVISION, "Historical selection cannot become current")
+    require(current["role_defaults"] == ROLE_DEFAULTS, "Real role must resolve to BM01; no retired fallback")
     registry = json.loads(verified_bytes(root, REGISTRY_PATH, REGISTRY_SHA256))
-    require(registry["status"] == "frozen_static_selection" and registry["revision"] == 1, "Unexpected selection revision")
+    require(registry["status"] == "frozen_static_selection" and registry["revision"] == REGISTRY_REVISION, "Unexpected selection revision")
     require(registry["separate_character_tracks"] is True, "Characters must be separate")
     require(registry["motion_transfer_approved"] is False, "Static approval is not motion approval")
     require(registry["default_when_unspecified"] == "ask_which_of_the_two_no_silent_choice", "Unspecified character cannot silently select")
+    require(registry["role_defaults"] == ROLE_DEFAULTS and "JK03" in registry["retired"], "Retired JK03 cannot be the real role")
     selected = registry["selected"]
-    require(len(selected) == 2 and {s["selection_id"] for s in selected} == set(EXPECTED), "Expected exactly SA02 and JK03")
+    require(len(selected) == 2 and {s["selection_id"] for s in selected} == set(EXPECTED), "Expected exactly SA02 and BM01")
     results = []
     for entry in selected:
         selection = entry["selection_id"]
@@ -83,8 +100,22 @@ def verify_lock(root: Path = ROOT) -> dict:
         for untested in ("motion_transfer", "skeleton", "target_model_compatibility"):
             require(asset["validation"][untested] == "not_run", "Unperformed capability must remain not_run")
         require(asset["version_policy"]["overwrite_frozen_anchor"] is False, "Frozen anchor cannot be overwritten")
-        results.append({"selection_id": selection, "character_id": character_id, "revision": 1, "anchor": entry["anchor_path"], "sha256": fixed["anchor_sha256"]})
-    return {"status": "passed", "scope": "local_frozen_file_integrity_and_approval_metadata_not_generated_visual_quality", "characters": results, "new_media_generated": False, "motion_transfer_verified": False}
+        result = {"selection_id": selection, "character_id": character_id, "revision": 1, "anchor": entry["anchor_path"], "sha256": fixed["anchor_sha256"]}
+        if selection == "BM01":
+            sheet = asset["supporting_views"]["approved_four_view"]
+            require("selected_four_view_version" in asset["approval"]["scope"], "BM01 four-view approval missing")
+            require(sheet["path"] == base + "/four-view.png" and sheet["sha256"] == fixed["four_view_sha256"], "Approved BM01 four-view changed")
+            require(entry["supporting_sheet_path"] == sheet["path"] and entry["supporting_sheet_sha256"] == sheet["sha256"], "Selected sheet mismatch")
+            sheet_raw = verified_bytes(root, sheet["path"], sheet["sha256"])
+            require(len(sheet_raw) == sheet["bytes"] and png_size(sheet_raw) == (1536, 1024), "Four-view dimensions/bytes mismatch")
+            require(asset["constraints"]["height_design_cm"] is None, "Do not inherit JK03 height")
+            result["approved_four_view"] = sheet["path"]
+            result["four_view_sha256"] = sheet["sha256"]
+        results.append(result)
+    for relative in RETIRED_OFFICIAL_FILES:
+        path = root / relative
+        require(not path.exists() and not path.is_symlink(), f"Retired official JK03 file must not be restored: {relative}")
+    return {"status": "passed", "scope": "local_frozen_file_integrity_and_approval_metadata_not_generated_visual_quality", "selection_revision": REGISTRY_REVISION, "role_defaults": ROLE_DEFAULTS, "characters": results, "retired": ["JK03"], "new_media_generated": False, "motion_transfer_verified": False}
 
 
 if __name__ == "__main__":

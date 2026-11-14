@@ -1,5 +1,15 @@
 # 变更记录
 
+## BM01 real-character approval and JK03 retirement — 2026-11-15
+
+- 用户批准蓝白鲸尾真人四视图作为BM01；冻结关联正面根图与批准四视图，真实角色映射改为BM01，二次元SA02保持不变。
+- 按进一步确认，仅删除JK03正式角色和膝部／全身图及重复交付产物，保留SA02、S02和其他独立历史候选。旧选择记录保留历史，不自动回退或恢复已删除资产。
+- 使用指定Sub2默认模型制作BM01＋S02的F05膝部中景／F06全身图，已文件及人工视觉查看；新图逐张用户复审与角色批准分开记录，动作／骨架／模型适配仍未验证。
+- 选择与组合索引升级v2，锁校验增加current指针、BM01四视图、JK03退役与禁止继承旧身高的检查；同步双语说明与当前规则。私人图片和清单不公开，不新增前端。
+- Approved BM01's displayed photographic four-view as the new real character, keeping SA02 unchanged. Pin the front root and approved sheet; do not inherit JK03 age/height.
+- Removed only JK03's official anchor/framing outputs and duplicate delivery artifacts; independent historical candidates remain. Version-2 registries prevent retired-character fallback.
+- Produced and visually inspected BM01/S02 knee and full-body images via the requested Sub2 route. New outputs are not falsely marked individually user-approved or motion-validated. No private media or frontend is published.
+
 ## README synchronization after scope correction — 2026-11-14
 
 - 同步中英文README与文档导航：明确公开文档／维护工具、本地静态资产、未实现动作能力和已移除前端的边界。
