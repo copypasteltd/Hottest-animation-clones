@@ -5,19 +5,13 @@
 [简体中文](README.zh-CN.md) · [English](README.md) · [项目文档导航](docs/README.md) · [完整需求总纲](docs/12-项目需求梳理与实现方案总纲.md)
 
 > **当前为需求与工程基础阶段，不是已经完成的动作迁移产品。**
-> 已有代码包含目录初始化、需求/Schema检查、Git公开边界检查、私有人物锚点hash校验，以及中英双语静态交互演示。通用源骨架推理、标准动作视频生产、数据库检索、模型适配与完整提炼skill仍待实现。
+> 已有代码包含目录初始化、需求/Schema检查、Git公开边界检查、双语文档检查和私有人物锚点hash校验。通用源骨架推理、标准动作视频生产、数据库检索、模型适配与完整提炼skill仍待实现。
 
-![实际中文工作台截图，全部为合成文档示例](docs/assets/workbench-zh.png)
+## 实施范围
 
-*截图来自真实打开的文档演示页面。几何人物、轨迹和审核状态均为人工构造，不是模型推理或动作迁移结果。*
+当前仓库仅包含需求、数据契约和维护脚本。此前擅自创建的前端、相关页面、预览服务、截图、录屏和GIF已按用户要求移除。
 
-## 先看演示
-
-![真实浏览器录屏转换的合成工作台导览GIF](docs/assets/workbench-tour.gif)
-
-[观看静音MP4录屏](docs/assets/workbench-tour.mp4) · [静态页面源码](docs/demo/index.html) · [录制来源与校验](docs/assets/capture-manifest.json)
-
-页面可切换中英文、搜索3个示例动作、筛选审核范围、播放/拖动合成轨迹、查看独立审核和版本来源、导出示例JSON。它**不读取真实视频、不上传图片、不运行模型、不修改本地角色资产**。GitHub展示文档和媒体；交互页面请按下文启动本地服务，不代表已部署线上应用或GitHub Pages。
+**未经用户明确指示并给出相应要求与约束，不得构建任何前端开发项。** 整理README、录制内容或发布代码不等于授权创建UI、网站、Dashboard或演示应用。
 
 ## 项目要解决什么
 
@@ -59,12 +53,12 @@ flowchart TD
 | `scripts/check_project_docs.py` | 检查46项需求、29个**计划产品案例**的覆盖、Schema样例与10个非法记录负例 |
 | `scripts/check_repository.py` | 检查Git索引路径白名单、文本和常见凭据/设备信息误提交风险 |
 | `scripts/check_character_lock.py` | 验证本地SA02/JK03固定记录与锚点hash；公开克隆缺私有图片时明确失败 |
-| `scripts/serve_demo.py` | 在回环地址仅提供公开静态演示，无API、上传或私有媒体访问 |
+| `scripts/check_release.py` | 检查双语文档引用、能力声明与纯文档/脚本范围 |
 | 仓库测试 | 使用合成/模拟数据验证维护契约，不评价模型准确率 |
 
 需求基线为 **v0.3**，软件包为 **0.0.1 / Planning**，两者不代表同一实施进度。设计中的`extract_pose`、`canonicalize`等接口名称不能当作已经存在的通用CLI。
 
-## 安装、检查与页面使用
+## 安装与检查
 
 需要Python **3.11+**、Git；维护检查不需要GPU或图像模型密钥。
 
@@ -82,14 +76,6 @@ python scripts/check_release.py
 ```
 
 首次安装依赖后，这些检查在本地完成，不安装姿态/视频模型，不调用生成网关。文档检查通过不是29个产品推理测试已执行通过。
-
-启动真实可操作的文档演示页：
-
-```bash
-python scripts/serve_demo.py --port 8765
-```
-
-打开`http://127.0.0.1:8765/`，点击**演示导览**，或自行切换语言、搜索“指向”、选择受限示例、切换**轨迹与事件／版本与来源**，下载明确标注的合成JSON清单。Ctrl+C停止服务。此页演示业务逻辑，不是完整后端。
 
 公开克隆不包含真实角色资产：
 
@@ -138,13 +124,11 @@ git diff --cached --check
 ```text
 README.md / README.zh-CN.md      英文/中文完整项目入口
 src/ai_motion_library/          包基础，尚无推理实现
-scripts/                       实际维护与演示命令
+scripts/                       维护与完整性检查
 tests/                         合成/模拟仓库测试
 configs/project.example.toml   可移植配置，默认关闭外部动作
 docs/                          需求、契约、维护和贡献文档
   en/                          英文方案与使用说明
-  demo/                        独立中英双语合成工作台
-  assets/                      经审阅的真实页面PNG/MP4/GIF
 .github/                       CI、Issue与PR模板
 
 # 本地忽略，不随源码分发
@@ -152,7 +136,7 @@ media/  catalog/  standard-assets/  assets/  models/  workflows/
 runs/  output/  outputs/  exports/  indexes/  tooling/  .local/
 ```
 
-仅`docs/assets/`内特定、经检查的公开录制媒体为例外。真实舞蹈、人像、权重、设备配置与日志仍被忽略，不用`git add -f`绕过。[路径与发布规范](docs/15-项目路径结构与开源维护规范.md)说明详细规则。
+没有自动公开媒体或前端例外。真实舞蹈、人像、权重、设备配置与日志仍被忽略，不用`git add -f`绕过。[路径与发布规范](docs/15-项目路径结构与开源维护规范.md)说明详细规则。
 
 ## 实施路线与验收
 
@@ -165,15 +149,15 @@ runs/  output/  outputs/  exports/  indexes/  tooling/  .local/
 
 暂不承诺推理吞吐或总工期。单目深度估计不是真实动捕，2D改文件扩展名不会变成有效BVH/FBX；只支持RGB视频参考的模型也不自动具备关节坐标控制。
 
-## 文档、录制与持续更新
+## 文档与持续更新
 
 - [完整项目需求](docs/12-项目需求梳理与实现方案总纲.md) · [数据与skill契约](docs/13-双库数据契约与Skill执行规范.md) · [验收矩阵](docs/14-实施计划与验收矩阵.md)
-- [英文方案与使用](docs/en/solution-and-usage.md) · [截图/录像来源](docs/assets/README.md)
+- [英文方案与使用](docs/en/solution-and-usage.md)
 - [贡献指南](docs/CONTRIBUTING.md) · [发布与持续同步规范](docs/18-开源发布与持续同步规范.md) · [更新说明](docs/CHANGELOG.md)
 - [安全](docs/SECURITY.md) · [第三方权利](docs/THIRD_PARTY_NOTICES.md) · [治理规则](docs/GOVERNANCE.md)
 
-**后续更新规则**：实现或使用方式改变时同步两份README及相关文档；页面行为改变时重录截图/视频/GIF并更新capture manifest；补变更记录、运行检查后正常提交并推送指定origin。禁止默认强推、泄露私有素材；推送失败必须报告，不能称已同步。[AGENTS.md](AGENTS.md)将此规则持久化给后续项目协作。
+**后续更新规则**：严格按用户明确范围实施，同步两份README、相关文档和变更记录，运行检查后正常提交并推送指定origin。前端工作须另有用户明确指示及要求约束；禁止默认强推、泄露私有素材。推送失败必须报告，不能称已同步。[AGENTS.md](AGENTS.md)将此规则持久化给后续项目协作。
 
 ## 许可证
 
-原创代码、文档与自制合成演示采用MIT，见[LICENSE](LICENSE)。第三方舞蹈、音乐、角色、权重、人体模型和上游工作流保留各自权利，不被本项目自动再许可。源码包不含真实媒体、生成网关或SSH凭据，真实输入的用途与分发许可需要单独登记。
+原创代码和文档采用MIT，见[LICENSE](LICENSE)。第三方舞蹈、音乐、角色、权重、人体模型和上游工作流保留各自权利，不被本项目自动再许可。源码包不含真实媒体、生成网关或SSH凭据，真实输入的用途与分发许可需要单独登记。

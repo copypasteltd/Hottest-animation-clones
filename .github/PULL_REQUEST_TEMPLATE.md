@@ -12,8 +12,8 @@ Describe the final user-visible change. Reference requirement IDs when relevant.
 
 - [ ] English and Chinese root READMEs updated, or explain why unaffected.
 - [ ] Detailed contract/example changes are consistent.
-- [ ] UI changes have current real screenshot/recording/GIF evidence where applicable.
-- [ ] Capture manifest and CHANGELOG updated.
+- [ ] No frontend or page work was added without an explicit user instruction and its requirements/constraints.
+- [ ] CHANGELOG updated within the authorized scope.
 - [ ] Source observations and generated/synthetic data remain distinct.
 
 ## Limits and follow-up / 限制与后续

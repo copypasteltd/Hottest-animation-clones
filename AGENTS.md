@@ -1,41 +1,46 @@
 # Project maintenance instructions / 项目持续维护约束
 
+## Explicit scope boundary / 禁止擅自新增前端
+
+- **未经用户明确指示并给出相应要求与约束，不得构建任何前端开发项。**不得自行创建网站、交互页面、演示工作台、Dashboard、静态预览服务或相关前端工程。
+- **Do not create a frontend without an explicit user instruction and its requirements/constraints.** Requests to organize code, improve a README, record content, publish a repository or continue the project do not authorize inventing a UI or demo application.
+- Use Markdown, data contracts, scripts and actual task artifacts for the currently authorized work. If frontend work is relevant, explain why and establish scope with the user before creating it.
+- Do not recreate the removed frontend or its screenshots, recordings, GIFs, server, tests or media exceptions. Future UI work requires a new explicit instruction; repository synchronization authorization does not expand implementation scope.
+
 ## Scope and truthfulness
 
-- Preserve the user's existing project work and Git history. The public repository is `git@github.com:copypasteltd/Hottest-animation-clones.git`.
-- Keep current state explicit: requirements/contracts, maintenance tools and a synthetic documentation demo exist; production source-pose inference and canonical motion-video skill do not yet exist.
+- Preserve the user's project work and Git history. The public repository is `git@github.com:copypasteltd/Hottest-animation-clones.git`.
+- Current implementation consists of requirements/contracts and maintenance tools. Production source-pose inference and canonical motion-video skill do not yet exist. There is no bundled frontend.
 - Source observations and generated derivatives remain separate. Static character approval does not approve motion, pose, unseen views or rights.
-- Never replace a frozen local anchor silently. Run `python scripts/check_character_lock.py` before using locally provided character media. A public clone lacking that media must fail clearly without downloading/regenerating it.
+- Never replace a frozen local anchor silently. Run `python scripts/check_character_lock.py` before using locally provided character media. A public clone lacking it must fail clearly without downloading or regenerating replacements.
 
 ## File and publication boundaries
 
-- All detailed docs, prompt templates and reports stay under `docs/`. The user explicitly requested bilingual root README files; `README.md` and `README.zh-CN.md` are the public entry exceptions. This instruction file is also intentional at the root.
-- Real sources, character images, weights, device configuration, gateway scripts, private keys, logs and generated project outputs remain ignored. Do not change those rules or use `git add -f` to expose them.
-- Only the reviewed synthetic-demo capture files listed in `docs/assets/capture-manifest.json` may be published as README media. They are actual page captures, not proof of inference. Re-record if page behavior changes.
-- Follow `docs/18-开源发布与持续同步规范.md` and the existing path/text/asset guards. Code MIT licensing does not relicense third-party media or IP.
+- Detailed docs, prompt templates and reports stay under `docs/`. User-requested bilingual root README files and this instruction file are intentional root entries.
+- Real sources, character images, weights, device configuration, private keys, gateway scripts, logs and generated project outputs stay ignored. Do not use `git add -f` or broaden allow-lists to publish them.
+- Public content is reviewed source, text documentation, contracts and illustrative machine-readable examples. There are no automatic public-media or frontend exceptions.
+- Follow `docs/18-开源发布与持续同步规范.md` and existing path/text guards. Code MIT licensing does not relicense third-party media or IP.
 
 ## Required update and synchronization workflow
 
-The user explicitly asked that future work on this project keep the specified GitHub repository, documentation and update notes synchronized.
+The user requested that completed project work keep the specified GitHub repository, documentation and update notes synchronized. This grants normal repository synchronization, not permission to create additional features.
 
-1. Before editing, inspect status and remote refs. Preserve unrelated local changes; never overwrite unknown remote history.
-2. For behavior, schema, CLI, structure or capability changes, update **both** root README languages plus the relevant detailed docs. Correct stale implementation claims.
-3. For demo/UI changes, run the real page, inspect desktop/mobile, update screenshots and actual screen recording/GIF when applicable, then update capture provenance/hashes. Do not present mock screenshots as evidence.
-4. Add a scoped bilingual entry to `docs/CHANGELOG.md`; list actual verification and any untested model behavior in the commit/PR explanation.
-5. Run `python scripts/check_project_docs.py`, `python scripts/check_release.py`, and `python -m unittest discover -s tests -v`. After explicitly staging reviewed files, run `python scripts/check_repository.py` and `git diff --cached --check`.
-6. Commit only the authorized project changes. Normal-push the completed change to the configured repository when within the user's standing synchronization request, and verify the remote branch points at the intended commit.
-7. If the user says not to push or asks for review first, that newer instruction wins. Never force-push, erase history, expose secrets, or alter unrelated remotes. If authentication/permissions/network prevent pushing, retain the local commit and report the exact synchronization failure; do not claim the repository is updated.
+1. Inspect worktree status and remote refs before editing. Preserve unrelated local changes and unknown remote history.
+2. Update both root README languages and relevant detailed docs when behavior, schema, CLI, structure, scope or capability claims change. Do not add new implementation merely to decorate documentation.
+3. Add a scoped bilingual entry to `docs/CHANGELOG.md`, stating actual verification and untested model behavior.
+4. Run `python scripts/check_project_docs.py`, `python scripts/check_release.py`, and `python -m unittest discover -s tests -v`. Explicitly stage reviewed files, then run `python scripts/check_repository.py` and `git diff --cached --check`.
+5. Commit only authorized changes, normal-push within the user's synchronization request, then verify the remote branch points at the intended commit.
+6. A newer user instruction to hold a push or request review wins. Never force-push, erase history, expose secrets or change unrelated remotes. If a push fails, preserve the local commit and report the failure instead of claiming synchronization.
 
 ## Local commands
 
 ```bash
 python -m pip install -e ".[dev]"
 python scripts/bootstrap_workspace.py
-python scripts/serve_demo.py --port 8765
 python scripts/check_project_docs.py
 python scripts/check_release.py
 python -m unittest discover -s tests -v
 python scripts/check_repository.py
 ```
 
-The final command checks indexed content. Do not install or launch remote generation services just to maintain documentation. Stop task-owned preview servers/browser sessions/recordings after captures are complete; do not stop unrelated user services.
+The final command checks indexed content. Do not launch browsers, preview servers or remote generation services for ordinary documentation maintenance. Do not stop unrelated user services.

@@ -5,19 +5,11 @@
 [English](README.md) · [简体中文](README.zh-CN.md) · [Detailed solution](docs/en/solution-and-usage.md) · [Documentation index](docs/README.md)
 
 > **Status: specification-first foundation, not a finished motion-transfer application.**
-> The working code provides project bootstrap, requirements/Schema checks, repository guards, a private character-anchor integrity check, and a bilingual static documentation demo. General pose inference, canonical motion-video production, database search and downstream model integration are **not implemented**.
+> The working code provides project bootstrap, requirements/Schema checks, repository guards and a private character-anchor integrity check. No frontend, website, dashboard or preview server is included. General pose inference, canonical motion-video production, database search and downstream model integration are **not implemented**.
 
-![Actual English workbench screenshot — synthetic documentation examples](docs/assets/workbench-en.png)
+## Scope boundary
 
-*Real browser screenshot of the documentation demo. All figures, trajectories and review states are authored synthetic examples; they are not model inference results.*
-
-## Preview the idea
-
-![Actual browser walkthrough of the synthetic workbench](docs/assets/workbench-tour.gif)
-
-[Watch the silent MP4 walkthrough](docs/assets/workbench-tour.mp4) · [Open the static page source](docs/demo/index.html) · [Capture provenance](docs/assets/capture-manifest.json)
-
-The demo lets you switch languages, search three example motions, filter review scope, scrub/play a constructed trajectory, inspect independent reviews and version lineage, and download an example JSON manifest. It never reads local videos, uploads images, runs models or changes private assets. GitHub displays the documentation and media; run the local server below to interact with the page. No hosted application or GitHub Pages deployment is implied.
+This repository currently contains specifications, data contracts and maintenance scripts. The unsolicited frontend and its related pages, server, screenshots, recordings and GIFs have been removed at the user's request. **Do not create a frontend without an explicit user instruction and its requirements/constraints.** Improving a README or publishing code does not authorize creating a UI.
 
 ## Why this project exists
 
@@ -59,7 +51,7 @@ This is the **target architecture**, not a list of implemented commands. “Para
 | `scripts/check_project_docs.py` | Checks 46 requirements, coverage by 29 **planned** product cases, a JSON Schema example and 10 invalid-record checks |
 | `scripts/check_repository.py` | Inspects the Git index, public path allow-list and accidental secret/device disclosure patterns |
 | `scripts/check_character_lock.py` | Checks exact locally held SA02/JK03 records and anchor hashes; explicitly fails when private files are absent |
-| `scripts/serve_demo.py` | Serves only the public static demo on loopback, without an API or private-media access |
+| `scripts/check_release.py` | Checks bilingual documentation links, implementation claims and the documentation-only scope |
 | Repository tests | Exercise maintenance/contract behavior using synthetic data or mocked reads, not model accuracy |
 
 The requirements baseline is **v0.3**; the Python package is **0.0.1 / Planning**. These are separate version schemes. Do not call operations named in the design (`extract_pose`, `canonicalize`, etc.) as if a production CLI existed.
@@ -82,14 +74,6 @@ python scripts/check_release.py
 ```
 
 After the first dependency installation, these checks operate locally. They do not install pose/video models or contact a generation service. `check_project_docs.py` reports document consistency; its 29 product cases are not 29 executed inference tests.
-
-Start the actual interactive documentation page:
-
-```bash
-python scripts/serve_demo.py --port 8765
-```
-
-Open `http://127.0.0.1:8765/`. Click **Guided tour**, change **EN / 中文**, choose a limited example, inspect **Tracks & events** or **Versions & lineage**, then export its clearly marked synthetic manifest. Stop the server with Ctrl+C. It is a local preview, not a backend application.
 
 A clean public clone intentionally has no real character/media files:
 
@@ -140,13 +124,11 @@ An earlier local H3 experiment completed a roughly 13-second transfer but showed
 ```text
 README.md / README.zh-CN.md      English / Chinese project entry
 src/ai_motion_library/          Package foundation (no inference implementation)
-scripts/                       Real maintenance and demo commands
+scripts/                       Maintenance and integrity checks
 tests/                         Synthetic/mocked repository tests
 configs/project.example.toml   Portable settings, external actions disabled
 docs/                          Detailed specifications and contributor guides
   en/                          English solution and usage
-  demo/                        Standalone bilingual synthetic workbench
-  assets/                      Inspected actual browser PNG/MP4/GIF captures
 .github/                       CI, issue and PR templates
 
 # Local and ignored: not shipped in this source repository
@@ -154,7 +136,7 @@ media/  catalog/  standard-assets/  assets/  models/  workflows/
 runs/  output/  outputs/  exports/  indexes/  tooling/  .local/
 ```
 
-Only the specifically reviewed `docs/assets/` capture files are allowed media exceptions. Real source videos, portraits, weights, device settings and logs stay ignored. Do not use `git add -f` to bypass that policy. See [path and publication rules](docs/15-项目路径结构与开源维护规范.md).
+There are no automatic public-media or frontend exceptions. Real source videos, portraits, weights, device settings and logs stay ignored. Do not use `git add -f` to bypass that policy. See [path and publication rules](docs/15-项目路径结构与开源维护规范.md).
 
 ## Roadmap and acceptance
 
@@ -167,15 +149,15 @@ Only the specifically reviewed `docs/assets/` capture files are allowed media ex
 
 There is no promised inference throughput or completion date. Single-view depth estimates are not verified mocap; 2D files cannot become valid BVH/FBX simply by changing an extension. An RGB-reference model is not automatically a pose-coordinate consumer.
 
-## Documentation, recordings and updates
+## Documentation and updates
 
 - [Chinese project specification](docs/12-项目需求梳理与实现方案总纲.md) · [Data/skill contract](docs/13-双库数据契约与Skill执行规范.md) · [Acceptance matrix](docs/14-实施计划与验收矩阵.md)
-- [English solution and usage](docs/en/solution-and-usage.md) · [Screenshot/video provenance](docs/assets/README.md)
+- [English solution and usage](docs/en/solution-and-usage.md)
 - [Contribution guide](docs/CONTRIBUTING.md) · [Release and synchronization policy](docs/18-开源发布与持续同步规范.md) · [Changelog](docs/CHANGELOG.md)
 - [Security](docs/SECURITY.md) · [Third-party boundaries](docs/THIRD_PARTY_NOTICES.md) · [Governance](docs/GOVERNANCE.md)
 
-**Future update rule:** synchronize both READMEs and relevant docs, regenerate screenshots/recordings/GIFs when page behavior changes, update the changelog and capture manifest, run checks, then normally commit and push to the configured origin. Do not force-push or publish private media. A failed push must be reported, not called synchronized. See the persistent project instructions in [AGENTS.md](AGENTS.md).
+**Future update rule:** stay within the explicitly requested scope, synchronize both READMEs and relevant docs, update the changelog, run checks, then normally commit and push to the configured origin. Frontend work requires a separate explicit user instruction and requirements. Do not force-push or publish private media. A failed push must be reported, not called synchronized. See the persistent project instructions in [AGENTS.md](AGENTS.md).
 
 ## License and scope
 
-Original repository code, documentation and authored synthetic demo are MIT-licensed; see [LICENSE](LICENSE). This does **not** relicense third-party dance videos, music, characters, model weights, body models or upstream workflows. No private media or gateway/SSH credentials are bundled. Rights to use or redistribute real inputs must be recorded separately.
+Original repository code and documentation are MIT-licensed; see [LICENSE](LICENSE). This does **not** relicense third-party dance videos, music, characters, model weights, body models or upstream workflows. No private media or gateway/SSH credentials are bundled. Rights to use or redistribute real inputs must be recorded separately.

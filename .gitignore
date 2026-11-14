@@ -26,8 +26,6 @@
 !/docs/17-S02场景定稿与四张构图母版规范.md
 !/docs/18-开源发布与持续同步规范.md
 !/docs/en/
-!/docs/demo/
-!/docs/assets/
 !/docs/CONTRIBUTING.md
 !/docs/SECURITY.md
 !/docs/CHANGELOG.md
@@ -103,13 +101,3 @@ Thumbs.db
 *credentials*.json
 *secrets*.json
 **/device.json
-
-# Exact exceptions: original synthetic-demo browser captures, not private media.
-/docs/assets/*
-!/docs/assets/README.md
-!/docs/assets/capture-manifest.json
-!/docs/assets/workbench-zh.png
-!/docs/assets/workbench-en.png
-!/docs/assets/workbench-mobile.png
-!/docs/assets/workbench-tour.mp4
-!/docs/assets/workbench-tour.gif

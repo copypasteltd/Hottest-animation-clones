@@ -16,7 +16,7 @@ The English explanation below summarizes those decisions without replacing their
 | Requirements and JSON Schema checks | Implemented | Checks 46 requirement IDs, coverage by 29 planned acceptance cases, an illustrative record, and 10 invalid-record checks |
 | Repository boundary check | Implemented | Examines indexed filenames and text for accidental disclosure risks |
 | Local character hash lock | Implemented | Verifies the exact privately held SA02 and JK03 character records and anchors |
-| Repository unit tests | 19 tests in the documentation foundation | Exercises documentation and guard behavior using synthetic data or mocked reads; not model quality |
+| Repository unit tests | Maintenance and contract tests | Exercises documentation and guard behavior using synthetic data or mocked reads; not model quality |
 | Selected static characters, scene, and four compositions | Produced locally | Private design assets with recorded references and versions; not distributed as open-source media |
 | Source body and hand pose extraction | Not implemented | No general source-pose inference command is provided |
 | Canonical motion-video production skill | Not implemented | Local image work and an earlier isolated video experiment do not constitute a reusable production pipeline |
@@ -189,7 +189,7 @@ The [documentation checker](../../scripts/check_project_docs.py) prints a JSON r
 Expect 46 requirements, 29 **planned** acceptance cases, and 10 invalid-record checks; the local-link count can change as documentation grows.
 The check validates the [illustrative record](../examples/dual-library-record.example.json) against the [summary Schema](../schemas/dual-library-record.schema.json).
 It does not infer joints, inspect private generated media, or execute the 29 future product acceptance cases.
-The 19 current repository tests cover guards, release documentation, capture provenance and the isolated static server, not the quality of a model-generated dance.
+The repository tests cover maintenance guards, contracts and bilingual documentation, not the quality of a model-generated dance. There is no frontend or static preview service in the current project.
 
 ### Optional private character-lock check
 
@@ -216,21 +216,18 @@ It requires a populated index and can be used after explicitly staging reviewed 
 It does not stage files, inspect global Git configuration, contact a remote, or publish anything.
 A passed guard is defense against common mistakes, not a complete security audit or proof that every public asset is licensed.
 
-## 10. Public interactive illustration
+## 10. Explicit implementation scope
 
-The [public demonstration page](../demo/index.html) is an interactive documentation illustration built from author-created synthetic stick figures.
-It explains the workflow and review concepts; it is not a pose-inference interface, a live generation service, or an output from a dance model.
-Its records, motion illustrations, and UI states must remain visibly labeled as synthetic demonstrations.
-Browser screenshots, recordings, or GIFs of that page document the page's actual rendered behavior only.
-They do not establish source extraction accuracy, canonical-video fidelity, character identity consistency, or completed A/B validation.
-No private character image is needed to understand that public illustration.
+The project currently contains specifications, data contracts and maintenance scripts. The unsolicited frontend and its associated pages, preview server, screenshots, recordings and GIFs were removed at the user's direction.
+
+**Do not create a frontend without an explicit user instruction and its requirements/constraints.** Organizing code, improving documentation, recording content or publishing the repository does not authorize inventing an interface. Any future frontend needs separately established scope before implementation.
 
 ## 11. Suggested local data layout
 
 The following is the intended workspace separation, not a claim that each directory already contains a working subsystem:
 
 ```text
-docs/                  # requirements, usage, templates, reports and public demo
+docs/                  # requirements, usage, templates and reports
 src/ai_motion_library/ # production package foundation
 scripts/               # portable maintenance checks
 tests/                 # synthetic and mocked foundation tests
@@ -277,7 +274,7 @@ Selecting a character, generating a white-background image, or extracting coordi
 Private student-character designs require age-appropriate use; they are not a reason to distribute identifiable real student media.
 See the [third-party boundary](../THIRD_PARTY_NOTICES.md) and [contribution guide](../CONTRIBUTING.md) before adding assets.
 
-For future updates, keep both language entries, this usage explanation, requirements, Schema examples, tests, and demo labels consistent with the actual code.
+For future updates, stay within the explicit user scope and keep both language entries, this usage explanation, requirements, Schema examples and tests consistent with the actual code.
 When an inference stage becomes real, add its interface, failure behavior, dependency versions, and reproducible evidence before documenting a runnable workflow.
 Keep planned cases labeled planned until executed; keep private evidence local unless separately authorized for publication.
 Normal repository synchronization and releases should follow the maintainer's reviewed workflow, without force-pushing over unrelated changes or bundling local secrets and media.

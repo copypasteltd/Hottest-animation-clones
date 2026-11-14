@@ -5,7 +5,6 @@ It reads Git index objects only, never global Git configuration or media files.
 """
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import re
@@ -21,7 +20,6 @@ DOC_NAMES = {
     "CHANGELOG.md", "GOVERNANCE.md", "THIRD_PARTY_NOTICES.md",
 }
 ROOT_FILES = {".gitignore", ".gitattributes", ".editorconfig", "LICENSE", "pyproject.toml", "README.md", "README.zh-CN.md", "AGENTS.md"}
-PUBLIC_MEDIA = {"docs/assets/workbench-zh.png", "docs/assets/workbench-en.png", "docs/assets/workbench-mobile.png", "docs/assets/workbench-tour.mp4", "docs/assets/workbench-tour.gif"}
 BINARY_EXTENSIONS = {
     ".mp4", ".mov", ".mkv", ".avi", ".webm", ".wav", ".mp3", ".png", ".jpg", ".jpeg",
     ".webp", ".gif", ".npz", ".npy", ".safetensors", ".ckpt", ".pt", ".pth", ".onnx",
@@ -31,7 +29,7 @@ BINARY_EXTENSIONS = {
 
 def allowed_path(name: str) -> bool:
     path = PurePosixPath(name)
-    if name in ROOT_FILES or name in PUBLIC_MEDIA:
+    if name in ROOT_FILES:
         return True
     if path.suffix.lower() in BINARY_EXTENSIONS:
         return False
@@ -49,10 +47,6 @@ def allowed_path(name: str) -> bool:
             return parts[1] in DOC_NAMES
         if parts[1] in {"templates", "schemas", "evidence", "en"}:
             return path.suffix in {".md", ".json"}
-        if parts[1] == "demo":
-            return name in {"docs/demo/index.html", "docs/demo/styles.css", "docs/demo/app.js"}
-        if parts[1] == "assets":
-            return name in {"docs/assets/README.md", "docs/assets/capture-manifest.json"}
         return name == "docs/examples/dual-library-record.example.json"
     return False
 
@@ -81,13 +75,6 @@ def check(root: Path = ROOT) -> dict:
     if not names:
         raise ValueError("Index is empty; explicitly stage reviewed source files first")
     findings = []
-    media_metadata = {}
-    if PUBLIC_MEDIA.intersection(names):
-        manifest_raw = subprocess.run(["git", "show", ":docs/assets/capture-manifest.json"], cwd=root, check=True, capture_output=True).stdout
-        manifest = json.loads(manifest_raw)
-        if manifest.get("inference_result") is not False or manifest.get("private_media_included") is not False:
-            raise ValueError("Public capture provenance must disclose synthetic-only, non-inference content")
-        media_metadata = {entry["path"]: entry for entry in manifest["files"]}
     modes_raw = subprocess.run(["git", "ls-files", "--stage", "-z"], cwd=root, check=True, capture_output=True).stdout
     modes = {}
     for entry in modes_raw.split(b"\0"):
@@ -102,17 +89,6 @@ def check(root: Path = ROOT) -> dict:
             findings.append({"path": name, "rule": "not_in_public_allowlist"})
             continue
         payload = subprocess.run(["git", "show", ":" + name], cwd=root, check=True, capture_output=True).stdout
-        if name in PUBLIC_MEDIA:
-            metadata = media_metadata.get(name)
-            if metadata is None or len(payload) != metadata.get("bytes") or hashlib.sha256(payload).hexdigest() != metadata.get("sha256") or len(payload) > 12_000_000:
-                findings.append({"path": name, "rule": "public_capture_not_verified_by_manifest"})
-            if name.endswith(".png") and not payload.startswith(b"\x89PNG\r\n\x1a\n"):
-                findings.append({"path": name, "rule": "capture_not_png"})
-            if name.endswith(".gif") and payload[:6] not in {b"GIF87a", b"GIF89a"}:
-                findings.append({"path": name, "rule": "capture_not_gif"})
-            if name.endswith(".mp4") and payload[4:8] != b"ftyp":
-                findings.append({"path": name, "rule": "capture_not_mp4"})
-            continue
         if len(payload) > 2_000_000 or b"\0" in payload:
             findings.append({"path": name, "rule": "binary_or_large_blob"})
             continue

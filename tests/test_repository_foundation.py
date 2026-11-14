@@ -8,6 +8,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "src"))
 
 from check_project_docs import validate
+from check_release import validate as validate_release
 from check_repository import allowed_path, scan_text
 from bootstrap_workspace import DIRECTORIES
 from ai_motion_library import __version__
@@ -19,6 +20,11 @@ class FoundationTests(unittest.TestCase):
         self.assertEqual(result["requirements"], 46)
         self.assertEqual(result["planned_acceptance_cases"], 29)
         self.assertEqual(result["schema_negative_checks"], 10)
+
+    def test_bilingual_docs_keep_explicit_frontend_scope_boundary(self):
+        result = validate_release()
+        self.assertEqual(result["status"], "passed")
+        self.assertEqual(result["readme_languages"], 2)
 
     def test_package_version(self):
         metadata = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
@@ -37,7 +43,7 @@ class FoundationTests(unittest.TestCase):
     def test_public_source_boundary(self):
         for path in ["pyproject.toml", "src/ai_motion_library/__init__.py", "docs/schemas/dual-library-record.schema.json", "configs/project.example.toml"]:
             self.assertTrue(allowed_path(path), path)
-        for path in ["runs/private.json", "outputs/demo.mp4", "tooling/remote.py", "docs/runs/private.md", "configs/project.local.toml", "docs/examples/private.json", "docs/templates/private.png"]:
+        for path in ["runs/private.json", "outputs/demo.mp4", "tooling/remote.py", "docs/runs/private.md", "configs/project.local.toml", "docs/examples/private.json", "docs/templates/private.png", "docs/demo/index.html", "docs/demo/app.js", "docs/demo/styles.css", "docs/assets/workbench-zh.png", "docs/assets/workbench-tour.gif", "docs/assets/capture-manifest.json"]:
             self.assertFalse(allowed_path(path), path)
 
     def test_credential_guard_detects_synthetic_value(self):

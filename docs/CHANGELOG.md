@@ -1,6 +1,16 @@
 # 变更记录
 
-## Public documentation foundation — 2026-11-14
+## Scope correction: remove unsolicited frontend — 2026-11-14
+
+- 按用户要求移除合成交互前端及相关页面、静态服务、截图、录屏、GIF、媒体清单、专用测试和本地临时副本。
+- 清理中英README、英文使用长文、CI及维护规则，发布检查回归纯文档和代码边界，不再要求页面或录制产物。
+- 明确约束：未经用户明确指示并给出要求与约束，不得新增前端开发项；文档/发布任务不隐含界面开发授权。
+- 保留需求、数据契约、人物与场景锚点、四张构图母版、真实任务记录及正常Git历史；不重写历史。
+- Removed the unsolicited frontend, related pages, preview service, captures, recordings, GIFs, media manifest, dedicated tests and temporary copies at the user's direction.
+- Kept bilingual solution and maintenance documentation; release checks now cover documentation only. No frontend may be created without explicit user instructions and requirements/constraints.
+- Core specifications, contracts, approved local assets and Git history are preserved.
+
+## Earlier publication (frontend additions below have since been removed) — 2026-11-14
 
 - 新增根中英双语README、英文方案与使用长文，明确已实现维护工具和仍待实现的推理/双库阶段。
 - 新增真实可操作的中英合成动作工作台，含搜索/筛选、播放/时间轴、独立审核、版本来源和JSON导出；不含真实人物或模型结果。
