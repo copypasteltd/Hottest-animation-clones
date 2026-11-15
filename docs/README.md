@@ -18,15 +18,32 @@ Begin with either root README for a complete overview and actual commands. The d
 
 ## 2. 当前状态 / Current state
 
-- **公开实现**：需求／契约、虚构记录、Python初始化、文档检查、Git索引边界和本地角色锁。无前端、演示页面或预览服务。
+- **公开内容/实现**：需求／契约、虚构记录、Python初始化、文档检查、Git索引边界、本地角色锁，以及下表用户明确要求的8个README人物展示副本和manifest。无前端、演示页面或预览服务。
 - **未实现**：通用源身体／双手推理、标准动作视频生产、可检索双库和下游A/B完整闭环。需求46项、产品案例29个均不代表已运行模型验收。
 - **SA02**：原正面根图已批准，红白服装及2D画风不变；新正／侧／背／脸部四视图已生成并查看，**待用户确认**，与根图／当前清单分开。
 - **BM01**：用户批准的蓝白鲸尾真人角色，关联正面与四视图已锁定，无椰子／吸管；不继承JK03年龄或148cm。
 - **S02与构图**：场景为纯白＋浅灰地面网格；当前F01/F02为保留SA02膝部／全身，F05/F06为BM01新膝部／全身，已查看但未逐张获用户确认。
 - **JK03**：正式角色／构图及重复交付产物已按用户选定范围删除，其他独立历史候选保留。旧清单仅历史，不恢复作当前输入。
-- **版本读取**：人物current→selection.v2，构图current→s02-master-set.v2。图片、真实清单和任务回执均在本地忽略区，不随公开源码分发。
+- **版本读取**：人物current→selection.v2，构图current→s02-master-set.v2保持不变。用户本次明确要求将8张既有人物图的字节一致副本内嵌于中英README；仅精确展示副本及manifest公开，真实注册表/正式资产目录、原始参考照片、源舞视频、其他候选、JK03和任务回执仍不分发。
 
-Approval of a still or four-view sheet does not approve every derived composition, motion, body/hand track, target model or redistribution right. The new SA02 sheet remains pending; this documentation update does not promote it.
+Approval of a still or four-view sheet does not approve every derived composition, motion, body/hand track, target model or redistribution right. The eight expressly requested README display copies do not promote the pending SA02 sheet or BM01 F05/F06, change the private v2 selection/lock, or grant MIT/IP/training/commercial rights. Static Markdown image display does not create a frontend.
+
+### README人物图展示清单 / Character display inventory
+
+中英根README第4节内嵌下列既有静态图的字节一致副本。公开目录固定为`docs/images/characters/`，仅这8个PNG与[manifest.json](images/characters/manifest.json)为明确例外：
+
+| 精确文件名 | 对应人物/视图 | 必须保留的状态 |
+|---|---|---|
+| `sa02-front-v1.png` | SA02正面根图 | 用户已批准 |
+| `sa02-four-view-candidate-v1.png` | SA02四视图 | 仍待用户确认 |
+| `sa02-s02-knee-v1.png` | F01 SA02膝部中景 | 保留既有已查看状态 |
+| `sa02-s02-full-v1.png` | F02 SA02完整全身 | 保留既有已查看状态 |
+| `bm01-front-v1.png` | BM01关联正面根图 | 已批准人物版本的固定参考 |
+| `bm01-four-view-v1.png` | BM01四视图 | 用户已批准 |
+| `bm01-s02-knee-v1.png` | F05 BM01膝部中景 | 执行者视觉检查，未逐图用户批准 |
+| `bm01-s02-full-v1.png` | F06 BM01完整全身 | 执行者视觉检查，未逐图用户批准 |
+
+这是用户明确要求的README展示，不重画、不新增网页前端，不扩成整个媒体目录公开。精确PNG签名/尺寸/SHA256、manifest、索引路径与双语内嵌引用应一致，检查结果以实际执行证据为准。显示副本不包含完整私有注册表或正式目录；公开克隆不是“完全没有图片”，但角色锁所需私有结构仍缺失。
 
 ## 3. 现有命令 / Existing tools
 
@@ -42,9 +59,9 @@ python scripts/check_repository.py
 ```
 
 - 初始化仅创建本地忽略目录，不填充数据／模型。
-- 文档与测试不调用生成网关、不启动服务、不需要GPU或私有图片。
-- 索引检查要求非空Git索引；工作区修改需显式暂存后才能检查对应新内容。
-- `python scripts/check_character_lock.py`是私有资产校验，不包含在公开克隆必须通过的命令组。公开克隆缺文件应退出1并返回`stop_no_fallback_no_regeneration`，不能自动下载或生成替代品。
+- 文档与测试不调用生成网关、不启动服务、不需要GPU或其他私有图片。README/索引检查需核验仓内8张明确授权展示图及manifest，不将这些显示图误称私有依赖。
+- 索引检查要求非空Git索引；工作区修改需显式暂存后才能检查对应新内容。8图例外不能放行其他二进制或私有路径。
+- `python scripts/check_character_lock.py`是私有资产校验，不包含在公开克隆必须通过的命令组。公开克隆虽含8个显示副本，但缺完整current/selection注册表与正式目录时仍应退出1并返回`stop_no_fallback_no_regeneration`；不能自动下载、生成或拿显示副本拼造正式资产。
 - 当前角色锁检查已批准SA02／BM01及BM01四视图，不自动激活待确认SA02四视图，也不代替构图／视频视觉审核。
 
 ## 4. 核心规格与资产规则 / Specifications

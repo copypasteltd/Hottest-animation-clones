@@ -1,4 +1,4 @@
-"""Check public bilingual documentation offline, without any frontend or media.
+"""Check bilingual documentation and explicitly requested public PNG examples.
 
 Does not run models, contact GitHub, serve pages, or read private assets.
 """
@@ -9,6 +9,8 @@ import json
 import re
 import sys
 from urllib.parse import unquote
+
+from check_readme_images import validate as validate_readme_images
 
 ROOT = Path(__file__).resolve().parents[1]
 MARKDOWN_PATHS = (
@@ -53,7 +55,8 @@ def validate(root: Path = ROOT) -> dict:
     require("git@github.com:copypasteltd/Hottest-animation-clones.git" in texts["AGENTS.md"], "Synchronization destination missing")
     require("Do not create a frontend without an explicit user instruction" in texts["AGENTS.md"], "Explicit frontend scope boundary missing")
     require("未经用户明确指示" in texts["AGENTS.md"], "Chinese frontend scope boundary missing")
-    return {"status": "passed", "scope": "public_bilingual_documentation_consistency_not_inference_quality", "readme_languages": 2, "markdown_links_checked": links}
+    image_check = validate_readme_images(root)
+    return {"status": "passed", "scope": "public_bilingual_documentation_and_image_identity_not_inference_quality", "readme_languages": 2, "markdown_links_checked": links, "public_character_images": image_check["public_character_images"]}
 
 
 if __name__ == "__main__":

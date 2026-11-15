@@ -1,7 +1,8 @@
 """Offline pre-commit check of staged filenames and content.
 
 This is a conservative accidental-disclosure guard, not a full security audit.
-It reads Git index objects only, never global Git configuration or media files.
+It reads Git index objects, including the exact public README PNG exceptions,
+never global Git configuration or private/raw media files.
 """
 from __future__ import annotations
 
@@ -10,6 +11,8 @@ from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import sys
+
+from check_readme_images import MANIFEST_PATH, PUBLIC_IMAGES, readme_images, validate_manifest, validate_payload
 
 ROOT = Path(__file__).resolve().parents[1]
 DOC_NAMES = {
@@ -30,7 +33,7 @@ BINARY_EXTENSIONS = {
 
 def allowed_path(name: str) -> bool:
     path = PurePosixPath(name)
-    if name in ROOT_FILES:
+    if name in ROOT_FILES or name in PUBLIC_IMAGES or name == MANIFEST_PATH:
         return True
     if path.suffix.lower() in BINARY_EXTENSIONS:
         return False
@@ -76,6 +79,16 @@ def check(root: Path = ROOT) -> dict:
     if not names:
         raise ValueError("Index is empty; explicitly stage reviewed source files first")
     findings = []
+    image_entries = {}
+    if PUBLIC_IMAGES.intersection(names) or MANIFEST_PATH in names:
+        if not PUBLIC_IMAGES.union({MANIFEST_PATH}).issubset(names):
+            raise ValueError("Stage the complete explicit README image inventory and manifest")
+        manifest_raw = subprocess.run(["git", "show", ":" + MANIFEST_PATH], cwd=root, check=True, capture_output=True).stdout
+        image_entries = validate_manifest(json.loads(manifest_raw))
+        for readme in ("README.md", "README.zh-CN.md"):
+            text = subprocess.run(["git", "show", ":" + readme], cwd=root, check=True, capture_output=True).stdout.decode("utf-8")
+            if readme_images(text) != PUBLIC_IMAGES:
+                raise ValueError("Both staged READMEs must inline all eight character illustrations")
     modes_raw = subprocess.run(["git", "ls-files", "--stage", "-z"], cwd=root, check=True, capture_output=True).stdout
     modes = {}
     for entry in modes_raw.split(b"\0"):
@@ -90,6 +103,12 @@ def check(root: Path = ROOT) -> dict:
             findings.append({"path": name, "rule": "not_in_public_allowlist"})
             continue
         payload = subprocess.run(["git", "show", ":" + name], cwd=root, check=True, capture_output=True).stdout
+        if name in PUBLIC_IMAGES:
+            try:
+                validate_payload(name, payload, image_entries[name])
+            except ValueError as error:
+                findings.append({"path": name, "rule": "readme_image_identity_failed", "detail": str(error)})
+            continue
         if len(payload) > 2_000_000 or b"\0" in payload:
             findings.append({"path": name, "rule": "binary_or_large_blob"})
             continue

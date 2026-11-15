@@ -27,6 +27,7 @@
 !/docs/18-开源发布与持续同步规范.md
 !/docs/19-BM01真实角色替换与JK03退役约束.md
 !/docs/en/
+!/docs/images/
 !/docs/CONTRIBUTING.md
 !/docs/SECURITY.md
 !/docs/CHANGELOG.md
@@ -102,3 +103,17 @@ Thumbs.db
 *credentials*.json
 *secrets*.json
 **/device.json
+
+# User-requested README character illustrations: exact files only, not raw photos.
+/docs/images/*
+!/docs/images/characters/
+/docs/images/characters/*
+!/docs/images/characters/manifest.json
+!/docs/images/characters/sa02-front-v1.png
+!/docs/images/characters/sa02-four-view-candidate-v1.png
+!/docs/images/characters/sa02-s02-knee-v1.png
+!/docs/images/characters/sa02-s02-full-v1.png
+!/docs/images/characters/bm01-front-v1.png
+!/docs/images/characters/bm01-four-view-v1.png
+!/docs/images/characters/bm01-s02-knee-v1.png
+!/docs/images/characters/bm01-s02-full-v1.png

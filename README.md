@@ -5,7 +5,15 @@
 [English](<README.md>) · [简体中文](<README.zh-CN.md>) · [Documentation index](<docs/README.md>) · [Detailed solution](<docs/en/solution-and-usage.md>) · [Changelog](<docs/CHANGELOG.md>)
 
 > **Specification-first foundation — not a finished motion-transfer application.**
-> This public repository contains requirements, data contracts, illustrative records and Python maintenance tools. General source-pose inference, canonical motion-video production, searchable dual-library storage and downstream model integration are **not implemented**. Character images and actual project media are private local assets, not a downloadable dataset.
+> This public repository contains requirements, data contracts, illustrative records and Python maintenance tools. General source-pose inference, canonical motion-video production, searchable dual-library storage and downstream model integration are **not implemented**. The eight existing character illustrations explicitly requested by the user are embedded below and published in a precise image allow-list; raw reference photographs, source videos, private registries and logs remain excluded. This is not a downloadable motion dataset.
+
+### Character references at a glance
+
+| SA02 · approved anime front root | BM01 · approved real-character front root |
+|---|---|
+| ![SA02 approved front reference: chestnut hair and red-white knight outfit](<docs/images/characters/sa02-front-v1.png>) | ![BM01 approved front reference: blue-gray hair and blue-white whale outfit, empty hands](<docs/images/characters/bm01-front-v1.png>) |
+
+These are the actual existing project images, not UI mockups or new designs. **Their faces, hair, wardrobe and rendering medium are the visual constraints.** See section 4 for four-views, framing images and per-image approval labels. Public illustration copies are byte-identical to the source project PNGs; [image inventory and hashes](<docs/images/characters/manifest.json>). README display does not grant third-party IP, training or commercial rights and does not promote a pending image to approved.
 
 ## Contents
 
@@ -67,8 +75,8 @@ This README is the overview. Detailed documents retain the requirement IDs and s
 | Documentation checks | Implemented | Requirement coverage, Schema validity, 10 invalid-record checks, public links and bilingual documentation consistency |
 | Git-index boundary guard | Implemented | Reviewed path allow-list, regular-file checks and accidental secret/device disclosure patterns; not a complete security audit |
 | Local character lock | Implemented | Current SA02/BM01 registry and anchor hashes, BM01's approved four-view, and absence of retired formal JK03 files |
-| Repository tests | Implemented | 20 current synthetic/mocked maintenance and contract tests; not motion-quality tests |
-| Character and scene stills | Produced locally | Current state is listed in section 4; static file/visual checks and user approval are separate |
+| Repository tests | Implemented | Synthetic/mocked maintenance and contract tests plus exact public-illustration checks; not motion-quality tests |
+| Character and scene stills | Produced locally; eight requested character illustrations published below | Current state is listed in section 4; README display, static checks and user approval are separate |
 | Source-pose inference and video production | Not implemented | No general production extraction/generation CLI or reusable production skill is distributed |
 | Search/export and target-model A/B loop | Specified, not implemented | No finished motion database, validated retargeter or downstream reuse service |
 | Frontend / demo service | Not included | The unsolicited frontend and its associated pages, server and demo media were removed |
@@ -121,8 +129,8 @@ The initial dependency installation may need network access. Afterwards these ch
 |---|---|---|
 | `python scripts/bootstrap_workspace.py` | JSON `workspace_directories` list | No media import, model installation or inference |
 | `python scripts/check_project_docs.py` | JSON `status: passed`, 46 requirements, 29 planned cases and 10 negative checks | Does not execute the 29 future product cases |
-| `python scripts/check_release.py` | JSON `status: passed`, two README languages and checked links | No media/model validation, release upload or Git push |
-| `python -m unittest discover -s tests -v` | Current suite passes | No real private-media dependency or model-quality measurement |
+| `python scripts/check_release.py` | JSON `status: passed`, bilingual links and all eight inline images with exact hash/PNG/dimension checks | No model-quality or visual approval, release upload or Git push |
+| `python -m unittest discover -s tests -v` | Current suite passes, including the public illustration inventory | No raw-source/private-registry dependency or model-quality measurement |
 | `python scripts/check_repository.py` | Indexed public paths/text pass the guard | Does not stage changes or inspect unstaged edits; requires a populated Git index |
 | `python scripts/check_character_lock.py` | Passes only with the exact required private assets and metadata | No downloads, regeneration, biometric recognition or automatic selection fallback |
 
@@ -134,7 +142,7 @@ The checked-in [configuration example](<configs/project.example.toml>) is a port
 python scripts/check_character_lock.py
 ```
 
-A clean public clone intentionally lacks the current private registry and images. Expected behavior is **exit code 1**, a JSON explanation of the missing file and `action: stop_no_fallback_no_regeneration`. Do not change hashes, download substitutes or generate a lookalike to make this check pass. The public unit tests use synthetic data and remain runnable without those assets.
+A clean public clone includes the eight README illustration copies, but intentionally lacks the current private registry and formal asset directories. Expected behavior is **exit code 1**, a JSON explanation of the missing file and `action: stop_no_fallback_no_regeneration`. Do not change hashes, download substitutes or generate a lookalike to make this check pass. Public tests use synthetic/mocked contract data and the bundled public illustrations; they remain runnable without the private registries or formal assets.
 
 The lock checks SA02/BM01's current approved references. It **does not activate or approve the new SA02 four-view candidate**, assess visual motion quality, or verify every S02 composition automatically.
 
@@ -156,6 +164,18 @@ BM01 does **not** inherit JK03's age or 148 cm design parameter. Neither a photo
 
 SA02's newly inferred back hair/wardrobe details still require confirmation. A request to build the sheet, a valid PNG or an assistant visual check does not equal user approval. Keep the candidate separate from the frozen root and do not update the approved registry until explicitly authorized.
 
+#### SA02 · anime identity and wardrobe constraints
+
+![SA02 four-view candidate: front full, 90-degree side, back full and front face; pending user confirmation](<docs/images/characters/sa02-four-view-candidate-v1.png>)
+
+**Status: the front root above is approved; this new four-view is still pending user confirmation.** All four sections show the same SA02 design, not different characters. Keep the chestnut long hair and side braids, brown eyes, clean 2D line art/cel shading, red-white high-collar knight outfit, silver fasteners, layered skirt, opaque white legs and red-white boots. Do not make her photographic/3D, blue-haired or elf-eared; do not substitute another outfit, face, sword, cape or hand-held object. The back hair join and unseen clothing continuation are generated completions, not already approved geometry.
+
+#### BM01 · real-character identity and wardrobe constraints
+
+![BM01 approved four-view: front full, 90-degree side, back full and front face](<docs/images/characters/bm01-four-view-v1.png>)
+
+**Status: this displayed four-view is user-approved as the real-character version.** Keep the same face, photographic medium, blue-gray long wavy hair and top loop, white maid headpiece, blue fin-shaped side pieces, navy-white dress, lace straps, small navy bow, white ruffled whale apron, blue tail and navy flat Mary Jane shoes. Both hands are empty: no coconut, straw, drink or replacement prop. Do not mix in JK03's face/uniform or the source close-up's winter collar/snowflake ornaments. No new numeric age/height is assigned. Static design approval does not establish biometric identity or motion fidelity.
+
 ### 4.2 Current S02 composition set
 
 All four current composition PNGs are **1024×1536**:
@@ -168,6 +188,24 @@ All four current composition PNGs are **1024×1536**:
 | F06 | `ref-bm01-s02-full@1` | BM01 complete head-to-shoe view | Newly generated and visually checked; not yet individually confirmed by the user |
 
 “Half-body” follows the earlier requested knee-level framing, **not** a bust or waist-up portrait. Complete head, hands and skirt are required; feet are intentionally outside the closer frame. Full-body stills must retain shoes and space around the subject, but do not guarantee a later dance will stay in frame. F03/F04 are retired JK03 views and must not be restored or reused for BM01.
+
+#### SA02 with S02 · preserved knee and full-body references
+
+| F01 · knee-level medium view | F02 · complete full-body view |
+|---|---|
+| ![F01 SA02 S02 knee-level composition, preserved and visually checked](<docs/images/characters/sa02-s02-knee-v1.png>) | ![F02 SA02 S02 full-body composition, preserved and visually checked](<docs/images/characters/sa02-s02-full-v1.png>) |
+
+**Constraint:** same approved SA02 face/hair/outfit and 2D medium; plain white backdrop, pale floor grid only, no wall grid or props. F01 excludes feet by design; F02 keeps both boots and floor margin. Preserved static/visual checks do not approve a new motion or guarantee raised arms remain in frame.
+
+#### BM01 with S02 · updated knee and full-body references
+
+| F05 · knee-level medium view | F06 · complete full-body view |
+|---|---|
+| ![F05 BM01 S02 knee-level composition, visually checked pending individual user review](<docs/images/characters/bm01-s02-knee-v1.png>) | ![F06 BM01 S02 full-body composition, visually checked pending individual user review](<docs/images/characters/bm01-s02-full-v1.png>) |
+
+**Status: produced and visually checked, not yet individually user-approved. Constraint:** keep the approved BM01 appearance, white backdrop/pale floor grid, empty hands and no coconut/straw; do not inherit the retired character's wardrobe or age/height. F05 retains head, hands, skirt and knee region; F06 includes shoes and floor. The grid is not a height ruler and these stills are not pose-inference evidence.
+
+The [eight-file public illustration manifest](<docs/images/characters/manifest.json>) records exact hashes, dimensions and unchanged approval labels. Only these existing PNG copies were authorized for README display; original source photographs, retired JK03 media and private production records are not published. Display permission does not grant MIT rights over third-party character IP or a general training/commercial license.
 
 ### 4.3 Local version resolution
 
@@ -218,11 +256,12 @@ The [data/skill contract](<docs/13-双库数据契约与Skill执行规范.md>) i
 README.md / README.zh-CN.md      English / Chinese overview
 AGENTS.md                       Persistent scope and synchronization rules
 src/ai_motion_library/          Package identity/version foundation only
-scripts/                       Five maintenance/bootstrap commands
+scripts/                       Maintenance/bootstrap and public-image checks
 tests/                         Synthetic/mocked maintenance tests
 configs/project.example.toml   Portable template; external actions disabled
 docs/                          Requirements, contracts, asset rules, usage
   en/                          English detailed solution
+  images/characters/           Eight requested README PNGs + exact manifest
   schemas/ examples/           Summary Schema and unexecuted example
   templates/ evidence/         Collection template and sanitized evidence
 .github/                       Python CI, issue and pull-request templates
@@ -233,7 +272,7 @@ runs/ output/ outputs/ exports/ indexes/ tooling/ .local/
 docs/runs/ docs/validation/ docs/bundles/
 ```
 
-The public clone does not reproduce the complete private workspace. Bootstrap creates the current directory skeleton; it does not populate local stills or all optional report folders. Historic task-specific image editing scripts, credentials and production receipts are not portable public commands.
+The public clone contains the eight requested README PNG copies, not the complete private workspace. Bootstrap creates the local directory skeleton; it does not populate formal character registries, raw media or all optional report folders. Historic task-specific image editing scripts, credentials and production receipts are not portable public commands.
 
 There is **no frontend, website, dashboard or preview server** and no browser startup step. **Do not create a frontend without an explicit user instruction and its requirements/constraints.** A README, recording, publishing or continuation request does not implicitly authorize UI development. This documentation update does not regenerate assets, approve a pending sheet, run Docker/WSL or start any service.
 
@@ -285,4 +324,4 @@ git ls-remote origin refs/heads/main
 
 The [CI workflow](<.github/workflows/ci.yml>) is configured for Ubuntu/Windows and Python 3.11/3.13. It installs Python development dependencies and runs repository, documentation and unit checks; it does not access a GPU, private media or generation credentials. See [contributing](<docs/CONTRIBUTING.md>), [governance](<docs/GOVERNANCE.md>), [security](<docs/SECURITY.md>) and [persistent project instructions](<AGENTS.md>).
 
-Original code and documentation use [MIT](<LICENSE>). That license does **not** relicense third-party dances, music, characters, model weights, body models, source images or upstream workflows. Static character selection does not establish commercial, training or redistribution permission. Real media, model weights, credentials, device settings and logs remain ignored; never bypass the boundary with `git add -f`. See [third-party notices](<docs/THIRD_PARTY_NOTICES.md>).
+Original code and documentation use [MIT](<LICENSE>). That license does **not** relicense third-party dances, music, characters, model weights, body models, source images or upstream workflows. Static character selection does not establish commercial, training or redistribution permission. Except for the eight explicitly requested README illustrations, raw/private media, model weights, credentials, device settings and logs remain ignored; never bypass the boundary with `git add -f`. See [third-party notices](<docs/THIRD_PARTY_NOTICES.md>).

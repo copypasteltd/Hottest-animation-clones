@@ -5,7 +5,7 @@
 - **未经用户明确指示并给出相应要求与约束，不得构建任何前端开发项。**不得自行创建网站、交互页面、演示工作台、Dashboard、静态预览服务或相关前端工程。
 - **Do not create a frontend without an explicit user instruction and its requirements/constraints.** Requests to organize code, improve a README, record content, publish a repository or continue the project do not authorize inventing a UI or demo application.
 - Use Markdown, data contracts, scripts and actual task artifacts for the currently authorized work. If frontend work is relevant, explain why and establish scope with the user before creating it.
-- Do not recreate the removed frontend or its screenshots, recordings, GIFs, server, tests or media exceptions. Future UI work requires a new explicit instruction; repository synchronization authorization does not expand implementation scope.
+- Do not recreate the removed frontend or its screenshots, recordings, GIFs, server, tests or former frontend-capture exceptions. The explicitly requested eight static character PNG display copies listed below are separate from that removed frontend and do not authorize UI work. Future UI work requires a new explicit instruction; repository synchronization authorization does not expand implementation scope.
 
 ## Scope and truthfulness
 
@@ -18,8 +18,10 @@
 ## File and publication boundaries
 
 - Detailed docs, prompt templates and reports stay under `docs/`. User-requested bilingual root README files and this instruction file are intentional root entries.
-- Real sources, character images, weights, device configuration, private keys, gateway scripts, logs and generated project outputs stay ignored. Do not use `git add -f` or broaden allow-lists to publish them.
-- Public content is reviewed source, text documentation, contracts and illustrative machine-readable examples. There are no automatic public-media or frontend exceptions.
+- Real source photographs/videos, private character registries/formal asset directories, weights, device configuration, private keys, gateway scripts, logs and other generated outputs stay ignored. Do not use `git add -f` or broaden allow-lists to publish them.
+- The user explicitly requested inline character images in both READMEs. The sole current display-media exception is the eight existing static PNG byte-identical copies in `docs/images/characters/` plus `manifest.json`: `sa02-front-v1.png`, `sa02-four-view-candidate-v1.png`, `sa02-s02-knee-v1.png`, `sa02-s02-full-v1.png`, `bm01-front-v1.png`, `bm01-four-view-v1.png`, `bm01-s02-knee-v1.png`, `bm01-s02-full-v1.png`. Do not infer a whole-directory, other-candidate, video, original-reference-photo or frontend exemption. See `docs/18-开源发布与持续同步规范.md`.
+- README display authorization is separate from design approval: SA02's root is approved but its four-view remains pending; BM01's four-view is approved; F01/F02 remain preserved/viewed, and BM01 F05/F06 are visually checked but not individually user-approved. Current v2 selection and lock remain unchanged. A public clone has these display copies, not the complete private registry/formal directories, so the private character lock still fails clearly when required private files are absent.
+- Public content otherwise consists of reviewed source, documentation, contracts and illustrative machine-readable examples. Validate the exact PNG signatures, sizes, hashes, manifest inventory, index paths and inline README references before publishing this exception; report actual results rather than assuming success. Displaying the images does not grant a new license, commercial/training rights or broader publication authority, and creates no frontend.
 - Follow `docs/18-开源发布与持续同步规范.md` and existing path/text guards. Code MIT licensing does not relicense third-party media or IP.
 
 ## Required update and synchronization workflow

@@ -17,7 +17,7 @@ The English explanation below summarizes those decisions without replacing their
 | Repository boundary check | Implemented | Examines indexed filenames and text for accidental disclosure risks |
 | Local character hash lock | Implemented | Verifies the current privately held SA02/BM01 selection and its fixed records/anchors; historical selection v1 is not current |
 | Repository unit tests | Maintenance and contract tests | Exercises documentation and guard behavior using synthetic data or mocked reads; not model quality |
-| Selected static characters, scene, and four compositions | Produced locally | Private design assets with recorded references and versions; not distributed as open-source media |
+| Selected static characters, scene, and four compositions | Produced locally | The user explicitly requested eight existing character PNG display copies in both READMEs; complete private registries/formal directories and other media are not distributed |
 | Source body and hand pose extraction | Not implemented | No general source-pose inference command is provided |
 | Canonical motion-video production skill | Not implemented | Local image work and an earlier isolated video experiment do not constitute a reusable production pipeline |
 | Search, reference export, and downstream A/B loop | Specified, not implemented | No complete searchable dual library or validated reuse service is available |
@@ -77,7 +77,7 @@ A scene anchor defines the background and floor; a framing profile defines what 
 
 The current local selection has two independent character tracks, not two outfits of one person:
 
-- `char-asuna-sa02@1`: the unchanged 2D anime Asuna-inspired design in the selected red-and-white outfit; the default for an explicitly anime-character task. A new front-full / 90° side / back-full / front-face sheet was generated directly from that frozen root and visually inspected. It remains a local supporting-view candidate pending user confirmation; neither its inferred back details nor its production use is automatically approved.
+- `char-asuna-sa02@1`: the unchanged 2D anime Asuna-inspired design in the selected red-and-white outfit; the default for an explicitly anime-character task. A new front-full / 90° side / back-full / front-face sheet was generated directly from that frozen root and visually inspected. Its byte-identical display copy is now included in the explicitly requested README image set, but it remains a supporting-view candidate pending user confirmation; neither its inferred back details nor its production use is automatically approved.
 - `char-blue-maid-bm01@1`: the user-approved live-action blue-and-white whale-tail character; the default for an explicitly real/live-action-character task.
 
 If no role or character is specified, ask rather than silently choosing. Resolve the current private character registry through `standard-assets/characters/current.json` → `selection.v2.json`. Historical `selection.v1.json` must not be treated as current or used to restore retired JK03.
@@ -90,7 +90,24 @@ The selected scene remains `scene-s02-white-grid@1`: a plain white background an
 
 The user chose to delete only the old **formal JK03** character and its formal knee/full compositions F03/F04. Their mixed comparison images, packages and old galleries were removed. SA02 and other independent historical casting candidates remain; retained historical candidates do not become active production references.
 
-Use [current BM01 and JK03 retirement constraints](../19-BM01真实角色替换与JK03退役约束.md) for the live-action track, [the historical selection and continuing SA02 rules](../16-定稿角色SA02与JK03使用约束.md) for SA02/history, and [the current scene/framing specification](../17-S02场景定稿与四张构图母版规范.md) for current compositions. Their images and real asset manifests are intentionally excluded from the public source distribution. No official character art, private portraits, generation credentials or device configuration is required for public documentation checks.
+Use [current BM01 and JK03 retirement constraints](../19-BM01真实角色替换与JK03退役约束.md) for the live-action track, [the historical selection and continuing SA02 rules](../16-定稿角色SA02与JK03使用约束.md) for SA02/history, and [the current scene/framing specification](../17-S02场景定稿与四张构图母版规范.md) for current compositions. The exact eight generated PNG display copies listed below are included at the user's explicit request, separate from the complete private formal assets and registries. No original reference photograph, source dance video, other candidate, retired JK03 media, private registry, generation credential or device configuration is distributed through that exception.
+
+### Explicit README display exception
+
+The user explicitly requested that both READMEs display the existing character references. The public directory is exactly `docs/images/characters/`, containing these eight byte-identical PNG copies plus `manifest.json`:
+
+| Filename | Displayed reference | Unchanged approval/review state |
+|---|---|---|
+| `sa02-front-v1.png` | SA02 front root | User-approved root |
+| `sa02-four-view-candidate-v1.png` | SA02 front/side/back/face board | Generated/viewed; pending user confirmation |
+| `sa02-s02-knee-v1.png` | F01 SA02 knee view | Preserved/viewed, not a new approval |
+| `sa02-s02-full-v1.png` | F02 SA02 full view | Preserved/viewed, not a new approval |
+| `bm01-front-v1.png` | BM01 associated front root | Pinned reference for the approved design |
+| `bm01-four-view-v1.png` | BM01 four-view board | User-approved four-view version |
+| `bm01-s02-knee-v1.png` | F05 BM01 knee view | Assistant visual check, not individually user-approved |
+| `bm01-s02-full-v1.png` | F06 BM01 full view | Assistant visual check, not individually user-approved |
+
+See the [display manifest](../images/characters/manifest.json) and the [publication policy](../18-开源发布与持续同步规范.md). This is a narrow display-publication exception, not a whole-directory allowance, a dataset release or a frontend. PNG signature, dimensions, SHA256, exact inventory, indexed paths and inline references in both READMEs must agree; actual check results are reported separately rather than assumed here. No images are regenerated, no current v2 pointer/lock is changed, and media display does not promote any pending design or review state.
 
 ## 5. The four static composition masters
 
@@ -206,7 +223,7 @@ The [lock checker](../../scripts/check_character_lock.py) resolves the current l
 With the authorized local assets present, it verifies the applicable fixed hashes, character IDs, PNG dimensions and scoped approval metadata, including BM01's approved front and four-view references.
 It does not assess a face biometrically, detect video wardrobe drift, or validate the S02 compositions automatically.
 
-**A clean public clone is expected to fail this optional check**, because those private records and images are not distributed.
+**A clean public clone is still expected to fail this optional check.** It contains the eight README display copies, but not the complete private `current`/`selection` registries and formal asset directories required by the lock. Display copies must not be used to fabricate a complete approved registry or alter the current v2 selection.
 It returns a clear failure with `action: stop_no_fallback_no_regeneration` and a nonzero exit code.
 Do not fabricate replacement assets, edit the hashes to match arbitrary images, or interpret this expected failure as an instruction to download a model.
 
@@ -216,14 +233,14 @@ Do not fabricate replacement assets, edit the hashes to match arbitrary images, 
 python scripts/check_repository.py
 ```
 
-The [repository checker](../../scripts/check_repository.py) examines the Git index, including indexed paths, file types, size, UTF-8 text, and accidental-disclosure patterns.
+The [repository checker](../../scripts/check_repository.py) examines the Git index, including indexed paths, file types, size, UTF-8 text, and accidental-disclosure patterns. The README display exception is restricted to the eight exact PNG names and manifest above, with signature/dimension/hash/inventory checks; it is not permission to index arbitrary binaries or private asset directories.
 It requires a populated index and can be used after explicitly staging reviewed source changes.
 It does not stage files, inspect global Git configuration, contact a remote, or publish anything.
 A passed guard is defense against common mistakes, not a complete security audit or proof that every public asset is licensed.
 
 ## 10. Explicit implementation scope
 
-The project currently contains specifications, data contracts and maintenance scripts. The unsolicited frontend and its associated pages, preview server, screenshots, recordings and GIFs were removed at the user's direction.
+The project currently contains specifications, data contracts, maintenance scripts and the eight expressly requested static README character display copies. The unsolicited frontend and its associated pages, preview server, screenshots, recordings and GIFs were removed at the user's direction and are not recreated by embedding existing PNGs in Markdown.
 
 **Do not create a frontend without an explicit user instruction and its requirements/constraints.** Organizing code, improving documentation, recording content or publishing the repository does not authorize inventing an interface. Any future frontend needs separately established scope before implementation.
 
@@ -233,6 +250,7 @@ The following is the intended workspace separation, not a claim that each direct
 
 ```text
 docs/                  # requirements, usage, templates and reports
+docs/images/characters/ # exact eight README display PNGs plus manifest.json
 src/ai_motion_library/ # production package foundation
 scripts/               # portable maintenance checks
 tests/                 # synthetic and mocked foundation tests
@@ -268,7 +286,7 @@ If route B introduces new critical movement losses, retain the source and valid 
 
 ## 13. Limitations, rights, and future maintenance
 
-Existing private static images do not establish a motion library, a production skill, or model-general character control.
+Existing static images, including the eight README display copies, do not establish a motion library, a production skill, or model-general character control.
 The earlier local H3 experiment was an isolated RGB-reference transfer with observed hand-shape, timing, and framing limitations.
 No generic structured-pose control for H3, exact monocular motion capture, 3D retargeting, or measured grid geometry is claimed.
 The [acceptance plan](../14-实施计划与验收矩阵.md) defines future evidence needed before those claims can change.
@@ -276,10 +294,10 @@ The [acceptance plan](../14-实施计划与验收矩阵.md) defines future evide
 Original repository code and documentation use the [MIT license](../../LICENSE).
 Source videos, music, characters, generated portraits, upstream models, weights, body models, and workflows retain their own rights and conditions.
 Selecting a character, generating a white-background image, or extracting coordinates does not grant commercial or redistribution rights.
-BM01 has no specified numeric age or centimeter height; do not assign the retired student-character metadata to it. Private reference images and derived portraits are not authorized for redistribution merely because the character was selected. Retained historical student-character candidates keep their own limitations and are not current defaults.
+BM01 has no specified numeric age or centimeter height; do not assign the retired student-character metadata to it. Character selection alone never authorizes image redistribution. A later explicit user instruction authorizes only the eight README display copies listed here, not the original reference photographs or other portraits. That display request does not place third-party character IP or image/model rights under MIT, establish training/commercial rights, or invent a new media license. Retained historical student-character candidates remain excluded and are not current defaults.
 See the [third-party boundary](../THIRD_PARTY_NOTICES.md) and [contribution guide](../CONTRIBUTING.md) before adding assets.
 
 For future updates, stay within the explicit user scope and keep both language entries, this usage explanation, requirements, Schema examples and tests consistent with the actual code.
 When an inference stage becomes real, add its interface, failure behavior, dependency versions, and reproducible evidence before documenting a runnable workflow.
 Keep planned cases labeled planned until executed; keep private evidence local unless separately authorized for publication.
-Normal repository synchronization and releases should follow the maintainer's reviewed workflow, without force-pushing over unrelated changes or bundling local secrets and media.
+Normal repository synchronization and releases should follow the maintainer's reviewed workflow, without force-pushing over unrelated changes or bundling local secrets and media beyond the exact explicitly authorized README display inventory.

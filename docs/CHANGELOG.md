@@ -1,5 +1,14 @@
 # 变更记录
 
+## Restore explicitly requested README character illustrations — 2026-11-15
+
+- 修正此前将所有人物图排除的错误：按用户明确要求，在中英README直接嵌入SA02／BM01正面基准、两张四视图及F01/F02/F05/F06构图，共8张既有PNG。
+- 图片旁明确标注定稿／待确认／已查看状态和脸、发型、服装、媒介、空手／场景约束；公开展示不改变SA02候选四视图或其他未逐图批准状态。
+- 只公开精确白名单内的字节一致副本及图例清单；原始3张参考照片、源舞视频、正式私有清单、JK03和其他候选、凭据日志仍不公开，不恢复前端。
+- 增加PNG签名／尺寸／hash、精确清单、两份README全部嵌图及索引边界检查，防止文档再次缺图或意外扩大媒体范围。
+- Restored eight explicitly requested existing character PNG illustrations inline in both READMEs, with visual constraints and unchanged per-image approval labels.
+- Published only precise byte-identical display copies and a sanitized manifest; raw references and private production data remain excluded. Added image identity/inline-presence checks, without generation or frontend work.
+
 ## Systematic bilingual README refresh — 2026-11-15
 
 - 系统重整中英文README为相同十部分：目标／架构、真实实现、安装／命令、人物与构图状态、计划生产流程、数据规则、目录、路线、文档索引、维护／权利。

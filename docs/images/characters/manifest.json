@@ -1,0 +1,145 @@
+{
+  "schema_version": "readme_character_images/1.0",
+  "record_kind": "explicitly_requested_readme_character_illustrations",
+  "authorization": {
+    "by": "user",
+    "request": "你的readme中的图呢？我要求的在readme中明确约束的人物的图呢？",
+    "date_local": "2026-11-15",
+    "scope": "Display only these eight existing SA02/BM01 character images in both public READMEs with constraints and approval labels",
+    "does_not_expand_to": [
+      "raw_reference_photographs",
+      "source_dance_videos",
+      "private_registries",
+      "credentials",
+      "runtime_logs",
+      "retired_JK03_media",
+      "frontend_pages"
+    ]
+  },
+  "approval_states_unchanged": true,
+  "pixel_or_geometry_edits": false,
+  "inference_or_motion_quality_claim": false,
+  "license_scope": "README illustration publication requested; source-code MIT is not a grant of third-party IP, biometric identity, training or commercial rights",
+  "files": [
+    {
+      "path": "docs/images/characters/sa02-front-v1.png",
+      "character": "SA02",
+      "view": "front_root",
+      "revision": 1,
+      "status": "user_approved",
+      "sha256": "dd876e86f8602b60d16f115a080058669e95a5c6fbf440c8bac7c870dc505659",
+      "bytes": 483009,
+      "size": [
+        1024,
+        1536
+      ],
+      "format": "PNG",
+      "copy": "byte_identical_to_existing_project_image"
+    },
+    {
+      "path": "docs/images/characters/sa02-four-view-candidate-v1.png",
+      "character": "SA02",
+      "view": "four_view",
+      "revision": 1,
+      "status": "pending_user_confirmation",
+      "sha256": "953e12f5cf30f0fa2ededbb813f600938cbe8686365759550e5fe0b5607a9fd0",
+      "bytes": 1688289,
+      "size": [
+        1536,
+        1024
+      ],
+      "format": "PNG",
+      "copy": "byte_identical_to_existing_project_image"
+    },
+    {
+      "path": "docs/images/characters/sa02-s02-knee-v1.png",
+      "character": "SA02",
+      "view": "F01_knee",
+      "revision": 1,
+      "status": "produced_visual_checked_no_motion_approval",
+      "sha256": "21262a3aa400ad81158ecc021ba28075cff3e9f2a04f01b7d608a83d8b04536f",
+      "bytes": 1389883,
+      "size": [
+        1024,
+        1536
+      ],
+      "format": "PNG",
+      "copy": "byte_identical_to_existing_project_image"
+    },
+    {
+      "path": "docs/images/characters/sa02-s02-full-v1.png",
+      "character": "SA02",
+      "view": "F02_full",
+      "revision": 1,
+      "status": "produced_visual_checked_no_motion_approval",
+      "sha256": "e0a9a681bc34a721ff2b8f877e89742d4a924c764e714466c2636bc97dece3d1",
+      "bytes": 1301385,
+      "size": [
+        1024,
+        1536
+      ],
+      "format": "PNG",
+      "copy": "byte_identical_to_existing_project_image"
+    },
+    {
+      "path": "docs/images/characters/bm01-front-v1.png",
+      "character": "BM01",
+      "view": "front_root",
+      "revision": 1,
+      "status": "user_approved",
+      "sha256": "a8329f3f84a267e9bad2c283054b5547751bd96028563dbd018372f336bb9180",
+      "bytes": 1387896,
+      "size": [
+        1024,
+        1536
+      ],
+      "format": "PNG",
+      "copy": "byte_identical_to_existing_project_image"
+    },
+    {
+      "path": "docs/images/characters/bm01-four-view-v1.png",
+      "character": "BM01",
+      "view": "four_view",
+      "revision": 1,
+      "status": "user_approved",
+      "sha256": "1e911077dcee910ae9e5b31bf57997b1fff800140320bea18d9049f7290f70d0",
+      "bytes": 1921825,
+      "size": [
+        1536,
+        1024
+      ],
+      "format": "PNG",
+      "copy": "byte_identical_to_existing_project_image"
+    },
+    {
+      "path": "docs/images/characters/bm01-s02-knee-v1.png",
+      "character": "BM01",
+      "view": "F05_knee",
+      "revision": 1,
+      "status": "produced_visual_checked_pending_individual_user_review",
+      "sha256": "838203a596e83ad2ed107b9208043a7d628f7b03a4f701dc29542fe172d66c7a",
+      "bytes": 1607313,
+      "size": [
+        1024,
+        1536
+      ],
+      "format": "PNG",
+      "copy": "byte_identical_to_existing_project_image"
+    },
+    {
+      "path": "docs/images/characters/bm01-s02-full-v1.png",
+      "character": "BM01",
+      "view": "F06_full",
+      "revision": 1,
+      "status": "produced_visual_checked_pending_individual_user_review",
+      "sha256": "5e847ade47edda1c9c320ac24d306e158d87af3cc41560548a7ae9d200b7e012",
+      "bytes": 1357392,
+      "size": [
+        1024,
+        1536
+      ],
+      "format": "PNG",
+      "copy": "byte_identical_to_existing_project_image"
+    }
+  ]
+}
