@@ -17,9 +17,9 @@ from ai_motion_library import __version__
 class FoundationTests(unittest.TestCase):
     def test_distributable_requirements_and_schema(self):
         result = validate()
-        self.assertEqual(result["requirements"], 46)
-        self.assertEqual(result["planned_acceptance_cases"], 29)
-        self.assertEqual(result["schema_negative_checks"], 10)
+        self.assertEqual(result["requirements"], 5)
+        self.assertEqual(result["planned_acceptance_cases"], 10)
+        self.assertEqual(result["schema_negative_checks"], 16)
 
     def test_bilingual_docs_keep_explicit_frontend_scope_boundary(self):
         result = validate_release()
@@ -36,14 +36,33 @@ class FoundationTests(unittest.TestCase):
         self.assertFalse(config["execution"]["allow_network"])
         self.assertFalse(config["execution"]["allow_remote_generation"])
         self.assertFalse(config["execution"]["allow_model_download"])
+        self.assertEqual(config["source"]["downloader"], "ra-video-download")
+        self.assertEqual(config["source"]["platforms"], ["bilibili", "x", "douyin"])
+        self.assertEqual(
+            config["workflow"]["workflow_directory"],
+            "user/default/workflows/社区精选H3_人物与场景替换_实验",
+        )
         for relative in config["paths"].values():
             self.assertFalse(Path(relative).is_absolute())
             self.assertNotIn("..", Path(relative).parts)
 
     def test_public_source_boundary(self):
-        for path in ["pyproject.toml", "src/ai_motion_library/__init__.py", "docs/schemas/dual-library-record.schema.json", "configs/project.example.toml"]:
+        for path in ["pyproject.toml", "src/ai_motion_library/__init__.py", "docs/schemas/motion-transfer-run.schema.json", "configs/project.example.toml"]:
             self.assertTrue(allowed_path(path), path)
         for path in ["runs/private.json", "outputs/demo.mp4", "tooling/remote.py", "docs/runs/private.md", "configs/project.local.toml", "docs/examples/private.json", "docs/templates/private.png", "docs/demo/index.html", "docs/demo/app.js", "docs/demo/styles.css", "docs/assets/workbench-zh.png", "docs/assets/workbench-tour.gif", "docs/assets/capture-manifest.json"]:
+            self.assertFalse(allowed_path(path), path)
+
+    def test_public_run_contract_excludes_local_archives(self):
+        self.assertTrue(allowed_path("docs/examples/motion-transfer-run.example.json"))
+        self.assertTrue(allowed_path("docs/templates/动作迁移任务与交付模板.md"))
+        for path in (
+            "docs/archive/v0.3/README.md",
+            "docs/local/4090工作流定位.md",
+            "docs/examples/dual-library-record.example.json",
+            "docs/schemas/dual-library-record.schema.json",
+            "docs/schemas/unreviewed.json",
+            "docs/templates/动作采集与入库模板.md",
+        ):
             self.assertFalse(allowed_path(path), path)
 
     def test_credential_guard_detects_synthetic_value(self):

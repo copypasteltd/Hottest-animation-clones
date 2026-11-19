@@ -1,8 +1,4 @@
-"""Validate distributable v0.3 requirements without private media or reports.
-
-This script performs document/schema checks only; it never runs inference,
-contacts a service, reads historical device logs, or writes generated reports.
-"""
+"""Validate the public requirements, acceptance matrix, and run record offline."""
 from __future__ import annotations
 
 import copy
@@ -16,21 +12,20 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
-PREFIXES = ("STD", "SRC", "ACT", "POSE", "VIS", "DUAL", "LIB", "USE", "OPS")
 MAIN = "12-项目需求梳理与实现方案总纲.md"
-CONTRACT = "13-双库数据契约与Skill执行规范.md"
+CONTRACT = "13-动作迁移运行与交付规范.md"
 ACCEPTANCE = "14-实施计划与验收矩阵.md"
 PUBLIC_DOCS = (
     "README.md", MAIN, CONTRACT, ACCEPTANCE,
-    "15-项目路径结构与开源维护规范.md", "16-定稿角色SA02与JK03使用约束.md",
+    "15-项目路径结构与开源维护规范.md", "16-SA02二次元角色使用约束.md",
     "17-S02场景定稿与四张构图母版规范.md", "18-开源发布与持续同步规范.md",
-    "19-BM01真实角色替换与JK03退役约束.md",
+    "19-BM01真实角色替换与JK03退役约束.md", "en/solution-and-usage.md",
     "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md", "GOVERNANCE.md",
-    "THIRD_PARTY_NOTICES.md", "templates/动作采集与入库模板.md",
+    "THIRD_PARTY_NOTICES.md", "templates/动作迁移任务与交付模板.md",
     "evidence/H3基础用例公开摘要.md",
 )
-SCHEMA_PATH = DOCS / "schemas/dual-library-record.schema.json"
-EXAMPLE_PATH = DOCS / "examples/dual-library-record.example.json"
+SCHEMA_PATH = DOCS / "schemas/motion-transfer-run.schema.json"
+EXAMPLE_PATH = DOCS / "examples/motion-transfer-run.example.json"
 
 
 def require(condition: bool, message: str) -> None:
@@ -42,58 +37,94 @@ def check_contract(schema: dict, example: dict) -> int:
     Draft202012Validator.check_schema(schema)
     validator = Draft202012Validator(schema)
     validator.validate(example)
-    require(example["record_kind"] == "illustrative_example", "Example must remain illustrative")
-    require(example["execution"]["state"] == "not_run", "Example must not claim execution")
-    require(not example["semantic"]["observed_events"], "Example has no real observations")
-    require(example["semantic"]["independent_origin_count"] == 0, "No source consensus exists")
-    for review in example["reviews"].values():
-        require(review["status"] == "not_run", "Example reviews must remain unperformed")
-    occurrence = example["occurrence"]["ref"]
-    require(example["source_pose"]["source_occurrence_ref"] == occurrence, "Pose parent mismatch")
-    require(example["canonical_visual"]["source_occurrence_ref"] == occurrence, "Visual parent mismatch")
-    require(example["canonical_visual"]["eventset_ref"] == example["semantic"]["eventset_ref"], "Event revision mismatch")
-    require(example["alignment"]["visual_ref"] == example["canonical_visual"]["ref"], "Alignment parent mismatch")
-    start, end = example["occurrence"]["core_range_us"]
-    before, after = example["occurrence"]["context_range_us"]
-    require(0 <= before <= start < end <= after, "Invalid example ranges")
+    require(example["record_kind"] == "illustrative_example", "Sample must be marked illustrative")
 
-    def reject(name: str, mutation) -> None:
-        invalid = copy.deepcopy(example)
-        mutation(invalid)
-        require(not validator.is_valid(invalid), f"Invalid record accepted: {name}")
+    # Exercise an executed record with synthetic identifiers and file metadata.
+    # Neither fixture refers to a real file, download, or model job.
+    completed = copy.deepcopy(example)
+    digest = "0" * 64
+    source_media = {
+        "path": "media/sources/test/source.mp4", "sha256": digest, "bytes": 100,
+        "duration_ms": 3000, "width": 1080, "height": 1920, "frame_rate": "24/1",
+        "video_codec": "h264", "audio_codec": "aac",
+    }
+    completed["record_kind"] = "run"
+    completed["source"].update(
+        download_status="downloaded", download_method="yt-dlp",
+        sidecar_path="media/sources/test/source.json", media=source_media,
+    )
+    completed["decision"].update(
+        status="decided", core_ms={"start": 0, "end": 3000},
+        framing="half_body", performers="single", performer_count=1,
+        evidence_ms=[0, 1500, 2999],
+    )
+    completed["target"] = {
+        "scene_id": "scene-s02-white-grid", "scene_revision": 1,
+        "images": [{
+            "image_id": "example-knee", "revision": 1, "sha256": digest,
+            "path": "standard-assets/framing/example/image.png", "review_status": "viewed",
+        }],
+        "performer_mapping": [{
+            "performer_ref": "performer-1", "character_id": "example-character",
+            "image_id": "example-knee",
+        }],
+    }
+    completed["workflow"] = {
+        "path": "user/default/workflows/社区精选H3_人物与场景替换_实验/example.json",
+        "sha256": digest, "active_branch": "example",
+        "input_mapping": {"motion_video": "video", "target_images": ["image"], "scene": None, "audio": None},
+        "output_mapping": "video-output",
+    }
+    completed["execution"].update(
+        status="completed", reason=None, receipt_id="example-receipt",
+        inputs_manifest_path="runs/example/input.json",
+    )
+    completed["output"] = {
+        "media": {**source_media, "path": "outputs/example/result.mp4", "audio_codec": None},
+        "audio_treatment": "silent", "warnings": [],
+    }
+    completed["review"].update(status="passed", evidence_paths=["docs/runs/example/review.md"])
+    validator.validate(completed)
 
-    reject("generated source pose", lambda r: r["source_pose"].update(origin_kind="generated"))
-    reject("source pose with generated parent", lambda r: r["source_pose"].update(generated_from_visual={"id": "fake", "revision": 1}))
-    reject("required review bypass", lambda r: r["reviews"]["hand_pose"].update(status="not_applicable"))
-    reject("false approval", lambda r: r["reviews"]["visual"].update(status="passed"))
-    reject("fabricated BPM", lambda r: r["semantic"].update(measured_bpm=120))
-    reject("false present artifact", lambda r: r["canonical_visual"]["output"].update(state="present"))
-    reject("unknown field", lambda r: r.update(pretend_already_generated=True))
-    reject("negative time", lambda r: r["occurrence"].update(core_range_us=[-1, 1]))
-    reject("invalid revision", lambda r: r["action_ref"].update(revision=0))
-
-    def generated_without_parent(record):
-        record["generated_pose_check"] = copy.deepcopy(record["source_pose"])
-        record["generated_pose_check"]["origin_kind"] = "generated"
-    reject("generated pose missing parent", generated_without_parent)
-    return 10
+    cases = (
+        (example, "false review in sample", ("review", "status"), "passed"),
+        (example, "false receipt in sample", ("execution", "receipt_id"), "synthetic-id"),
+        (example, "unsupported platform", ("source", "platform"), "other"),
+        (example, "unknown field", ("unknown_field",), True),
+        (completed, "missing source sidecar", ("source", "sidecar_path"), None),
+        (completed, "missing review evidence", ("review", "evidence_paths"), []),
+        (completed, "missing source observations", ("decision", "evidence_ms"), []),
+        (completed, "wrong multi-performer count", ("decision", "performers"), "multiple"),
+        (completed, "workflow outside required folder", ("workflow", "path"), "other/flow.json"),
+        (completed, "escaping workflow path", ("workflow", "path"), "user/default/workflows/社区精选H3_人物与场景替换_实验/../flow.json"),
+        (completed, "missing input mapping", ("workflow", "input_mapping", "target_images"), []),
+        (completed, "missing receipt", ("execution", "receipt_id"), None),
+        (completed, "missing submitted input record", ("execution", "inputs_manifest_path"), None),
+        (completed, "completed without media", ("output",), None),
+        (completed, "absolute output path", ("output", "media", "path"), "C:/outside/result.mp4"),
+        (completed, "silent record with audio stream", ("output", "media", "audio_codec"), "aac"),
+    )
+    for original, label, path, value in cases:
+        record = copy.deepcopy(original)
+        field = record
+        for key in path[:-1]:
+            field = field[key]
+        field[path[-1]] = value
+        require(not validator.is_valid(record), f"Invalid record accepted: {label}")
+    return len(cases)
 
 
 def validate() -> dict:
     texts = {name: (DOCS / name).read_text(encoding="utf-8") for name in PUBLIC_DOCS}
-    prefix = "(?:" + "|".join(PREFIXES) + ")"
-    requirements = re.findall(r"^\| (" + prefix + r"-\d{2}) \| P[012] \|", texts[MAIN], re.M)
-    require(len(requirements) == len(set(requirements)) == 46, "Expected 46 unique requirements")
-    for name in PREFIXES:
-        group = [item for item in requirements if item.startswith(name + "-")]
-        require(group == [f"{name}-{i:02d}" for i in range(1, len(group) + 1)], f"Nonsequential {name}")
+    requirements = re.findall(r"^\| (R-\d{2}) \|", texts[MAIN], re.M)
+    require(requirements == [f"R-{number:02d}" for number in range(1, 6)], "Expected R-01..05")
     cases = re.findall(r"^\| (TC-\d{2}) \| ([^|]+) \|", texts[ACCEPTANCE], re.M)
-    require([case[0] for case in cases] == [f"TC-{i:02d}" for i in range(1, 30)], "Expected TC-01..29")
+    require([number for number, _ in cases] == [f"TC-{number:02d}" for number in range(1, 11)], "Expected TC-01..10")
     covered: set[str] = set()
-    for case, references in cases:
-        refs = set(re.findall(prefix + r"-\d{2}", references))
-        require(bool(refs) and refs <= set(requirements), f"Unknown requirement in {case}")
-        covered |= refs
+    for case, raw_refs in cases:
+        refs = {ref.strip() for ref in raw_refs.split(",")}
+        require(refs <= set(requirements), f"Unknown requirement in {case}")
+        covered.update(refs)
     require(covered == set(requirements), "Uncovered requirements")
 
     link_count = 0
@@ -110,8 +141,11 @@ def validate() -> dict:
             link_count += 1
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     example = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
-    negatives = check_contract(schema, example)
-    return {"status": "passed", "scope": "public_document_consistency_not_product_testing", "requirements": len(requirements), "planned_acceptance_cases": len(cases), "schema_negative_checks": negatives, "local_links_checked": link_count}
+    return {
+        "status": "passed", "scope": "public_document_and_schema_checks",
+        "requirements": len(requirements), "planned_acceptance_cases": len(cases),
+        "schema_negative_checks": check_contract(schema, example), "local_links_checked": link_count,
+    }
 
 
 if __name__ == "__main__":

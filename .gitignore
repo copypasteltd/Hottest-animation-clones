@@ -19,10 +19,10 @@
 /docs/*
 !/docs/README.md
 !/docs/12-项目需求梳理与实现方案总纲.md
-!/docs/13-双库数据契约与Skill执行规范.md
+!/docs/13-动作迁移运行与交付规范.md
 !/docs/14-实施计划与验收矩阵.md
 !/docs/15-项目路径结构与开源维护规范.md
-!/docs/16-定稿角色SA02与JK03使用约束.md
+!/docs/16-SA02二次元角色使用约束.md
 !/docs/17-S02场景定稿与四张构图母版规范.md
 !/docs/18-开源发布与持续同步规范.md
 !/docs/19-BM01真实角色替换与JK03退役约束.md
@@ -34,11 +34,15 @@
 !/docs/GOVERNANCE.md
 !/docs/THIRD_PARTY_NOTICES.md
 !/docs/templates/
+/docs/templates/*
+!/docs/templates/动作迁移任务与交付模板.md
 !/docs/evidence/
 !/docs/schemas/
+/docs/schemas/*
+!/docs/schemas/motion-transfer-run.schema.json
 !/docs/examples/
 /docs/examples/*
-!/docs/examples/dual-library-record.example.json
+!/docs/examples/motion-transfer-run.example.json
 
 # Local configuration is never a distributable example.
 /configs/*

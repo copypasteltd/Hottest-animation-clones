@@ -1,5 +1,14 @@
 # 变更记录
 
+## 链接到基准白模成片 · Link-to-video baseline v0.4 — 2026-11-20
+
+- 将现行规格收敛为作品链接、下载、取景与人数判断、匹配目标图、4090 H3 人物替换以及成片交付。常规输入只需 Bilibili、X 或抖音链接，下载使用 /ra-video-download。
+- 同步双语 README、人物与 S02 取景规则、运行记录与质检模板。旧双库、骨架、检索、参考包和原下载器方案归入项目本地历史档案。
+- 离线验证通过 5 项需求与 10 项计划验收的映射、16 项 Schema 负例、27 项单元测试、8 张展示图及正式角色锁。三站实物下载、4090 接线及成片验收待按路线执行。
+- Defined the five-step route from a Bilibili, X, or Douyin link to a reviewed S02 video using the designated RTX 4090 H3 workflows.
+- Updated both READMEs, the run record, the acceptance matrix, and the asset rules. Moved superseded dual-library and downloader specifications into the local archive.
+- Offline verification passed for the five requirements, ten planned acceptance cases, sixteen negative schema checks, twenty-seven unit tests, eight display images, and the character lock. Live download, workflow execution, and visual acceptance are pending.
+
 ## Restore explicitly requested README character illustrations — 2026-11-15
 
 - 修正此前将所有人物图排除的错误：按用户明确要求，在中英README直接嵌入SA02／BM01正面基准、两张四视图及F01/F02/F05/F06构图，共8张既有PNG。
@@ -78,4 +87,4 @@
 - 默认不跟踪真实媒体、模型、设备记录、历史实验脚本和生成产物。
 - 使用MIT许可原创代码/文档，第三方素材、模型和数据保持独立权利边界。
 
-当前版本仍是仓库基础建设，不表示已实现通用源骨架推理、标准动作视频生产、双库应用或提炼skill；软件包未发行。用户已授权指定GitHub仓库同步，实际push/CI以远端状态和执行回执为准。
+这一时期交付了仓库维护基础。v0.3 的模型推理、动作库与提炼流程仍为当时的设计目标。软件包尚未发行。

@@ -1,19 +1,27 @@
-# Portable example only. Copy to project.local.toml (ignored) for real settings.
+# Portable design example. Copy to the ignored project.local.toml for local settings.
 [project]
 root = "."
 document_root = "docs"
 
 [paths]
 sources = "media/sources"
-catalog = "catalog"
 standard_assets = "standard-assets"
-action_assets = "assets"
 workflows = "workflows"
-models = "models"
 runs = "runs"
-indexes = "indexes"
-exports = "exports"
+review_notes = "docs/runs"
 outputs = "outputs"
+
+[source]
+downloader = "ra-video-download"
+platforms = ["bilibili", "x", "douyin"]
+
+[target]
+scene_id = "scene-s02-white-grid"
+# Set the desired character preset (SA02 or BM01) in local settings.
+
+[workflow]
+# Relative to the designated 4090 ComfyUI root.
+workflow_directory = "user/default/workflows/社区精选H3_人物与场景替换_实验"
 
 [execution]
 mode = "local"
@@ -22,11 +30,6 @@ allow_remote_generation = false
 allow_model_download = false
 
 [secrets]
-# Resolve values at runtime; do not put actual credentials in a TOML file.
+# Reference environment variable names rather than credential values.
 remote_endpoint_env = "AI_MOTION_REMOTE_ENDPOINT"
 remote_token_env = "AI_MOTION_REMOTE_TOKEN"
-
-[scope]
-source_pose = "2d_body_and_both_hands"
-canonical_visual = "planned"
-three_dimensional_retargeting = false

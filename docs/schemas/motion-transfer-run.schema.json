@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Motion-transfer run record",
+  "description": "A project-local record for one source, one execution interval, and one attempt. The runtime contract defines cross-field time, ownership, and media checks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_kind",
+    "run_id",
+    "item_id",
+    "source",
+    "decision",
+    "target",
+    "workflow",
+    "execution",
+    "output",
+    "review"
+  ],
+  "properties": {
+    "schema_version": {"const":"motion-transfer-run/1.0"},
+    "record_kind": {"enum":["illustrative_example","run"]},
+    "run_id": {"type":"string","minLength":1},
+    "item_id": {"type":"string","minLength":1},
+    "source": {"$ref":"#/$defs/source"},
+    "decision": {"$ref":"#/$defs/decision"},
+    "target": {"anyOf":[{"$ref":"#/$defs/target"},{"type":"null"}]},
+    "workflow": {"anyOf":[{"$ref":"#/$defs/workflow"},{"type":"null"}]},
+    "execution": {"$ref":"#/$defs/execution"},
+    "output": {"anyOf":[{"$ref":"#/$defs/output"},{"type":"null"}]},
+    "review": {"$ref":"#/$defs/review"}
+  },
+  "allOf": [
+    {
+      "if": {"properties":{"execution":{"properties":{"status":{"enum":["running","completed"]}}}}},
+      "then": {
+        "properties": {
+          "source": {"properties":{"download_status":{"const":"downloaded"}}},
+          "decision": {"properties":{"status":{"const":"decided"}}},
+          "target": {"type":"object"},
+          "workflow": {"type":"object"},
+          "execution": {
+            "properties": {
+              "receipt_id": {"type":"string","minLength":1},
+              "inputs_manifest_path": {"$ref":"#/$defs/relativePath"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties":{"execution":{"properties":{"status":{"const":"completed"}}}}},
+      "then": {"properties":{"output":{"type":"object"}}},
+      "else": {"properties":{"output":{"type":"null"}}}
+    },
+    {
+      "if": {"properties":{"review":{"properties":{"status":{"const":"passed"}}}}},
+      "then": {
+        "properties": {
+          "execution": {"properties":{"status":{"const":"completed"}}},
+          "review": {"properties":{"evidence_paths":{"minItems":1}}}
+        }
+      }
+    },
+    {
+      "if": {"properties":{"record_kind":{"const":"illustrative_example"}}},
+      "then": {
+        "properties": {
+          "source": {
+            "properties": {
+              "download_status": {"const":"not_run"},
+              "download_method": {"type":"null"},
+              "sidecar_path": {"type":"null"}
+            }
+          },
+          "decision": {
+            "properties": {
+              "status": {"const":"planned"},
+              "core_ms": {"type":"null"},
+              "visible_parts": {"maxItems":0},
+              "evidence_ms": {"maxItems":0}
+            }
+          },
+          "target": {"type":"null"},
+          "workflow": {"type":"null"},
+          "execution": {
+            "properties": {
+              "status": {"const":"planned"},
+              "receipt_id": {"type":"null"},
+              "inputs_manifest_path": {"type":"null"}
+            }
+          },
+          "review": {"properties":{"status":{"const":"not_run"},"evidence_paths":{"maxItems":0}}}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "relativePath": {
+      "type": "string",
+      "pattern": "^(?!(?:[^/]+/)*\\.{1,2}(?:/|$))[^/\\\\:\\u0000-\\u001F]+(?:/[^/\\\\:\\u0000-\\u001F]+)*(?![\\s\\S])"
+    },
+    "sha256": {"type":"string","pattern":"^[a-f0-9]{64}(?![\\s\\S])"},
+    "media": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "bytes",
+        "duration_ms",
+        "width",
+        "height",
+        "frame_rate",
+        "video_codec",
+        "audio_codec"
+      ],
+      "properties": {
+        "path": {"$ref":"#/$defs/relativePath"},
+        "sha256": {"$ref":"#/$defs/sha256"},
+        "bytes": {"type":"integer","minimum":1},
+        "duration_ms": {"type":"integer","minimum":1},
+        "width": {"type":"integer","minimum":1},
+        "height": {"type":"integer","minimum":1},
+        "frame_rate": {"type":"string","pattern":"^[1-9][0-9]*/[1-9][0-9]*(?![\\s\\S])"},
+        "video_codec": {"type":"string","minLength":1},
+        "audio_codec": {"anyOf":[{"type":"string","minLength":1},{"type":"null"}]}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform","source_id","download_status","download_method","media","sidecar_path"],
+      "properties": {
+        "platform": {"enum":["bilibili","x","douyin"]},
+        "source_id": {"type":"string","minLength":1},
+        "download_status": {"enum":["not_run","downloaded","blocked","failed","unknown"]},
+        "download_method": {"anyOf":[{"type":"string","minLength":1},{"type":"null"}]},
+        "media": {"anyOf":[{"$ref":"#/$defs/media"},{"type":"null"}]},
+        "sidecar_path": {"anyOf":[{"$ref":"#/$defs/relativePath"},{"type":"null"}]}
+      },
+      "if": {"properties":{"download_status":{"const":"downloaded"}}},
+      "then": {
+        "properties": {
+          "download_method": {"type":"string","minLength":1},
+          "sidecar_path": {"$ref":"#/$defs/relativePath"},
+          "media": {"type":"object"}
+        }
+      },
+      "else": {"properties":{"media":{"type":"null"}}}
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "core_ms",
+        "framing",
+        "performers",
+        "performer_count",
+        "posture",
+        "visible_parts",
+        "evidence_ms",
+        "reason",
+        "limits"
+      ],
+      "properties": {
+        "status": {"enum":["planned","needs_review","decided"]},
+        "core_ms": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["start","end"],
+              "properties": {"start":{"type":"integer","minimum":0},"end":{"type":"integer","minimum":1}}
+            },
+            {"type":"null"}
+          ]
+        },
+        "framing": {"anyOf":[{"enum":["half_body","full_body"]},{"type":"null"}]},
+        "performers": {"anyOf":[{"enum":["single","multiple"]},{"type":"null"}]},
+        "performer_count": {"anyOf":[{"type":"integer","minimum":1},{"type":"null"}]},
+        "posture": {"anyOf":[{"type":"string","minLength":1},{"type":"null"}]},
+        "visible_parts": {"type":"array","items":{"type":"string","minLength":1}},
+        "evidence_ms": {"type":"array","uniqueItems":true,"items":{"type":"integer","minimum":0}},
+        "reason": {"type":"string","minLength":1},
+        "limits": {"type":"array","items":{"type":"string","minLength":1}}
+      },
+      "allOf": [
+        {
+          "if": {"properties":{"status":{"const":"decided"}}},
+          "then": {
+            "properties": {
+              "core_ms": {"type":"object"},
+              "framing": {"type":"string"},
+              "performers": {"type":"string"},
+              "performer_count": {"type":"integer","minimum":1},
+              "posture": {"type":"string","minLength":1},
+              "evidence_ms": {"minItems":1}
+            }
+          }
+        },
+        {
+          "if": {"properties":{"performers":{"const":"single"}}},
+          "then": {"properties":{"performer_count":{"const":1}}}
+        },
+        {
+          "if": {"properties":{"performers":{"const":"multiple"}}},
+          "then": {"properties":{"performer_count":{"type":"integer","minimum":2}}}
+        }
+      ]
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scene_id","scene_revision","images","performer_mapping"],
+      "properties": {
+        "scene_id": {"type":"string","minLength":1},
+        "scene_revision": {"type":"integer","minimum":1},
+        "images": {"type":"array","minItems":1,"items":{"$ref":"#/$defs/targetImage"}},
+        "performer_mapping": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["performer_ref","character_id","image_id"],
+            "properties": {
+              "performer_ref": {"type":"string","minLength":1},
+              "character_id": {"type":"string","minLength":1},
+              "image_id": {"type":"string","minLength":1}
+            }
+          }
+        }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path","sha256","active_branch","input_mapping","output_mapping"],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/relativePath",
+          "pattern": "^user/default/workflows/社区精选H3_人物与场景替换_实验/.+\\.json(?![\\s\\S])"
+        },
+        "sha256": {"$ref":"#/$defs/sha256"},
+        "active_branch": {"type":"string","minLength":1},
+        "input_mapping": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["motion_video","target_images","scene","audio"],
+          "properties": {
+            "motion_video": {"type":"string","minLength":1},
+            "target_images": {"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}},
+            "scene": {"anyOf":[{"type":"string","minLength":1},{"type":"null"}]},
+            "audio": {"anyOf":[{"type":"string","minLength":1},{"type":"null"}]}
+          }
+        },
+        "output_mapping": {"type":"string","minLength":1}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempt_id","status","reason","receipt_id","inputs_manifest_path"],
+      "properties": {
+        "attempt_id": {"type":"string","minLength":1},
+        "status": {"enum":["planned","blocked","running","unknown","failed","completed"]},
+        "reason": {"anyOf":[{"type":"string","minLength":1},{"type":"null"}]},
+        "receipt_id": {"anyOf":[{"type":"string","minLength":1},{"type":"null"}]},
+        "inputs_manifest_path": {"anyOf":[{"$ref":"#/$defs/relativePath"},{"type":"null"}]}
+      }
+    },
+    "text": {"type":"string","minLength":1},
+    "targetImage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["image_id","revision","path","sha256","review_status"],
+      "properties": {
+        "image_id": {"type":"string","minLength":1},
+        "revision": {"type":"integer","minimum":1},
+        "path": {"$ref":"#/$defs/relativePath"},
+        "sha256": {"$ref":"#/$defs/sha256"},
+        "review_status": {"enum":["viewed","visually_checked_pending_confirmation","user_approved"]}
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["media","audio_treatment","warnings"],
+      "properties": {
+        "media": {"$ref":"#/$defs/media"},
+        "audio_treatment": {"enum":["source","generated","silent","mixed"]},
+        "warnings": {"type":"array","items":{"type":"string","minLength":1}}
+      },
+      "if": {"properties":{"audio_treatment":{"const":"silent"}}},
+      "then": {"properties":{"media":{"properties":{"audio_codec":{"type":"null"}}}}},
+      "else": {"properties":{"media":{"properties":{"audio_codec":{"type":"string","minLength":1}}}}}
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status","evidence_paths","findings"],
+      "properties": {
+        "status": {"enum":["not_run","needs_review","failed","passed"]},
+        "evidence_paths": {"type":"array","uniqueItems":true,"items":{"$ref":"#/$defs/relativePath"}},
+        "findings": {"type":"array","items":{"type":"string","minLength":1}}
+      }
+    }
+  }
+}
