@@ -1,22 +1,19 @@
 # AI 动作迁移库 · 文档导航
 
-[中文 README](<../README.zh-CN.md>) · [English README](<../README.md>) · [English operating guide](<en/solution-and-usage.md>) · [更新说明](<CHANGELOG.md>)
+[中文 README](<../README.zh-CN.md>) · [English README](<../README.md>) · [English operating guide](<en/solution-and-usage.md>) · [变更记录](<CHANGELOG.md>)
 
-## 当前规格
-
-| 要查什么 | 文档 |
+| 主题 | 查阅入口 |
 | --- | --- |
-| Bilibili／X／抖音链接到基准白模成片 | [产品需求 v0.4](<12-项目需求梳理与实现方案总纲.md>) |
-| 下载、判断、选图、4090 接线、成片交付 | [运行与交付规范](<13-动作迁移运行与交付规范.md>) |
-| 首条闭环、路线验证及成片质量 | [实施与验收](<14-实施计划与验收矩阵.md>) |
-| 执行预览、回执与复核 | [任务与交付模板](<templates/动作迁移任务与交付模板.md>)、[运行记录 Schema](<schemas/motion-transfer-run.schema.json>)、[虚构记录](<examples/motion-transfer-run.example.json>) |
-| 静态角色、场景和构图 | [SA02](<16-SA02二次元角色使用约束.md>)、[S02 与四张构图](<17-S02场景定稿与四张构图母版规范.md>)、[BM01 与 JK03 退役](<19-BM01真实角色替换与JK03退役约束.md>) |
-| 曾经跑过的 H3 样片 | [历史试验摘要](<evidence/H3基础用例公开摘要.md>) |
+| 产品 | 作品链接、五步需求和成片范围。[产品需求](<product/requirements.md>) · [当前进度](<product/status.md>) |
+| 执行 | 下载、判断、选图、提交和交付。[执行手册](<operations/runbook.md>) · [4090 接线](<operations/h3-4090.md>) · [运行记录](<operations/run-record.md>) |
+| 资产 | 目标图匹配、正式文件核验和人物限制。[S02 与目标图](<assets/reference-images.md>) · [SA02](<assets/sa02.md>) · [BM01](<assets/bm01.md>) |
+| 验收 | 按需求、输入和路线核验样片。[计划用例与成片判定](<verification/acceptance.md>) |
+| 维护 | 工作区、公开范围和变更同步。[项目目录](<maintenance/workspace.md>) · [发布规范](<maintenance/publication.md>) · [贡献指南](<CONTRIBUTING.md>) · [治理规则](<GOVERNANCE.md>) · [安全与隐私](<SECURITY.md>) · [第三方材料](<THIRD_PARTY_NOTICES.md>) |
 
-## 目录和维护
+## 随手查阅
 
-- 工作区范围、正式素材、回执、成片目录与现有检查见[项目布局](<15-项目路径结构与开源维护规范.md>)。
-- 公开仓收录项目原创文档、维护代码、虚构数据和八张精确授权的角色展示副本，媒体与正式资产另存本地。[发布规范](<18-开源发布与持续同步规范.md>) · [展示清单](<images/characters/manifest.json>) · [第三方材料](<THIRD_PARTY_NOTICES.md>)
-- 提交及持续同步按[项目维护约束](<../AGENTS.md>)、[贡献指南](<CONTRIBUTING.md>)、[治理规则](<GOVERNANCE.md>)和[安全规范](<SECURITY.md>)执行。
+- 记录一次任务时使用填写模板，机器记录按 Schema 核对字段及状态。[任务与交付模板](<templates/动作迁移任务与交付模板.md>) · [运行记录 Schema](<schemas/motion-transfer-run.schema.json>) · [未执行的虚构样例](<examples/motion-transfer-run.example.json>)
+- 查看已授权展示的静态参考，按清单核对批准状态和图片身份。[展示清单](<images/characters/manifest.json>)
+- 回查历史实验和早期方案的变更过程。私有档案、设备定位说明和运行证据的位置见工作区说明。[H3 历史摘要](<evidence/H3基础用例公开摘要.md>) · [本地资料位置](<maintenance/workspace.md#layout>)
 
-v0.4 以用户最新复述的五步流程为现行基线。历次规格、研究和原批次方案随本地归档保留，相关的真实图像与运行记录可按原版本追溯。
+旧编号页保留主题跳转和原有小节入口。按上表的主题页维护现行规则。

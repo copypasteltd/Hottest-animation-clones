@@ -1,30 +1,20 @@
 # Motion-transfer operating guide
 
-Requirements baseline v0.4 defines a link-to-video operation. A configured run takes a Bilibili, X, or Douyin work link and delivers a checked motion-transfer video with a project character in the standard white S02 scene. [Product requirements](<../12-项目需求梳理与实现方案总纲.md>) · [Runtime contract](<../13-动作迁移运行与交付规范.md>)
+The v0.4 specification describes how a Bilibili, X, or Douyin work link becomes a reviewed MP4 of a reference character performing the source motion in the white S02 scene. The project configures the character and workflow before routine link-only runs. The status page records completed checks and outstanding route tests. [Requirements](<../product/requirements.md>) · [Current status](<../product/status.md>)
 
-## Download and inspect the source
+## Prepare a route
 
-Pass the supplied work link to `/ra-video-download` with its output directory under the project's private source area. Preserve the selected Bilibili part or the specific video in a post. Keep the untouched file, fingerprint, metadata sidecars, and actual media probe. A batch gives each input its own result, including duplicates, unsupported access, and download failures.
+Confirm the configured character, posture, shot framing, and performer count. The standing single-performer references are SA02 F01/F02 and BM01 F05/F06 for half-body/full-body output. Multi-performer routes need a matching set of target images and a verified correspondence for each performer. [Target images and approvals](<../assets/reference-images.md#target-frames>)
 
-Identify the continuous performance interval and record key action times. Use closer review for fast hands, occlusion, and changes in performers or shots. Record observed source framing and the chosen output framing separately.
+On the designated RTX 4090 ComfyUI host, verify the H3 workflow in the configured directory, its active branch, its executable graph, and the actual video and image inputs. Check a matching sample for media integrity, character, scene, and motion before enabling the route. [H3 connection guide](<../operations/h3-4090.md>)
 
-| Choice | How to decide |
-| --- | --- |
-| Half-body | Key movements are in the torso, shoulders, arms, or hands. Waist-up footage can provide evidence for these movements while the target uses a knee-length composition. |
-| Full-body | Steps, turns, travel, or weight shifts matter to the action. Check the necessary body parts and contact with the ground during key events. |
-| Single performer | One person performs the relevant action. A bystander can be recorded separately. |
-| Multiple performers | More than one person contributes to the motion or interaction. Keep the participants, corresponding identities, and relevant spacing. |
+## Process a link
 
-Standing is the current posture preset. A seated preset can use either framing. A route needs reviewed evidence if the required motion or participants are unclear. [Run and delivery template](<../templates/动作迁移任务与交付模板.md>)
+1. Use `/ra-video-download` to fetch the selected work or part. Check the actual media and retain the untouched video and source metadata in the project’s private source area. [Execution runbook](<../operations/runbook.md>)
+2. Review the continuous performance and its key moments. Choose half-body framing for torso and hand movements or full-body framing when steps, ground contact, turns, or travel determine the action. Count the performers who contribute to the action or interaction. Record source visibility separately from the intended framing. [Routing criteria](<../operations/runbook.md#routing>)
+3. Select the matching versioned target images and record the workflow inputs. Follow the original submission receipt through queue, history, and retrieval. If the submission result is unknown, reconcile that attempt before deciding on another. [Target selection](<../operations/runbook.md#target-selection>) · [Execution and recovery](<../operations/h3-4090.md#submission>)
+4. Check the retrieved video, then review identity, scene, framing, key motion, timing, and audio as required by the route. Deliver the reviewed MP4 with its source ID, processed interval, and any limits. [Delivery checks](<../verification/acceptance.md#delivery-review>) · [Run record](<../operations/run-record.md>)
 
-## Choose a target and run the workflow
+## Maintain the checkout
 
-Set the preferred project character at setup. For S02 standing single-person output, select F01 or F02 for SA02 and F05 or F06 for BM01, in half-body and full-body order. Check the official role registry, framing registry, image hash, and per-image review status. BM01 uses its approved four-view sheet to establish identity. The SA02 four-view candidate remains pending. Multi-person inputs require a corresponding group target or verified mapping of individual images. [S02 composition rules](<../17-S02场景定稿与四张构图母版规范.md>)
-
-Use the H3 workflows already under `user/default/workflows/社区精选H3_人物与场景替换_实验` on the designated RTX 4090 ComfyUI host. Verify the workflow file and hash, active branch, reference video and image connections, actual API graph, duration and format handling, and output mapping. Test a combined character and S02 composition for an eligible single-reference branch. Verify separate scene and subject inputs and multi-person mappings on their respective routes. Enable routine runs after the matching sample passes review. Record the returned submission ID and follow the same attempt through queue, history, and output retrieval. [Workflow and execution contract](<../13-动作迁移运行与交付规范.md#3-4090-工作流>)
-
-## Verify and deliver
-
-Retrieve the actual video, check decoding and duration, and record the media properties, audio treatment, and SHA256. Review the key events for order, timing, required limbs or interaction, identity, and scene and frame coverage. A finished delivery requires both the media checks and visual review to pass for the declared scope. Report blocked or failed items individually. Keep private source URLs and raw source metadata with the source sidecars. [Acceptance cases](<../14-实施计划与验收矩阵.md>) · [Illustrative run record](<../examples/motion-transfer-run.example.json>)
-
-Local maintenance commands cover documentation and static asset identity. The previous H3 run is evidence for a single historical clip. Check the current route and production status in the repository overview. [H3 historical evidence](<../evidence/H3基础用例公开摘要.md>) · [Repository overview](<../../README.md>)
+Use the workspace guide for local paths, offline checks, and formal character verification. The publication policy defines the material tracked in Git. [Workspace guide](<../maintenance/workspace.md>) · [Publication policy](<../maintenance/publication.md>)

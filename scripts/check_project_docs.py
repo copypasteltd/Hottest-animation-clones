@@ -6,26 +6,12 @@ import json
 from pathlib import Path
 import re
 import sys
-from urllib.parse import unquote
 
 from jsonschema import Draft202012Validator
 
+from documentation import ACCEPTANCE_PATH, EXAMPLE_PATH, REQUIREMENTS_PATH, SCHEMA_PATH, read_public_markdown, validate_local_links
+
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ROOT / "docs"
-MAIN = "12-项目需求梳理与实现方案总纲.md"
-CONTRACT = "13-动作迁移运行与交付规范.md"
-ACCEPTANCE = "14-实施计划与验收矩阵.md"
-PUBLIC_DOCS = (
-    "README.md", MAIN, CONTRACT, ACCEPTANCE,
-    "15-项目路径结构与开源维护规范.md", "16-SA02二次元角色使用约束.md",
-    "17-S02场景定稿与四张构图母版规范.md", "18-开源发布与持续同步规范.md",
-    "19-BM01真实角色替换与JK03退役约束.md", "en/solution-and-usage.md",
-    "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md", "GOVERNANCE.md",
-    "THIRD_PARTY_NOTICES.md", "templates/动作迁移任务与交付模板.md",
-    "evidence/H3基础用例公开摘要.md",
-)
-SCHEMA_PATH = DOCS / "schemas/motion-transfer-run.schema.json"
-EXAMPLE_PATH = DOCS / "examples/motion-transfer-run.example.json"
 
 
 def require(condition: bool, message: str) -> None:
@@ -115,10 +101,10 @@ def check_contract(schema: dict, example: dict) -> int:
 
 
 def validate() -> dict:
-    texts = {name: (DOCS / name).read_text(encoding="utf-8") for name in PUBLIC_DOCS}
-    requirements = re.findall(r"^\| (R-\d{2}) \|", texts[MAIN], re.M)
+    texts = read_public_markdown(ROOT)
+    requirements = re.findall(r"^\| (R-\d{2}) \|", texts[REQUIREMENTS_PATH], re.M)
     require(requirements == [f"R-{number:02d}" for number in range(1, 6)], "Expected R-01..05")
-    cases = re.findall(r"^\| (TC-\d{2}) \| ([^|]+) \|", texts[ACCEPTANCE], re.M)
+    cases = re.findall(r"^\| (TC-\d{2}) \| ([^|]+) \|", texts[ACCEPTANCE_PATH], re.M)
     require([number for number, _ in cases] == [f"TC-{number:02d}" for number in range(1, 11)], "Expected TC-01..10")
     covered: set[str] = set()
     for case, raw_refs in cases:
@@ -127,24 +113,14 @@ def validate() -> dict:
         covered.update(refs)
     require(covered == set(requirements), "Uncovered requirements")
 
-    link_count = 0
-    for name, text in texts.items():
-        require(text.count("```") % 2 == 0, f"Unbalanced code fence: {name}")
-        for match in re.finditer(r"!?\[[^\]\n]*\]\(([^)\n]+)\)", text):
-            target = match[1].strip().strip("<>")
-            if target.startswith(("http://", "https://", "mailto:", "#")):
-                continue
-            relative = unquote(target.split("#", 1)[0])
-            require(not re.match(r"^[A-Za-z]:", relative), f"Machine-specific link: {name}")
-            path = ((DOCS / name).parent / relative).resolve()
-            require(path.is_relative_to(ROOT.resolve()) and path.is_file(), f"Missing local link: {name} -> {target}")
-            link_count += 1
-    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
-    example = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+    link_count = validate_local_links(ROOT, texts)
+    schema = json.loads((ROOT / SCHEMA_PATH).read_text(encoding="utf-8"))
+    example = json.loads((ROOT / EXAMPLE_PATH).read_text(encoding="utf-8"))
     return {
         "status": "passed", "scope": "public_document_and_schema_checks",
         "requirements": len(requirements), "planned_acceptance_cases": len(cases),
         "schema_negative_checks": check_contract(schema, example), "local_links_checked": link_count,
+        "public_markdown_pages": len(texts),
     }
 
 

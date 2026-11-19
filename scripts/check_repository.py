@@ -13,21 +13,9 @@ import subprocess
 import sys
 
 from check_readme_images import MANIFEST_PATH, PUBLIC_IMAGES, readme_images, validate_manifest, validate_payload
+from documentation import PUBLIC_DOC_PATHS
 
 ROOT = Path(__file__).resolve().parents[1]
-DOC_NAMES = {
-    "README.md", "12-项目需求梳理与实现方案总纲.md",
-    "13-动作迁移运行与交付规范.md", "14-实施计划与验收矩阵.md",
-    "15-项目路径结构与开源维护规范.md", "16-SA02二次元角色使用约束.md",
-    "17-S02场景定稿与四张构图母版规范.md", "18-开源发布与持续同步规范.md", "CONTRIBUTING.md", "SECURITY.md",
-    "CHANGELOG.md", "GOVERNANCE.md", "THIRD_PARTY_NOTICES.md",
-    "19-BM01真实角色替换与JK03退役约束.md",
-}
-PUBLIC_RUN_CONTRACT = {
-    "docs/examples/motion-transfer-run.example.json",
-    "docs/schemas/motion-transfer-run.schema.json",
-    "docs/templates/动作迁移任务与交付模板.md",
-}
 ROOT_FILES = {".gitignore", ".gitattributes", ".editorconfig", "LICENSE", "pyproject.toml", "README.md", "README.zh-CN.md", "AGENTS.md"}
 BINARY_EXTENSIONS = {
     ".mp4", ".mov", ".mkv", ".avi", ".webm", ".wav", ".mp3", ".png", ".jpg", ".jpeg",
@@ -52,11 +40,7 @@ def allowed_path(name: str) -> bool:
     if parts[0] == ".github":
         return path.suffix in {".yml", ".yaml"} or name == ".github/PULL_REQUEST_TEMPLATE.md"
     if parts[0] == "docs":
-        if len(parts) == 2:
-            return parts[1] in DOC_NAMES
-        if parts[1] in {"evidence", "en"}:
-            return path.suffix in {".md", ".json"}
-        return name in PUBLIC_RUN_CONTRACT
+        return name in PUBLIC_DOC_PATHS
     return False
 
 

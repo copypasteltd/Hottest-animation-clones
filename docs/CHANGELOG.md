@@ -1,5 +1,14 @@
 # 变更记录
 
+## 主题文档重构 · Documentation reorganization — 2026-11-20
+
+- 将 v0.4 规格组织为产品、执行、资产、验收和维护五个主题。双语 README 指向对应主题，旧编号路径保留原有小节的跳转入口。
+- 集中记录三站与各 S02 路线的验收进度、4090 接线和原任务找回规则，以及角色和构图批准状态。本地设备说明、早期规格及运行证据从私有索引查阅。
+- 已通过 29 项离线单元测试、公开文档链接和锚点检查、运行记录 Schema、八张展示图核验及本地角色锁。三站现行接入与 4090 成片的样片验收待执行。
+- Organized the v0.4 documentation by product, operations, assets, verification, and maintenance. Updated both README entries and preserved section links in the numbered pages.
+- Consolidated route status, H3 workflow verification and recovery, asset approvals, and the private evidence index.
+- Passed 29 offline unit tests, public link and anchor checks, run-record schema checks, validation of all eight display images, and the local character lock. Sample acceptance for platform integration and RTX 4090 delivery is pending.
+
 ## 链接到基准白模成片 · Link-to-video baseline v0.4 — 2026-11-20
 
 - 将现行规格收敛为作品链接、下载、取景与人数判断、匹配目标图、4090 H3 人物替换以及成片交付。常规输入只需 Bilibili、X 或抖音链接，下载使用 /ra-video-download。

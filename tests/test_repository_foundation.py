@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from check_project_docs import validate
 from check_release import validate as validate_release
 from check_repository import allowed_path, scan_text
+from documentation import TOPIC_PAGES, read_public_markdown, validate_local_links
 from bootstrap_workspace import DIRECTORIES
 from ai_motion_library import __version__
 
@@ -64,6 +65,32 @@ class FoundationTests(unittest.TestCase):
             "docs/templates/动作采集与入库模板.md",
         ):
             self.assertFalse(allowed_path(path), path)
+
+    def test_topic_documents_and_numbered_section_links(self):
+        pages = read_public_markdown(ROOT)
+        for path in TOPIC_PAGES:
+            with self.subTest(path=path):
+                self.assertTrue(allowed_path(path))
+                self.assertIn(path.removeprefix("docs/"), pages["docs/README.md"])
+        pages["README.md"] = (
+            "[旧版工作流小节](<docs/13-动作迁移运行与交付规范.md#3-4090-工作流>)\n"
+            "[现行小节](<docs/operations/h3-4090.md#submission>)\n"
+            "```text\n[仅作示例](missing.md)\n```\n"
+        )
+        self.assertEqual(validate_local_links(ROOT, pages, ("README.md",)), 2)
+
+    def test_document_links_reject_missing_anchors_and_nonpublic_paths(self):
+        pages = read_public_markdown(ROOT)
+        for target, message in (
+            ("docs/operations/h3-4090.md#absent", "Missing heading or anchor"),
+            ("docs/local/README.md", "Missing or nonpublic link"),
+        ):
+            with self.subTest(target=target):
+                pages["README.md"] = f"[链接](<{target}>)"
+                with self.assertRaisesRegex(ValueError, message):
+                    validate_local_links(ROOT, pages, ("README.md",))
+        self.assertFalse(allowed_path("docs/operations/private-notes.md"))
+        self.assertFalse(allowed_path("docs/assets/unreviewed.json"))
 
     def test_credential_guard_detects_synthetic_value(self):
         synthetic = "Bearer " + "Z" * 32

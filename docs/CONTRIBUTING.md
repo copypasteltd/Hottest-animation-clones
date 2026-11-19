@@ -1,38 +1,8 @@
 # 贡献指南
 
-项目围绕作品链接到基准白模成片的流程维护需求、运行结构和工具。当前可运行的是本地维护脚本，生产编排仍待实现。参见 [项目入口](README.md)和 [路径规范](15-项目路径结构与开源维护规范.md)。
+1. 在 Issue 或 PR 里写明用户问题、改动范围、相关需求 ID 与可查验的结果。[产品需求](<product/requirements.md>) · [验收用例](<verification/acceptance.md#acceptance-cases>)
+2. 修改对应主题页。影响用户入口的变更同步两份根 README 和英文使用说明。改动运行字段时一起核对契约、Schema、样例和模板。[文档导航](<README.md>) · [运行记录](<operations/run-record.md>)
+3. 本地运行文档、发布和单元测试，再按准确路径暂存并检查索引。提交说明写明离线检查结果、模型实测覆盖及兼容性影响。[离线维护命令](<maintenance/workspace.md#offline-checks>)
+4. 在变更记录注明版本和影响。按用户授权同步 GitHub，核对远端提交。[变更记录](<CHANGELOG.md>) · [同步流程](<maintenance/publication.md#sync>)
 
-## 变更流程
-
-1. Issue说明用户问题、范围/非目标、涉及的需求ID和可观察验收。
-2. 新分支采用feat/、fix/、docs/或chore/前缀；除本篇规定的8个README显示副本外，不把原始参考照片、源舞视频、私有资产/注册表、设备配置等放入PR。
-3. 一并更新相关需求、运行契约、虚构示例和验收记录。影响路线或输入映射的改动应记录版本、具体证据及对已有任务的影响。
-4. 本地运行文档/Schema检查和单元测试，显式暂存本次改动，运行索引保护检查。
-5. PR写明实测与未测项、兼容影响和第三方来源。不要把计划TC写成已跑模型验证。
-6. 根据用户持续同步要求，相关变更同时更新根中英README、CHANGELOG与相关说明，经检查后正常提交/推送指定origin；若用户要求先审阅则暂不推送。同步授权不允许扩展功能范围，见[发布与持续同步规范](18-开源发布与持续同步规范.md)。
-
-```bash
-python -m pip install -e ".[dev]"
-python scripts/check_project_docs.py
-python scripts/check_release.py
-python -m unittest discover -s tests -v
-python scripts/check_repository.py
-```
-
-最后一条要求Git索引包含已审阅源码。在CI中完整checkout后的索引同样可检查。
-
-## 数据与文档规则
-
-- 详细说明、提示词、模板和运行报告在docs内；根中英README与AGENTS为用户明确要求的公开入口例外。机器数据/媒体在项目内对应忽略目录。
-- 虚构样例保持未执行状态，不上传人脸视频、原始3张参考照片、私有训练素材、歌词/音乐、权重、其他候选、已删除JK03、真实注册表或未核权利工作流。
-- 本次用户明确要求的唯一静态展示例外是`docs/images/characters/`中的8个PNG及`manifest.json`：`sa02-front-v1.png`、`sa02-four-view-candidate-v1.png`、`sa02-s02-knee-v1.png`、`sa02-s02-full-v1.png`、`bm01-front-v1.png`、`bm01-four-view-v1.png`、`bm01-s02-knee-v1.png`、`bm01-s02-full-v1.png`。使用既有图的字节一致副本，不重画，不扩成整个媒体目录放行。见[发布范围](18-开源发布与持续同步规范.md)与[展示清单](images/characters/manifest.json)。
-- README图旁必须保留真实状态：SA02根图批准、四视图待确认，BM01四视图批准；F01/F02保留已查看，F05/F06是执行者视觉检查、未逐图用户批准。公开展示不改变current v2、正式角色锁、许可或训练/商用权。
-- 精确PNG签名、尺寸、hash、manifest、Git索引及双语README内嵌引用需一致，按实际检查结果报告。公开克隆含8个显示副本但没有完整私有注册表及正式目录，缺文件时角色锁仍应明确失败，不利用显示图伪造通过。
-- **未经用户明确指示并给出相应要求与约束，不得构建前端开发项。** 网站、交互页面、Dashboard、演示应用和静态预览服务不属于整理README或发布仓库的隐含授权。
-- 新公开目录需要同时更新.gitignore、路径保护脚本和对应测试，不用强制添加绕过。
-- MIT覆盖本项目原创贡献，不自动覆盖外部材料；见[第三方说明](THIRD_PARTY_NOTICES.md)。
-- 按源 ID、目标图、工作流版本和提交回执追踪候选与成片。为未知结果保留核对状态。
-
-## 暂不接受的“完成证明”
-
-交付验收需要实际视频、媒体核验、人物与场景检查、关键动作检查和对应回执。真实运行证据默认本地保存，公开摘要需经过授权和脱敏。[验收计划](14-实施计划与验收矩阵.md)
+原片、正式资产、设备配置和实际回执放在各自的本地目录。公开图例的文件身份、展示授权与审核状态通过发布材料核对。[工作区](<maintenance/workspace.md#layout>) · [公开范围](<maintenance/publication.md#display-assets>) · [第三方材料](<THIRD_PARTY_NOTICES.md>)
