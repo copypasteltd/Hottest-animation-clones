@@ -23,9 +23,13 @@ default_variants = ["SA02", "BM01"]
 [workflow]
 # Relative to the designated 4090 ComfyUI root.
 workflow_directory = "user/default/workflows/社区精选H3_人物与场景替换_实验"
+camera_motion = "follow_source"
 
 [execution]
 mode = "local"
+# Apply after live ComfyUI submission is configured.
+queue_destination = "comfyui"
+source_group_size = 2
 allow_network = false
 allow_remote_generation = false
 allow_model_download = false

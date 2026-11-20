@@ -1,5 +1,14 @@
 # 变更记录
 
+## 双人轮替与队列规则 · Paired assignments and queue handling v0.6 — 2026-11-20
+
+- 首版通过会话收作品链接。双人使用 SA02 与 BM01，第一版按客户指定或随机分配，第二版互换对应。每版保持整片绑定，运镜跟随原片。
+- 沿输入顺序每两条原片编为一组，同一版本相邻入指定 ComfyUI 队列。停止指令覆盖当前批次全部未完成任务。每次生成结果都反馈，取回 MP4 即交付。
+- 运行记录 2.1 增加入队和已确认停止状态。29 项离线单元测试、24 项 Schema 负例及双语文档与展示图检查通过。首条样片链接待提供，指定 4090 的实跑待完成。
+- Use the conversation to collect work links. For two performers, record the requested assignment of SA02 and BM01 or select one at random. Exchange the assignments in the second version and follow the source camera motion.
+- Group two source videos at a time and submit matching variants together to the designated ComfyUI queue. A stop request covers all unfinished work in the current batch. Report each generation result and deliver its MP4 upon retrieval.
+- Run records 2.1 capture queued and confirmed cancellation states. Passed 29 offline unit tests, 24 negative schema checks, and bilingual documentation and display-image checks. The first source link and live RTX 4090 trial are pending.
+
 ## 整片双角色直出 · Whole-video dual output v0.5 — 2026-11-20
 
 - 每条链接选定一个完整参考视频。默认用同一原片分别提交 SA02 和 BM01，按整片取景、人数和姿态选用对应定稿图。动作解析与迁移由 4090 上的 H3 工作流处理。

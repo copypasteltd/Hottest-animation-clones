@@ -91,7 +91,26 @@ def check_contract(schema: dict, example: dict) -> int:
     )
     validator.validate(second)
 
+    queued = copy.deepcopy(completed)
+    queued["execution"]["status"] = "queued"
+    queued["output"] = None
+    validator.validate(queued)
+
+    cancelled = copy.deepcopy(queued)
+    cancelled["execution"].update(status="cancelled", reason="Example queued task cancelled")
+    validator.validate(cancelled)
+
+    stopped_before_submission = copy.deepcopy(example)
+    stopped_before_submission["record_kind"] = "run"
+    stopped_before_submission["execution"].update(
+        status="cancelled", reason="Example batch stopped before submission",
+    )
+    validator.validate(stopped_before_submission)
+
     cases = (
+        (queued, "queued without receipt", ("execution", "receipt_id"), None),
+        (queued, "queued with retrieved output", ("output",), completed["output"]),
+        (cancelled, "cancelled without reason", ("execution", "reason"), None),
         (example, "unsupported default variant", ("variant",), "other"),
         (completed, "partial source scope", ("input_scope",), "clip"),
         (example, "false receipt in sample", ("execution", "receipt_id"), "synthetic-id"),

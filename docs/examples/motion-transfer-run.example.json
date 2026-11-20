@@ -1,5 +1,5 @@
 {
-  "schema_version": "motion-transfer-run/2.0",
+  "schema_version": "motion-transfer-run/2.1",
   "record_kind": "illustrative_example",
   "run_id": "example-run-001",
   "item_id": "example-item-001",

@@ -11,7 +11,7 @@
 | 固定引用 | `scene-s02-white-grid@1` |
 | 背景 | 纯白空场，网格仅在地面。 |
 | 地面 | 白色哑光地面，带细浅灰透视网格。网格用作视觉参照。 |
-| 镜头与光线 | 正面水平、自然透视、柔和中性光，控制明显投影与反射。 |
+| 定稿图的镜头与光线 | 正面水平、自然透视、柔和中性光，控制明显投影与反射。生成视频的运镜跟随原片。 |
 
 场景清单位于 `standard-assets/scenes/selection.v1.json`。正式空场图位于 `standard-assets/scenes/scene-s02-white-grid/v1/background.png`，SHA256 为 `7bacc21b84b7657d924a442908325d1c3d655f1326acdca0701e619da2b3082d`。同目录的 `asset.json` 记录场景版本。
 
@@ -24,7 +24,7 @@
 | 半身 | F01 · `ref-sa02-s02-knee@1` | F05 · `ref-bm01-s02-knee@1` |
 | 全身 | F02 · `ref-sa02-s02-full@1` | F06 · `ref-bm01-s02-full@1` |
 
-半身母版采用头顶至膝部或上胫的中景，保留双手及服装空间。全身母版保留头顶、双手、鞋底与地面。F05 尾饰靠近画面边缘。多人配置先覆盖双人，两版分别使用同画风、可区分的目标组合。坐姿等路线按需补充。F03／F04 随 JK03 退役。[执行手册](<../operations/runbook.md#target-selection>) · [公开图例清单](<../images/characters/manifest.json>)
+半身母版采用头顶至膝部或上胫的中景，保留双手及服装空间。全身母版保留头顶、双手、鞋底与地面。F05 尾饰靠近画面边缘。多人配置先覆盖双人。同一参考视频的两版均使用 SA02 与 BM01，按客户指定或随机确定第一版绑定，第二版交叉互换。站立单人定稿图的对应见上表，双人图和工作流绑定待配置。坐姿等路线按需补充。F03／F04 随 JK03 退役。[执行手册](<../operations/runbook.md#target-selection>) · [公开图例清单](<../images/characters/manifest.json>)
 
 <a name="asset-checks"></a>
 

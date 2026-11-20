@@ -19,7 +19,7 @@
     "output"
   ],
   "properties": {
-    "schema_version": {"const":"motion-transfer-run/2.0"},
+    "schema_version": {"const":"motion-transfer-run/2.1"},
     "record_kind": {"enum":["illustrative_example","run"]},
     "run_id": {"type":"string","minLength":1},
     "item_id": {"type":"string","minLength":1},
@@ -34,7 +34,7 @@
   },
   "allOf": [
     {
-      "if": {"properties":{"execution":{"properties":{"status":{"enum":["running","completed"]}}}}},
+      "if": {"properties":{"execution":{"properties":{"status":{"enum":["queued","running","completed"]}}}}},
       "then": {
         "properties": {
           "source": {"properties":{"download_status":{"const":"downloaded"}}},
@@ -223,11 +223,13 @@
       "required": ["attempt_id","status","reason","receipt_id","inputs_manifest_path"],
       "properties": {
         "attempt_id": {"type":"string","minLength":1},
-        "status": {"enum":["planned","blocked","running","unknown","failed","completed"]},
+        "status": {"enum":["planned","blocked","queued","running","unknown","failed","completed","cancelled"]},
         "reason": {"anyOf":[{"type":"string","minLength":1},{"type":"null"}]},
         "receipt_id": {"anyOf":[{"type":"string","minLength":1},{"type":"null"}]},
         "inputs_manifest_path": {"anyOf":[{"$ref":"#/$defs/relativePath"},{"type":"null"}]}
-      }
+      },
+      "if": {"properties":{"status":{"const":"cancelled"}}},
+      "then": {"properties":{"reason":{"$ref":"#/$defs/text"}}}
     },
     "text": {"type":"string","minLength":1},
     "targetImage": {

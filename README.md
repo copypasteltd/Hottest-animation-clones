@@ -1,12 +1,12 @@
 # Hottest Animation Clones · AI Motion Transfer
 
-The project is designed to turn one Bilibili, X, or Douyin video link into two S02 motion-transfer MP4s, one for SA02 and one for BM01.
+Supply a Bilibili, X, or Douyin video link in the conversation. The project is designed to deliver two S02 motion-transfer MP4s from the same whole video. Single-performer videos use SA02 and BM01 separately. Two-performer videos use both characters and exchange their assignments between outputs.
 
 [English](<README.md>) · [简体中文](<README.zh-CN.md>) · [Documentation index](<docs/README.md>) · [Changelog](<docs/CHANGELOG.md>)
 
 ## From a work link to the finished video
 
-Use `/ra-video-download` to obtain the complete source video, select the framing and performer route, then run the designated RTX 4090 H3 workflow separately for SA02 and BM01. Both runs use the whole source. Deliver each MP4 upon retrieval and skip finished-video checks and approval. [Product requirements](<docs/product/requirements.md>) · [English operating guide](<docs/en/solution-and-usage.md>)
+Use `/ra-video-download` to obtain the complete source video, select framing and performer bindings, and submit both full-video inputs to the designated ComfyUI queue. H3 follows the source camera motion. Group two source videos at a time and queue matching variants together. Report each generation result and deliver its MP4 upon retrieval. [Product requirements](<docs/product/requirements.md>) · [English operating guide](<docs/en/solution-and-usage.md>)
 
 The repository has documentation, a run record schema, offline maintenance tools, static references, and one historical H3 sample. End-to-end production orchestration is pending implementation. Platform integration and the two-output H3 routes are pending live testing. [Current status](<docs/product/status.md>) · [Workflow test cases](<docs/verification/acceptance.md>)
 

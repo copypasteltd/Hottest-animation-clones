@@ -1,12 +1,12 @@
 # Hottest Animation Clones · AI 动作迁移库
 
-项目目标是将一条 Bilibili、X 或抖音视频链接转换为两份 S02 动作迁移 MP4，SA02 二次元和 BM01 写实各一份。
+在会话中提供 Bilibili、X 或抖音视频链接。项目目标是用同一条完整视频生成两份 S02 动作迁移 MP4。单人分别替换成 SA02 和 BM01，双人两版交换 SA02 和 BM01 的人物对应。
 
 [简体中文](<README.zh-CN.md>) · [English](<README.md>) · [文档导航](<docs/README.md>) · [变更记录](<docs/CHANGELOG.md>)
 
 ## 从作品链接到成片
 
-用 `/ra-video-download` 下载完整原片，判断取景和表演人数，为 SA02 和 BM01 分别匹配目标图。两版各自用整条原片调用指定 4090 的 H3 工作流。每版取回即交付，跳过成品校验和审查。[产品需求](<docs/product/requirements.md>) · [执行手册](<docs/operations/runbook.md>)
+用 `/ra-video-download` 下载完整原片，判断取景和表演人数，为 SA02 和 BM01 分别匹配目标图。将两版的整片输入提交到指定 4090 的 ComfyUI 队列，镜头跟随原片。多条视频按同一版本、每组两条入队。每次生成有结果就反馈，取回 MP4 即交付。[产品需求](<docs/product/requirements.md>) · [执行手册](<docs/operations/runbook.md>)
 
 当前已有规格、运行记录结构、离线维护工具、静态参考资产和历史 H3 样片。从链接到成片的生产编排仍待实现。三站下载接入与 S02 整片双版本路线待试跑。[当前进度](<docs/product/status.md>) · [流程用例](<docs/verification/acceptance.md>)
 
