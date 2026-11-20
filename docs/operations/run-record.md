@@ -1,28 +1,26 @@
 # 运行记录与状态
 
-记录版本为 `motion-transfer-run/1.0`。每条记录对应一段源视频执行区间的一次尝试。`run_id` 归集本次任务或批次，`item_id` 标识其中的执行条目，`execution.attempt_id` 区分不同尝试。批次汇总按输入和条目各自计数。[JSON Schema](<../schemas/motion-transfer-run.schema.json>) · [未执行的虚构样例](<../examples/motion-transfer-run.example.json>)
+记录版本为 `motion-transfer-run/2.0`。一条记录对应同一完整源视频、一个目标版本的一次尝试。`run_id` 标识任务或批次，`item_id` 标识批次内的完整视频，两个版本共享 `run_id`、`item_id` 和源 ID。`variant` 区分 `SA02` 和 `BM01`，`execution.attempt_id` 区分同一版本的各次尝试。[运行记录 Schema](<../schemas/motion-transfer-run.schema.json>) · [未执行的示例](<../examples/motion-transfer-run.example.json>)
 
-## 字段与证据
+## 字段与引用
 
 | 字段 | 记录内容 |
 | --- | --- |
-| `source` | 平台、源 ID、下载状态、方法、私有来源侧车引用和原片媒体摘要。 |
-| `decision` | 来源区间、可见范围、关键时间点、目标取景、人数、姿态、理由与限制。 |
-| `target` | 场景 ID 与版本、实际目标图版本及哈希、各图审核状态，及表演者到角色和目标图的对应。 |
-| `workflow` | 远端 ComfyUI 根下的工作流相对路径、哈希、活动分支、输入位和输出映射。 |
-| `execution` | 尝试 ID、执行状态、实际输入与参数清单相对路径、原任务回执及阻塞或失败原因。 |
-| `output` | 已取回并通过媒体检查的文件、实际音轨处理及限制。审核前指向可复核候选，成片路径随通过审核的交付记录登记。 |
-| `review` | 审核结论、证据文件路径和问题说明。 |
+| `source`、`input_scope` | 平台、源 ID、下载状态、方法、私有来源侧车和原片媒体摘要。输入范围固定为 `whole_video`。 |
+| `decision` | 整片的可见范围、取景、人数、姿态、理由与限制。此表只供路线与目标图选择。 |
+| `target` | 场景 ID 与版本、定稿目标图版本及哈希、整片表演者到角色和图片的对应。 |
+| `workflow` | 指定目录内原工作流的路径与哈希，实际执行图的路径基准、身份与哈希，以及活动分支、输入位和输出映射。原图路径以远端 ComfyUI 根为基准。执行图路径可相对项目根或远端 ComfyUI 根。 |
+| `execution` | 尝试 ID、运行状态、实际输入清单路径、原任务回执以及阻塞、失败或回执未明的原因。 |
+| `output` | 取回的项目内 MP4 路径、实际音轨处理和已知执行限制。音轨处理信息无法由执行记录确定时使用 `unknown`。 |
 
-源片、目标图、参数清单、审核证据和成片引用以项目内路径保存。工作流路径以远端 ComfyUI 根为基准。文件、时间范围、逐人对应、任务所有权和媒体内容在实际运行中核验。Schema 校验覆盖字段结构及其中编码的状态关系。[工作区路径](<../maintenance/workspace.md>)
+视频、目标图、输入清单及交付路径采用项目相对路径。两份交付按 `outputs/<run_id>/<item_id>/<variant>/<attempt_id>.mp4` 存放，记录实际取回的那份输出。Schema 检查记录结构，各版本分别根据实际回执更新。[项目目录](<../maintenance/workspace.md>)
 
 ## 记录状态
 
 | 范围 | 状态与使用条件 |
 | --- | --- |
-| 下载 `source.download_status` | `not_run`、`downloaded`、`blocked`、`failed`、`unknown`。`downloaded` 有媒体核验及来源侧车。 |
-| 判定 `decision.status` | `planned`、`needs_review`、`decided`。`decided` 有区间、动作证据、取景、姿态和人数。 |
-| 执行 `execution.status` | `planned` 为计划，`blocked` 为前置缺失，`running` 有明确回执并待结果，`unknown` 待核原尝试，`failed` 为已确认失败，`completed` 表示实际输出已取回且通过媒体检查。 |
-| 审核 `review.status` | `not_run`、`needs_review`、`failed`、`passed`。`passed` 需执行已完成且有审核证据，作为成片交付依据。 |
+| 下载 `source.download_status` | `not_run`、`downloaded`、`blocked`、`failed`、`unknown`。`downloaded` 有源片的下载核验与来源侧车。 |
+| 路线 `decision.status` | `planned`、`undetermined`、`decided`。无法确定整片路线时标 `undetermined` 并填写原因。`decided` 有取景、姿态和人数。 |
+| 执行 `execution.status` | `planned` 为计划，`blocked` 为前置能力或资产缺失，`running` 为已有回执且等待输出，`unknown` 为原尝试待核，`failed` 为已知失败，`completed` 为对应 MP4 已实际取回并可交付。 |
 
-开启新尝试时保存原记录。变更片段、目标图、工作流或执行参数时，在新记录中标明实际变更。对回执不明的尝试沿原记录核对并更新结果。[提交与找回](<h3-4090.md>) · [填写模板](<../templates/动作迁移任务与交付模板.md>)
+`completed` 作为直接交付状态，跳过成品校验与审查。已取回版本可以单独交付，另一个版本继续按各自回执跟踪。复用时引用原记录与已取回的文件。新尝试保留本版旧记录。历史 `1.0` 记录按原版 Schema 解释。[历史 Schema 1.0](https://github.com/copypasteltd/Hottest-animation-clones/blob/c9a5ad2e48b5ad96d95e362c78f33a324eaaadd7/docs/schemas/motion-transfer-run.schema.json)[提交与找回](<h3-4090.md#submission>) · [填写模板](<../templates/动作迁移任务与交付模板.md>)

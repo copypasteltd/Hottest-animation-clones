@@ -16,8 +16,8 @@
 | `media/sources/<source_id>/` | 私有原片、来源侧车和媒体探测摘要。 |
 | `standard-assets/` | 私有人物、场景、构图及版本清单。 |
 | `workflows/` | 私有工作流副本或版本记录。运行以指定设备目录的实际图为依据。 |
-| `runs/<run_id>/`、`docs/runs/<run_id>/` | 私有机器回执、输入清单、待审核候选及文字审核证据。 |
-| `outputs/<run_id>/` | 通过审核的本地成片。 |
+| `runs/<run_id>/`、`docs/runs/<run_id>/` | 私有回执、两版输入清单、执行状态和文字运行说明。 |
+| `outputs/<run_id>/` | 按视频、角色版本和尝试存放已取回的 MP4。 |
 | `docs/local/`、`docs/archive/` | 私有设备定位说明、早期需求和实验档案。 |
 | `.local/`、`tooling/` | 本地维护资料和历史设备工具。 |
 
@@ -45,4 +45,4 @@ python -m unittest discover -s tests -v
 | `check_repository.py` | 检查当前 Git 索引中的全部文件，包括本次暂存改动和其余已跟踪内容。 |
 | `check_character_lock.py` | 私有角色清单、固定图片及批准状态。使用正式人物素材前执行，资产缺失或哈希不符会停止。 |
 
-项目的目录规则与公开范围以维护约束和发布规范为准。模型路线及动作质量以实际样片检查为准。[维护约束](<../../AGENTS.md>) · [同步与发布](<publication.md>) · [验收矩阵](<../verification/acceptance.md>)
+项目的目录规则与公开范围以维护约束和发布规范为准。路线接通状态按实际提交与取回记录登记。[维护约束](<../../AGENTS.md>) · [同步与发布](<publication.md>) · [流程验证](<../verification/acceptance.md>)

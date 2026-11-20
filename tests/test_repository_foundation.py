@@ -20,7 +20,7 @@ class FoundationTests(unittest.TestCase):
         result = validate()
         self.assertEqual(result["requirements"], 5)
         self.assertEqual(result["planned_acceptance_cases"], 10)
-        self.assertEqual(result["schema_negative_checks"], 16)
+        self.assertEqual(result["schema_negative_checks"], 21)
 
     def test_bilingual_docs_keep_explicit_frontend_scope_boundary(self):
         result = validate_release()
@@ -39,6 +39,8 @@ class FoundationTests(unittest.TestCase):
         self.assertFalse(config["execution"]["allow_model_download"])
         self.assertEqual(config["source"]["downloader"], "ra-video-download")
         self.assertEqual(config["source"]["platforms"], ["bilibili", "x", "douyin"])
+        self.assertEqual(config["source"]["input_scope"], "whole_video")
+        self.assertEqual(config["target"]["default_variants"], ["SA02", "BM01"])
         self.assertEqual(
             config["workflow"]["workflow_directory"],
             "user/default/workflows/社区精选H3_人物与场景替换_实验",

@@ -1,14 +1,14 @@
 # Hottest Animation Clones · AI Motion Transfer
 
-The project is designed to turn a Bilibili, X, or Douyin work link into an MP4 of a reference character performing the source motion in the white S02 scene.
+The project is designed to turn one Bilibili, X, or Douyin video link into two S02 motion-transfer MP4s, one for SA02 and one for BM01.
 
 [English](<README.md>) · [简体中文](<README.zh-CN.md>) · [Documentation index](<docs/README.md>) · [Changelog](<docs/CHANGELOG.md>)
 
 ## From a work link to the finished video
 
-Use `/ra-video-download` to obtain and verify the source video. Assess the required framing and performer count, select the matching target image, run the designated RTX 4090 H3 workflow, and check the result before delivery. A configured route takes only the work link. [Product requirements](<docs/product/requirements.md>) · [English operating guide](<docs/en/solution-and-usage.md>)
+Use `/ra-video-download` to obtain the complete source video, select the framing and performer route, then run the designated RTX 4090 H3 workflow separately for SA02 and BM01. Both runs use the whole source. Deliver each MP4 upon retrieval and skip finished-video checks and approval. [Product requirements](<docs/product/requirements.md>) · [English operating guide](<docs/en/solution-and-usage.md>)
 
-The repository has documentation, a run record schema, offline maintenance tools, static references, and one historical H3 sample. End-to-end production orchestration is pending implementation. Platform downloads and each S02 route have their own acceptance records. [Current status](<docs/product/status.md>) · [Acceptance matrix](<docs/verification/acceptance.md>)
+The repository has documentation, a run record schema, offline maintenance tools, static references, and one historical H3 sample. End-to-end production orchestration is pending implementation. Platform integration and the two-output H3 routes are pending live testing. [Current status](<docs/product/status.md>) · [Workflow test cases](<docs/verification/acceptance.md>)
 
 ## Reference characters and S02
 
@@ -21,11 +21,11 @@ S02 uses a plain white background and a fine light-gray floor grid. The four cur
 | ![SA02 pending four-view sheet](<docs/images/characters/sa02-four-view-candidate-v1.png>) | ![BM01 approved four-view sheet](<docs/images/characters/bm01-four-view-v1.png>) |
 | Supporting four-view sheet pending confirmation. | Four-view sheet approved. |
 | ![F01 SA02 knee-length view](<docs/images/characters/sa02-s02-knee-v1.png>) | ![F05 BM01 knee-length view](<docs/images/characters/bm01-s02-knee-v1.png>) |
-| **F01** half-body. Previously viewed. | **F05** half-body. Visually checked, pending individual user confirmation. |
+| **F01** final half-body composition. | **F05** final half-body composition. |
 | ![F02 SA02 full-body view](<docs/images/characters/sa02-s02-full-v1.png>) | ![F06 BM01 full-body view](<docs/images/characters/bm01-s02-full-v1.png>) |
-| **F02** full-body. Previously viewed. | **F06** full-body. Visually checked, pending individual user confirmation. |
+| **F02** final full-body composition. | **F06** final full-body composition. |
 
-Production uses the registered formal assets in the local workspace. JK03 is retired. [SA02](<docs/assets/sa02.md>) · [BM01](<docs/assets/bm01.md>) · [Display manifest](<docs/images/characters/manifest.json>)
+Production uses the registered local originals. The manifest records the display labels at publication. JK03 is retired. [SA02](<docs/assets/sa02.md>) · [BM01](<docs/assets/bm01.md>) · [Display manifest](<docs/images/characters/manifest.json>)
 
 ## Workspace and offline checks
 

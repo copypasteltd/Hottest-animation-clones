@@ -1,8 +1,10 @@
 {
-  "schema_version": "motion-transfer-run/1.0",
+  "schema_version": "motion-transfer-run/2.0",
   "record_kind": "illustrative_example",
   "run_id": "example-run-001",
   "item_id": "example-item-001",
+  "variant": "SA02",
+  "input_scope": "whole_video",
   "source": {
     "platform": "bilibili",
     "source_id": "fictional-source-001",
@@ -13,14 +15,12 @@
   },
   "decision": {
     "status": "planned",
-    "core_ms": null,
     "framing": "half_body",
     "performers": "single",
     "performer_count": 1,
     "posture": "standing",
     "visible_parts": [],
-    "evidence_ms": [],
-    "reason": "虚构设想：单人以手势为主。尚无实际视频和取景证据。",
+    "reason": "示例计划使用完整视频并交付 SA02 版本。尚未下载、判定或提交。",
     "limits": []
   },
   "target": null,
@@ -32,10 +32,5 @@
     "attempt_id": "example-attempt-001",
     "inputs_manifest_path": null
   },
-  "output": null,
-  "review": {
-    "status": "not_run",
-    "findings": [],
-    "evidence_paths": []
-  }
+  "output": null
 }

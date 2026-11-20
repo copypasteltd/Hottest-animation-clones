@@ -1,6 +1,6 @@
 # S02 场景与目标替换图
 
-本页定义 S02 和站立单人目标图的匹配、版本及核验。人物外观见两份角色说明，取景与人数的判断见执行手册。[SA02](<sa02.md>) · [BM01](<bm01.md>) · [取景与人数判断](<../operations/runbook.md#routing>)
+本页定义 S02 及其站立单人半身和全身定稿图。每条视频使用同一档取景，为两种角色各选一张定稿。人物外观见两份角色说明，取景与人数的判断见执行手册。[SA02](<sa02.md>) · [BM01](<bm01.md>) · [取景与人数判断](<../operations/runbook.md#routing>)
 
 <a name="s02"></a>
 
@@ -19,20 +19,20 @@
 
 ## 按人物与取景选图
 
-| 角色 | 半身目标 | 全身目标 | 当前构图审核 |
-| --- | --- | --- | --- |
-| SA02 二次元 | F01 · `ref-sa02-s02-knee@1` | F02 · `ref-sa02-s02-full@1` | 两张沿用既有已查看状态。 |
-| BM01 写实 | F05 · `ref-bm01-s02-knee@1` | F06 · `ref-bm01-s02-full@1` | 两张均已经视觉检查，待逐图用户确认。 |
+| 取景 | SA02 二次元定稿 | BM01 写实定稿 |
+| --- | --- | --- |
+| 半身 | F01 · `ref-sa02-s02-knee@1` | F05 · `ref-bm01-s02-knee@1` |
+| 全身 | F02 · `ref-sa02-s02-full@1` | F06 · `ref-bm01-s02-full@1` |
 
-两种半身图都是从头顶到膝部或上胫的中景，留出双手与服装空间。全身图保留头顶、双手、鞋底及地面，工作流样片需要检查动作幅度、抬手和横移时的留边。F05 尾饰靠近画面边缘。多人和坐姿等预设按实际人数、姿态及图像输入方式补充，F03／F04 随 JK03 退役。[执行手册](<../operations/runbook.md#target-selection>) · [公开图例清单](<../images/characters/manifest.json>)
+半身母版采用头顶至膝部或上胫的中景，保留双手及服装空间。全身母版保留头顶、双手、鞋底与地面。F05 尾饰靠近画面边缘。多人配置先覆盖双人，两版分别使用同画风、可区分的目标组合。坐姿等路线按需补充。F03／F04 随 JK03 退役。[执行手册](<../operations/runbook.md#target-selection>) · [公开图例清单](<../images/characters/manifest.json>)
 
 <a name="asset-checks"></a>
 
 ## 正式文件与核验
 
 1. 运行 `python scripts/check_character_lock.py`，确认 `standard-assets/characters/current.json` 指向 `selection.v2.json`，通过正式角色与固定参考文件核验。
-2. 读取 `standard-assets/framing/current.json` 指向的 `s02-master-set.v2.json`。核对选中图的版本、哈希、审核状态及同目录 `asset.json` 中的人物、场景和构图关系。
-3. 按本次工作流记录实际输入图及其角色。人物锁覆盖角色锚点和 BM01 已批准四视图，S02、构图与动态效果按对应清单和成片证据核对。
+2. 读取 `standard-assets/framing/current.json` 指向的 `s02-master-set.v2.json`。核对选中图的版本、哈希及同目录 `asset.json` 中的人物、场景与取景关系。
+3. 按本次工作流记录实际输入图及其角色。人物锁覆盖角色锚点和 BM01 已批准四视图。以上表确定当前定稿，历史登记中的图例记录按其时间解释。
 
 | 编号 | 正式图片的项目相对路径 | SHA256 |
 | --- | --- | --- |

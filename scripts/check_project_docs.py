@@ -25,8 +25,7 @@ def check_contract(schema: dict, example: dict) -> int:
     validator.validate(example)
     require(example["record_kind"] == "illustrative_example", "Sample must be marked illustrative")
 
-    # Exercise an executed record with synthetic identifiers and file metadata.
-    # Neither fixture refers to a real file, download, or model job.
+    # Use a fictional source and two fictional retrievals for the same whole video.
     completed = copy.deepcopy(example)
     digest = "0" * 64
     source_media = {
@@ -40,15 +39,14 @@ def check_contract(schema: dict, example: dict) -> int:
         sidecar_path="media/sources/test/source.json", media=source_media,
     )
     completed["decision"].update(
-        status="decided", core_ms={"start": 0, "end": 3000},
-        framing="half_body", performers="single", performer_count=1,
-        evidence_ms=[0, 1500, 2999],
+        status="decided", framing="half_body", performers="single", performer_count=1,
+        visible_parts=["upper_body", "hands"],
     )
     completed["target"] = {
         "scene_id": "scene-s02-white-grid", "scene_revision": 1,
         "images": [{
             "image_id": "example-knee", "revision": 1, "sha256": digest,
-            "path": "standard-assets/framing/example/image.png", "review_status": "viewed",
+            "path": "standard-assets/framing/example/image.png",
         }],
         "performer_mapping": [{
             "performer_ref": "performer-1", "character_id": "example-character",
@@ -56,8 +54,11 @@ def check_contract(schema: dict, example: dict) -> int:
         }],
     }
     completed["workflow"] = {
-        "path": "user/default/workflows/社区精选H3_人物与场景替换_实验/example.json",
-        "sha256": digest, "active_branch": "example",
+        "original_path": "user/default/workflows/社区精选H3_人物与场景替换_实验/example.json",
+        "original_sha256": digest, "active_branch": "example",
+        "execution_graph": {
+            "kind": "copy", "path_base": "project", "path": "workflows/example/sa02.json", "sha256": "1" * 64,
+        },
         "input_mapping": {"motion_video": "video", "target_images": ["image"], "scene": None, "audio": None},
         "output_mapping": "video-output",
     }
@@ -66,29 +67,52 @@ def check_contract(schema: dict, example: dict) -> int:
         inputs_manifest_path="runs/example/input.json",
     )
     completed["output"] = {
-        "media": {**source_media, "path": "outputs/example/result.mp4", "audio_codec": None},
+        "path": "outputs/example-run-001/example-item-001/SA02/example-attempt-001.mp4",
         "audio_treatment": "silent", "warnings": [],
     }
-    completed["review"].update(status="passed", evidence_paths=["docs/runs/example/review.md"])
     validator.validate(completed)
 
+    second = copy.deepcopy(completed)
+    second["variant"] = "BM01"
+    second["target"]["images"][0].update(image_id="example-bm01-knee", sha256="2" * 64)
+    second["target"]["performer_mapping"][0].update(
+        character_id="example-bm01", image_id="example-bm01-knee",
+    )
+    second["workflow"]["execution_graph"].update(
+        kind="api", path="workflows/example/bm01.api.json", sha256="3" * 64,
+    )
+    second["execution"].update(
+        attempt_id="example-attempt-002", receipt_id="example-receipt-002",
+        inputs_manifest_path="runs/example/bm01-input.json",
+    )
+    second["output"].update(
+        path="outputs/example-run-001/example-item-001/BM01/example-attempt-002.mp4",
+        audio_treatment="unknown",
+    )
+    validator.validate(second)
+
     cases = (
-        (example, "false review in sample", ("review", "status"), "passed"),
+        (example, "unsupported default variant", ("variant",), "other"),
+        (completed, "partial source scope", ("input_scope",), "clip"),
         (example, "false receipt in sample", ("execution", "receipt_id"), "synthetic-id"),
         (example, "unsupported platform", ("source", "platform"), "other"),
         (example, "unknown field", ("unknown_field",), True),
         (completed, "missing source sidecar", ("source", "sidecar_path"), None),
-        (completed, "missing review evidence", ("review", "evidence_paths"), []),
-        (completed, "missing source observations", ("decision", "evidence_ms"), []),
+        (completed, "legacy review field", ("review",), {"status": "passed"}),
+        (completed, "manual source interval", ("decision", "core_ms"), {"start": 0, "end": 1}),
+        (completed, "manual action timestamps", ("decision", "evidence_ms"), [0]),
         (completed, "wrong multi-performer count", ("decision", "performers"), "multiple"),
-        (completed, "workflow outside required folder", ("workflow", "path"), "other/flow.json"),
-        (completed, "escaping workflow path", ("workflow", "path"), "user/default/workflows/社区精选H3_人物与场景替换_实验/../flow.json"),
+        (completed, "original workflow outside required folder", ("workflow", "original_path"), "other/flow.json"),
+        (completed, "escaping original workflow path", ("workflow", "original_path"), "user/default/workflows/社区精选H3_人物与场景替换_实验/../flow.json"),
+        (completed, "escaping execution graph path", ("workflow", "execution_graph", "path"), "../flow.json"),
         (completed, "missing input mapping", ("workflow", "input_mapping", "target_images"), []),
         (completed, "missing receipt", ("execution", "receipt_id"), None),
         (completed, "missing submitted input record", ("execution", "inputs_manifest_path"), None),
-        (completed, "completed without media", ("output",), None),
-        (completed, "absolute output path", ("output", "media", "path"), "C:/outside/result.mp4"),
-        (completed, "silent record with audio stream", ("output", "media", "audio_codec"), "aac"),
+        (completed, "completed before retrieval", ("output",), None),
+        (completed, "absolute output path", ("output", "path"), "C:/outside/result.mp4"),
+        (completed, "output outside delivery directory", ("output", "path"), "runs/example/result.mp4"),
+        (completed, "non-MP4 output", ("output", "path"), "outputs/example/result.txt"),
+        (completed, "undetermined route after submission", ("decision", "status"), "undetermined"),
     )
     for original, label, path, value in cases:
         record = copy.deepcopy(original)

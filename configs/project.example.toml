@@ -8,16 +8,17 @@ sources = "media/sources"
 standard_assets = "standard-assets"
 workflows = "workflows"
 runs = "runs"
-review_notes = "docs/runs"
+run_notes = "docs/runs"
 outputs = "outputs"
 
 [source]
 downloader = "ra-video-download"
 platforms = ["bilibili", "x", "douyin"]
+input_scope = "whole_video"
 
 [target]
 scene_id = "scene-s02-white-grid"
-# Set the desired character preset (SA02 or BM01) in local settings.
+default_variants = ["SA02", "BM01"]
 
 [workflow]
 # Relative to the designated 4090 ComfyUI root.

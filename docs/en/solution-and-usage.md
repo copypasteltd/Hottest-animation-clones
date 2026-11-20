@@ -1,20 +1,21 @@
 # Motion-transfer operating guide
 
-The v0.4 specification describes how a Bilibili, X, or Douyin work link becomes a reviewed MP4 of a reference character performing the source motion in the white S02 scene. The project configures the character and workflow before routine link-only runs. The status page records completed checks and outstanding route tests. [Requirements](<../product/requirements.md>) · [Current status](<../product/status.md>)
+The v0.5 specification takes a Bilibili, X, or Douyin work link as input. The project uses the complete selected video to generate two S02 outputs by default, one for SA02 and one for BM01. [Product requirements](<../product/requirements.md>) · [Current status](<../product/status.md>)
 
-## Prepare a route
+## Choose the route and references
 
-Confirm the configured character, posture, shot framing, and performer count. The standing single-performer references are SA02 F01/F02 and BM01 F05/F06 for half-body/full-body output. Multi-performer routes need a matching set of target images and a verified correspondence for each performer. [Target images and approvals](<../assets/reference-images.md#target-frames>)
+1. Identify the requested video or Bilibili part. If the link and page leave multiple plausible choices, ask once which video to use. Download it through `/ra-video-download` and keep the original file and source metadata in the private source directory.
+2. Assess the full video to choose half-body or full-body framing, standing or another available posture, and single- or multi-performer replacement. Choose half-body for upper-body motion and gestures, and full-body when footwork, turns or travel drive the action. Record any limitation that prevents routing the whole video.
+3. For a standing single performer, use F01 and F05 for half-body or F02 and F06 for full-body. For a two-performer route, use distinct target identities in each variant's visual medium and keep the source-to-target bindings throughout the video. [Execution runbook](<../operations/runbook.md>) · [Final target images](<../assets/reference-images.md#target-frames>)
 
-On the designated RTX 4090 ComfyUI host, verify the H3 workflow in the configured directory, its active branch, its executable graph, and the actual video and image inputs. Check a matching sample for media integrity, character, scene, and motion before enabling the route. [H3 connection guide](<../operations/h3-4090.md>)
+## Run and deliver both versions
 
-## Process a link
+Use the designated RTX 4090 H3 workflow. Bind the same entire source video and the corresponding target image to each run. H3 handles motion analysis and transfer. Manual segmentation, frame extraction for specifying motion, and delivery of shortened segments are excluded. Apply adaptations to a working copy or the execution graph so the source workflow stays intact. [H3 connection and execution](<../operations/h3-4090.md>)
 
-1. Use `/ra-video-download` to fetch the selected work or part. Check the actual media and retain the untouched video and source metadata in the project’s private source area. [Execution runbook](<../operations/runbook.md>)
-2. Review the continuous performance and its key moments. Choose half-body framing for torso and hand movements or full-body framing when steps, ground contact, turns, or travel determine the action. Count the performers who contribute to the action or interaction. Record source visibility separately from the intended framing. [Routing criteria](<../operations/runbook.md#routing>)
-3. Select the matching versioned target images and record the workflow inputs. Follow the original submission receipt through queue, history, and retrieval. If the submission result is unknown, reconcile that attempt before deciding on another. [Target selection](<../operations/runbook.md#target-selection>) · [Execution and recovery](<../operations/h3-4090.md#submission>)
-4. Check the retrieved video, then review identity, scene, framing, key motion, timing, and audio as required by the route. Deliver the reviewed MP4 with its source ID, processed interval, and any limits. [Delivery checks](<../verification/acceptance.md#delivery-review>) · [Run record](<../operations/run-record.md>)
+Track each submission with its own receipt. Reconcile uncertain submissions using the original attempt. A confirmed failure with a correctable cause allows one automatic retry for that version. Reuse retrieved outputs when the source, version, target images, workflow and actual parameters match. A user-requested adjustment or rerun creates a new attempt for the selected item or version. [Execution and recovery](<../operations/h3-4090.md#submission>)
+
+Deliver each MP4 as soon as it has been retrieved for its receipt. Skip finished-video checks, review and approval. The delivery note gives the source ID, character version, whole-video input, audio handling and any known execution limits. Use the route’s output dimensions and frame rate by default. Select a matching preset if the request specifies a format such as 9:16. Prefer the source audio when it can be kept on the full timeline. Use a silent output if source audio cannot be retained, and use generated audio only by request. [Delivery conditions](<../verification/acceptance.md#delivery-review>) · [Run record](<../operations/run-record.md>)
 
 ## Maintain the checkout
 
-Use the workspace guide for local paths, offline checks, and formal character verification. The publication policy defines the material tracked in Git. [Workspace guide](<../maintenance/workspace.md>) · [Publication policy](<../maintenance/publication.md>)
+Use the workspace guide for local paths, offline checks and formal character verification. The publication guide defines the material tracked in Git. [Workspace guide](<../maintenance/workspace.md>) · [Publication policy](<../maintenance/publication.md>)

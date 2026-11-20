@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Motion-transfer run record",
-  "description": "A project-local record for one source, one execution interval, and one attempt. The runtime contract defines cross-field time, ownership, and media checks.",
+  "title": "Whole-video motion-transfer attempt",
+  "description": "One project-local attempt for one whole source video and one target variant. Completed means the corresponding MP4 was retrieved.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -9,26 +9,28 @@
     "record_kind",
     "run_id",
     "item_id",
+    "variant",
+    "input_scope",
     "source",
     "decision",
     "target",
     "workflow",
     "execution",
-    "output",
-    "review"
+    "output"
   ],
   "properties": {
-    "schema_version": {"const":"motion-transfer-run/1.0"},
+    "schema_version": {"const":"motion-transfer-run/2.0"},
     "record_kind": {"enum":["illustrative_example","run"]},
     "run_id": {"type":"string","minLength":1},
     "item_id": {"type":"string","minLength":1},
+    "variant": {"enum":["SA02","BM01"]},
+    "input_scope": {"const":"whole_video"},
     "source": {"$ref":"#/$defs/source"},
     "decision": {"$ref":"#/$defs/decision"},
     "target": {"anyOf":[{"$ref":"#/$defs/target"},{"type":"null"}]},
     "workflow": {"anyOf":[{"$ref":"#/$defs/workflow"},{"type":"null"}]},
     "execution": {"$ref":"#/$defs/execution"},
-    "output": {"anyOf":[{"$ref":"#/$defs/output"},{"type":"null"}]},
-    "review": {"$ref":"#/$defs/review"}
+    "output": {"anyOf":[{"$ref":"#/$defs/output"},{"type":"null"}]}
   },
   "allOf": [
     {
@@ -54,15 +56,6 @@
       "else": {"properties":{"output":{"type":"null"}}}
     },
     {
-      "if": {"properties":{"review":{"properties":{"status":{"const":"passed"}}}}},
-      "then": {
-        "properties": {
-          "execution": {"properties":{"status":{"const":"completed"}}},
-          "review": {"properties":{"evidence_paths":{"minItems":1}}}
-        }
-      }
-    },
-    {
       "if": {"properties":{"record_kind":{"const":"illustrative_example"}}},
       "then": {
         "properties": {
@@ -73,14 +66,7 @@
               "sidecar_path": {"type":"null"}
             }
           },
-          "decision": {
-            "properties": {
-              "status": {"const":"planned"},
-              "core_ms": {"type":"null"},
-              "visible_parts": {"maxItems":0},
-              "evidence_ms": {"maxItems":0}
-            }
-          },
+          "decision": {"properties":{"status":{"const":"planned"},"visible_parts":{"maxItems":0}}},
           "target": {"type":"null"},
           "workflow": {"type":"null"},
           "execution": {
@@ -89,8 +75,7 @@
               "receipt_id": {"type":"null"},
               "inputs_manifest_path": {"type":"null"}
             }
-          },
-          "review": {"properties":{"status":{"const":"not_run"},"evidence_paths":{"maxItems":0}}}
+          }
         }
       }
     }
@@ -104,17 +89,7 @@
     "media": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "path",
-        "sha256",
-        "bytes",
-        "duration_ms",
-        "width",
-        "height",
-        "frame_rate",
-        "video_codec",
-        "audio_codec"
-      ],
+      "required": ["path","sha256","bytes","duration_ms","width","height","frame_rate","video_codec","audio_codec"],
       "properties": {
         "path": {"$ref":"#/$defs/relativePath"},
         "sha256": {"$ref":"#/$defs/sha256"},
@@ -152,37 +127,14 @@
     "decision": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "status",
-        "core_ms",
-        "framing",
-        "performers",
-        "performer_count",
-        "posture",
-        "visible_parts",
-        "evidence_ms",
-        "reason",
-        "limits"
-      ],
+      "required": ["status","framing","performers","performer_count","posture","visible_parts","reason","limits"],
       "properties": {
-        "status": {"enum":["planned","needs_review","decided"]},
-        "core_ms": {
-          "anyOf": [
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["start","end"],
-              "properties": {"start":{"type":"integer","minimum":0},"end":{"type":"integer","minimum":1}}
-            },
-            {"type":"null"}
-          ]
-        },
+        "status": {"enum":["planned","undetermined","decided"]},
         "framing": {"anyOf":[{"enum":["half_body","full_body"]},{"type":"null"}]},
         "performers": {"anyOf":[{"enum":["single","multiple"]},{"type":"null"}]},
         "performer_count": {"anyOf":[{"type":"integer","minimum":1},{"type":"null"}]},
         "posture": {"anyOf":[{"type":"string","minLength":1},{"type":"null"}]},
         "visible_parts": {"type":"array","items":{"type":"string","minLength":1}},
-        "evidence_ms": {"type":"array","uniqueItems":true,"items":{"type":"integer","minimum":0}},
         "reason": {"type":"string","minLength":1},
         "limits": {"type":"array","items":{"type":"string","minLength":1}}
       },
@@ -191,12 +143,10 @@
           "if": {"properties":{"status":{"const":"decided"}}},
           "then": {
             "properties": {
-              "core_ms": {"type":"object"},
               "framing": {"type":"string"},
               "performers": {"type":"string"},
               "performer_count": {"type":"integer","minimum":1},
-              "posture": {"type":"string","minLength":1},
-              "evidence_ms": {"minItems":1}
+              "posture": {"type":"string","minLength":1}
             }
           }
         },
@@ -237,13 +187,21 @@
     "workflow": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["path","sha256","active_branch","input_mapping","output_mapping"],
+      "required": [
+        "original_path",
+        "original_sha256",
+        "execution_graph",
+        "active_branch",
+        "input_mapping",
+        "output_mapping"
+      ],
       "properties": {
-        "path": {
+        "original_path": {
           "$ref": "#/$defs/relativePath",
           "pattern": "^user/default/workflows/社区精选H3_人物与场景替换_实验/.+\\.json(?![\\s\\S])"
         },
-        "sha256": {"$ref":"#/$defs/sha256"},
+        "original_sha256": {"$ref":"#/$defs/sha256"},
+        "execution_graph": {"$ref":"#/$defs/executionGraph"},
         "active_branch": {"type":"string","minLength":1},
         "input_mapping": {
           "type": "object",
@@ -275,36 +233,33 @@
     "targetImage": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["image_id","revision","path","sha256","review_status"],
+      "required": ["image_id","revision","path","sha256"],
       "properties": {
         "image_id": {"type":"string","minLength":1},
         "revision": {"type":"integer","minimum":1},
         "path": {"$ref":"#/$defs/relativePath"},
-        "sha256": {"$ref":"#/$defs/sha256"},
-        "review_status": {"enum":["viewed","visually_checked_pending_confirmation","user_approved"]}
+        "sha256": {"$ref":"#/$defs/sha256"}
       }
     },
     "output": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["media","audio_treatment","warnings"],
+      "required": ["path","audio_treatment","warnings"],
       "properties": {
-        "media": {"$ref":"#/$defs/media"},
-        "audio_treatment": {"enum":["source","generated","silent","mixed"]},
-        "warnings": {"type":"array","items":{"type":"string","minLength":1}}
-      },
-      "if": {"properties":{"audio_treatment":{"const":"silent"}}},
-      "then": {"properties":{"media":{"properties":{"audio_codec":{"type":"null"}}}}},
-      "else": {"properties":{"media":{"properties":{"audio_codec":{"type":"string","minLength":1}}}}}
+        "path": {"$ref":"#/$defs/relativePath","pattern":"^outputs/.+\\.mp4(?![\\s\\S])"},
+        "audio_treatment": {"enum":["source","silent","generated","mixed","unknown"]},
+        "warnings": {"type":"array","items":{"$ref":"#/$defs/text"}}
+      }
     },
-    "review": {
+    "executionGraph": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status","evidence_paths","findings"],
+      "required": ["kind","path_base","path","sha256"],
       "properties": {
-        "status": {"enum":["not_run","needs_review","failed","passed"]},
-        "evidence_paths": {"type":"array","uniqueItems":true,"items":{"$ref":"#/$defs/relativePath"}},
-        "findings": {"type":"array","items":{"type":"string","minLength":1}}
+        "kind": {"enum":["original","copy","api"]},
+        "path_base": {"enum":["project","remote_comfyui"]},
+        "path": {"$ref":"#/$defs/relativePath"},
+        "sha256": {"$ref":"#/$defs/sha256"}
       }
     }
   }

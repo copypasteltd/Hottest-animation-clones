@@ -1,5 +1,14 @@
 # 变更记录
 
+## 整片双角色直出 · Whole-video dual output v0.5 — 2026-11-20
+
+- 每条链接选定一个完整参考视频。默认用同一原片分别提交 SA02 和 BM01，按整片取景、人数和姿态选用对应定稿图。动作解析与迁移由 4090 上的 H3 工作流处理。
+- 工作流适配可使用项目副本或独立执行图。按每版原回执取回 MP4 后直接交付。跳过成品校验与审查，用户可点名原片或版本调整与重跑。
+- 将运行记录升级为 2.0。按完整视频、角色版本与尝试标识记录提交和取回。离线通过 29 项单元测试、21 项 Schema 负例、双语发布检查及八张展示图核验。指定 4090 的整片双版本试跑待完成。
+- Use one complete reference video for two default outputs, SA02 and BM01. Select the matching final target images for the framing, performers and posture. The H3 workflow on the RTX 4090 handles motion analysis and transfer.
+- Adapt working copies or execution graphs and deliver each MP4 upon retrieval using its submission receipt. Skip finished-video checks and review. Track user-requested revisions or reruns by source or version.
+- Updated the run-record schema to 2.0. Passed 29 offline unit tests, 21 negative schema checks, bilingual release checks and validation of all eight display images. Live whole-video dual-output trials on the designated RTX 4090 are pending.
+
 ## 主题文档重构 · Documentation reorganization — 2026-11-20
 
 - 将 v0.4 规格组织为产品、执行、资产、验收和维护五个主题。双语 README 指向对应主题，旧编号路径保留原有小节的跳转入口。
