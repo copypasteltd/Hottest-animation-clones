@@ -1,5 +1,14 @@
 # 变更记录
 
+## 本地半身双版本试跑 · Local half-body dual-variant trial（2026-11-20）
+
+- 指定 4090 已从同一条约 9.1 秒的完整本地原片取回 SA02 F01 和 BM01 F05 两份 MP4。SA02 补跑接入原片音轨，BM01 沿用已取回的版本。
+- 每条原片在同一批次准备两版。配对检查核对批次、原片、输入范围和两组入队顺序。私有执行入口预演已识别两份现有回执。
+- 32 项离线单元测试和 24 项 Schema 负例检查用于验证本次仓库更新。整批并发、平台链接、单人全身和双人路线的实跑待完成。
+- Retrieved the SA02 F01 and BM01 F05 MP4s from the designated RTX 4090 using the same complete local source of about 9.1 seconds. The SA02 render used the source audio and joined the existing BM01 delivery.
+- Each source has two plans in the same batch. Pairing checks the batch, source, input scope, and queue order. The private dispatcher preview matched both existing receipts.
+- The repository update is covered by 32 offline unit tests and 24 negative schema checks. Live tests for batches, platform links, full-body framing, and two performers are pending.
+
 ## 批次恢复与留存 · Batch recovery and retention v0.7（2026-11-20）
 
 - 含作品链接的消息默认新建编号批次，明确要求时可追加。组内仍有原片在下载时等待，另一条失败或阻塞后允许就绪原片单独入队。

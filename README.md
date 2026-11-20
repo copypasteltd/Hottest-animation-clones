@@ -8,7 +8,7 @@ Supply a Bilibili, X, or Douyin video link in the conversation. The project is d
 
 Use `/ra-video-download` to obtain the complete source video, select framing and performer bindings, and submit both full-video inputs to the designated ComfyUI queue. H3 follows the source camera motion. Start a new numbered batch for each message containing work links unless the customer requests an append. Queue matching variants in groups of two. Report each result and deliver its MP4 upon retrieval while the batch is active. [Batch handling](<docs/operations/h3-4090.md#queue-and-stop>) · [Product requirements](<docs/product/requirements.md>) · [English operating guide](<docs/en/solution-and-usage.md>)
 
-The repository has documentation, a run record schema, offline maintenance tools, static references, and one historical H3 sample. End-to-end production orchestration is pending implementation. Platform integration and the two-output H3 routes are pending live testing. [Current status](<docs/product/status.md>) · [Workflow test cases](<docs/verification/acceptance.md>)
+The local standing half-body trial produced SA02 (F01) and BM01 (F05) from one complete source video. New batches prepare both variants for the same queue submission round. Production orchestration from a platform link is pending implementation. Live trials for the full-body and two-performer routes are pending. [Current status](<docs/product/status.md>) · [Workflow test cases](<docs/verification/acceptance.md>)
 
 ## Reference characters and S02
 

@@ -8,7 +8,7 @@
 
 用 `/ra-video-download` 下载完整原片，判断取景和表演人数，为 SA02 和 BM01 分别匹配目标图。将两版的整片输入提交到指定 4090 的 ComfyUI 队列，镜头跟随原片。每条包含作品链接的消息默认开一个有编号的新批次，明确要求时可追加。多条视频按同一版本、每组两条入队。逐次反馈生成结果，批次运行中取回 MP4 即交付。[批次规则](<docs/operations/h3-4090.md#queue-and-stop>) · [产品需求](<docs/product/requirements.md>) · [执行手册](<docs/operations/runbook.md>)
 
-当前已有规格、运行记录结构、离线维护工具、静态参考资产和历史 H3 样片。从链接到成片的生产编排仍待实现。三站下载接入与 S02 整片双版本路线待试跑。[当前进度](<docs/product/status.md>) · [流程用例](<docs/verification/acceptance.md>)
+本地站立单人半身试跑已从同一条完整原片取回 SA02（F01）和 BM01（F05）两版。后续每条原片在同一批次安排两版。链接到成片的生产编排仍待实现，单人全身和双人路线待实跑。[当前进度](<docs/product/status.md>) · [流程用例](<docs/verification/acceptance.md>)
 
 ## 基准人物与 S02
 
