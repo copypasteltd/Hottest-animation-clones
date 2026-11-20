@@ -2,7 +2,7 @@
 
 ## 当前阶段
 
-项目需求基线为 v0.6，仓库基础包版本为 0.0.1。用户已指定GitHub目标copypasteltd/Hottest-animation-clones并授权正常推送及后续同步；维护者名单、服务承诺和正式版本发行仍未假定存在。
+项目需求基线为 v0.7，仓库基础包版本为 0.0.1。用户已指定GitHub目标copypasteltd/Hottest-animation-clones并授权正常推送及后续同步；维护者名单、服务承诺和正式版本发行仍未假定存在。
 
 ## 决策优先级
 

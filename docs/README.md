@@ -5,10 +5,10 @@
 | 主题 | 查阅入口 |
 | --- | --- |
 | 产品 | 作品链接、整片双版本和五步需求。[产品需求](<product/requirements.md>) · [当前进度](<product/status.md>) |
-| 执行 | 会话收链接、交叉绑定、成组入队、按批停止和逐次反馈。[执行手册](<operations/runbook.md>) · [4090 接线](<operations/h3-4090.md>) · [运行记录](<operations/run-record.md>) |
-| 资产 | 目标图匹配、正式文件核验和人物限制。[S02 与目标图](<assets/reference-images.md>) · [SA02](<assets/sa02.md>) · [BM01](<assets/bm01.md>) |
+| 执行 | 会话收链接、交叉绑定、成组入队、按批停止与恢复、逐次反馈。[执行手册](<operations/runbook.md>) · [4090 接线](<operations/h3-4090.md>) · [运行记录](<operations/run-record.md>) |
+| 资产 | 目标图匹配、动作道具、正式文件核验和人物限制。[S02 与目标图](<assets/reference-images.md>) · [SA02](<assets/sa02.md>) · [BM01](<assets/bm01.md>) |
 | 验证 | 核对整片输入、双版本提交、取回与交付。[计划用例与交付条件](<verification/acceptance.md>) |
-| 维护 | 工作区、公开范围和变更同步。[项目目录](<maintenance/workspace.md>) · [发布规范](<maintenance/publication.md>) · [贡献指南](<CONTRIBUTING.md>) · [治理规则](<GOVERNANCE.md>) · [安全与隐私](<SECURITY.md>) · [第三方材料](<THIRD_PARTY_NOTICES.md>) |
+| 维护 | 工作区、批次留存、公开范围和变更同步。[项目目录](<maintenance/workspace.md>) · [发布规范](<maintenance/publication.md>) · [贡献指南](<CONTRIBUTING.md>) · [治理规则](<GOVERNANCE.md>) · [安全与隐私](<SECURITY.md>) · [第三方材料](<THIRD_PARTY_NOTICES.md>) |
 
 ## 随手查阅
 

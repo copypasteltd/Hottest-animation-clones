@@ -1,5 +1,16 @@
 # 变更记录
 
+## 批次恢复与留存 · Batch recovery and retention v0.7（2026-11-20）
+
+- 含作品链接的消息默认新建编号批次，明确要求时可追加。组内仍有原片在下载时等待，另一条失败或阻塞后允许就绪原片单独入队。
+- 停止时反馈已生成的远端结果，恢复批次后按原回执取回。继续批次默认恢复所有剩余任务，会话中断后补发尚未反馈的结果。
+- 工作流支持时，主动重做默认换种子，故障补跑优先沿用原种子。重复链接复用符合配置且最近成功取回的成片。允许直接参与动作的道具，原片、实际执行图、回执和成片默认按批次长期留存。
+- 29 项离线单元测试、24 项 Schema 负例、双语文档和八张展示图检查通过。指定 4090 上的首条试跑待样片链接。
+- Start a new numbered batch for each message containing work links, with explicit append support. Wait for a group member that is still downloading. Queue the ready source on its own if the other source fails or is blocked.
+- Report results already generated when a batch stops and retrieve them by their original receipts when the batch resumes. Resume remaining work by default and report outstanding results after a session interruption.
+- Use a fresh seed for a requested remake and prefer the original seed for a fault retry when the workflow supports seeds. Reuse the most recently retrieved compatible output, allow props used in the action, and retain source videos, executed workflow graphs, receipts, and outputs by batch.
+- Passed 29 offline unit tests, 24 negative schema checks, bilingual documentation checks, and verification of the eight display images. The first RTX 4090 trial awaits a source link.
+
 ## 双人轮替与队列规则 · Paired assignments and queue handling v0.6 — 2026-11-20
 
 - 首版通过会话收作品链接。双人使用 SA02 与 BM01，第一版按客户指定或随机分配，第二版互换对应。每版保持整片绑定，运镜跟随原片。
