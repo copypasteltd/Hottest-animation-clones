@@ -20,7 +20,23 @@ Across 16 matched time samples, the second redraw showed the feet apart at 6.0, 
 
 A profile separates retained platform text and native tags, observations of the whole source, and observations of each retrieved rendition. A first offline pass covers two retained Bilibili sources with both SA02 and BM01 versions. Labels carry nominal sample times, evidence and uncertainty; the profile does not feed or block generation. [Collection and validation contract](<docs/operations/motion-profile.md>)
 
-The [static video catalog v1](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>) opens a single paginated gallery mixing anime and photographic renditions, with one card per rendition. Filter verified finals or group by work. Full-catalog search covers cleaned bilingual tags, keywords, and structured details, with optional review-note matching. Root and Pages builds contain synthetic examples only; real data stays in the separate private loopback viewer. Nothing has been deployed.
+## Browse the motion catalog
+
+**One card per rendition.** The default gallery mixes SA02 anime and BM01 photographic-style renditions in the same paginated list. Choose **按作品** to group by source, or **只看定稿** to show all indexed, verified finals. A retrieved file is not automatically approved, and a later attempt does not hide an earlier verified final.
+
+- **Search the whole catalog.** Use a title, description, keyword, cleaned Chinese or English tag, alias, author, or media detail such as `768×1376`. For an exact match, select a tag in **筛选**. Source observations, rendition observations, and generation settings remain separate. For example, filter the source tag **手势舞** to find both renditions of a matching work.
+- **Search beyond the tags.** Enable **同时检索观察与复核说明** to match observation and review notes. A note match does not confirm an action. Candidate tags are excluded unless you explicitly include them.
+
+With Node.js 24, the project’s Python development dependencies, FFmpeg/ffprobe, and validated local profiles and outputs available, run from the repository root:
+
+```bash
+npm --prefix web/catalog ci --ignore-scripts
+python -B scripts/check_character_lock.py
+node web/catalog/scripts/build.mjs --target local
+node web/catalog/scripts/serve.mjs --target local
+```
+
+Open [the private local viewer](http://127.0.0.1:4176/). To pick up newly archived renditions or approvals, stop the preview, rebuild, and restart. The root and GitHub Pages builds contain synthetic examples only; the site has not been deployed. [Operating and update guide](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>)
 
 ## Reference characters and S02
 

@@ -20,7 +20,23 @@
 
 画像把平台标题、简介和原始标签、原片观察、每份成片观察分别归档。首轮离线覆盖两条已有 Bilibili 原片及其 SA02／BM01 版本。标签带抽样时点、证据和不确定性；画像不参与生成、不阻挡交付。[采集与校验规范](<docs/operations/motion-profile.md>)
 
-[纯前端视频库 v1](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>)默认真人／动漫混排，一份成片一张卡，可只看已定稿或按作品归组。全库支持清洗后的中英标签、关键词、结构化详情与可选复核说明检索。根路径和 Pages 构建仅含虚构示例，真实成片由本机私有版查看；未部署。
+## 浏览动作迁移视频库
+
+**一份成片一张卡。** 首页默认将 SA02 动漫和 BM01 真人风格成片放在同一个列表里排序、分页。点 **按作品** 可按原片归组；点 **只看定稿** 可查看所有已索引且有验收记录的定稿。成功取回不等于验收通过，后续尝试也不会覆盖已验收的旧定稿。
+
+- **全库检索**：可搜标题、简介、关键词、清洗后的中英文标签和别名、作者或 `768×1376` 等媒体规格。到 **筛选** 里可精确选标签；平台原始标签、原片观察、成片观察和生成配置分开。例如，筛选原片标签 **手势舞** 可同时找到匹配作品的真人和动漫成片。
+- **检索复核说明**：勾选 **同时检索观察与复核说明**，可搜观察与对照文字。命中说明不等于确认动作出现；候选标签默认不参与检索。
+
+本机版需要 Node.js 24、项目 Python 开发依赖、FFmpeg／ffprobe，以及已核验的私有画像和成片。在仓库根目录运行：
+
+```bash
+npm --prefix web/catalog ci --ignore-scripts
+python -B scripts/check_character_lock.py
+node web/catalog/scripts/build.mjs --target local
+node web/catalog/scripts/serve.mjs --target local
+```
+
+打开[本机私有视频库](http://127.0.0.1:4176/)。新增成片或定稿验收记录归档后，停止旧预览，再重建并启动。根路径和 GitHub Pages 构建仅含虚构示例，未部署。[运行与更新说明](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>)
 
 ## 基准人物与 S02
 

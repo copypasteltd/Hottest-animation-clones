@@ -1,5 +1,10 @@
 # 变更记录
 
+## README 视频库使用说明 · Catalog quick start（2026-11-22）
+
+- 双语 README 补充真人与动漫混排、定稿筛选、标签和复核说明检索、本机启动与更新步骤。只修改文档，不变更索引逻辑或部署。
+- Added bilingual instructions for mixed browsing, verified-final filters, tag and review-note search, and local preview updates. Documentation only; no catalog behavior or deployment changes.
+
 ## 真人／动漫混排与详情索引 · Mixed renditions and detail search（2026-11-22）
 
 - 首页改为逐份成片混排，提供「只看定稿」筛选；按作品归组仍可选。定稿按已验证画像与验收记录绑定，不把取回或待复核算作定稿。扩展作者、规格、配置及可选观察与复核说明检索，保留标签的来源与候选状态。
