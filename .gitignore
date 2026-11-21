@@ -35,6 +35,7 @@
 !/docs/operations/runbook.md
 !/docs/operations/h3-4090.md
 !/docs/operations/run-record.md
+!/docs/operations/motion-profile.md
 !/docs/assets/
 /docs/assets/*
 !/docs/assets/reference-images.md
@@ -65,9 +66,12 @@
 !/docs/schemas/
 /docs/schemas/*
 !/docs/schemas/motion-transfer-run.schema.json
+!/docs/schemas/motion-video-profile.schema.json
+!/docs/schemas/motion-tags.v1.json
 !/docs/examples/
 /docs/examples/*
 !/docs/examples/motion-transfer-run.example.json
+!/docs/examples/motion-video-profile.example.json
 
 # Local configuration is never a distributable example.
 /configs/*

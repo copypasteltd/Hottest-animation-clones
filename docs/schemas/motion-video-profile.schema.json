@@ -1,0 +1,3731 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Motion video profile 1.0",
+  "description": "One whole source per item; platform snapshot, observations and retrieved renditions are separate. Semantic and file checks are additional to this schema.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "motion-video-profile/1.0"
+    },
+    "taxonomy_version": {
+      "const": "motion-tags/1.0"
+    },
+    "record_kind": {
+      "enum": [
+        "profile",
+        "illustrative_example"
+      ]
+    },
+    "visibility": {
+      "enum": [
+        "private",
+        "example"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "key": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+        },
+        "item_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+        },
+        "input_scope": {
+          "const": "whole_video"
+        }
+      },
+      "required": [
+        "run_id",
+        "item_id",
+        "input_scope"
+      ],
+      "additionalProperties": false
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "renditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rendition"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      },
+      "minItems": 2
+    }
+  },
+  "required": [
+    "schema_version",
+    "taxonomy_version",
+    "record_kind",
+    "visibility",
+    "created_at",
+    "key",
+    "source",
+    "renditions",
+    "evidence"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "record_kind": {
+            "const": "profile"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "visibility": {
+            "const": "private"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "visibility": {
+            "const": "example"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "asset": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*[\\\\:\\u0000-\\u001f])[^/]+(?:/[^/]+)*(?![\\s\\S])"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ],
+      "additionalProperties": false
+    },
+    "media": {
+      "type": "object",
+      "properties": {
+        "asset": {
+          "$ref": "#/$defs/asset"
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "video": {
+          "type": "object",
+          "properties": {
+            "codec": {
+              "type": "string",
+              "minLength": 1
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "pixel_format": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "avg_frame_rate": {
+              "type": "string",
+              "pattern": "^[0-9]+/[1-9][0-9]*$"
+            },
+            "nominal_frame_rate": {
+              "type": "string",
+              "pattern": "^[0-9]+/[1-9][0-9]*$"
+            },
+            "sample_aspect_ratio": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "display_aspect_ratio": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "rotation_deg": {
+              "type": "integer"
+            },
+            "frames": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "duration_ms": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "codec",
+            "width",
+            "height",
+            "pixel_format",
+            "avg_frame_rate",
+            "nominal_frame_rate",
+            "sample_aspect_ratio",
+            "display_aspect_ratio",
+            "rotation_deg",
+            "frames",
+            "duration_ms"
+          ],
+          "additionalProperties": false
+        },
+        "audio": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "codec": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sample_rate_hz": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "channels": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "duration_ms": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "codec",
+                "sample_rate_hz",
+                "channels",
+                "duration_ms"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "probe_evidence_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+        }
+      },
+      "required": [
+        "asset",
+        "duration_ms",
+        "video",
+        "audio",
+        "probe_evidence_id"
+      ],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+        },
+        "kind": {
+          "enum": [
+            "platform_snapshot",
+            "download_record",
+            "media_probe",
+            "frame_samples",
+            "visual_comparison",
+            "audio_analysis",
+            "camera_analysis",
+            "ocr",
+            "asr",
+            "manual_observation",
+            "run_record",
+            "delivery_receipt",
+            "review_record"
+          ]
+        },
+        "artifact": {
+          "$ref": "#/$defs/asset"
+        },
+        "media_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^/(?:[^~/]|~[01]|/)*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "captured_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sample_times_ms": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "artifact",
+        "media_sha256",
+        "method",
+        "method_version",
+        "locator",
+        "captured_at",
+        "sample_times_ms",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "extent": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "clip_summary"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "sample_points"
+            },
+            "times_ms": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "kind",
+            "times_ms"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "estimated_interval"
+            },
+            "start_ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "end_ms": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "resolution_ms": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "kind",
+            "start_ms",
+            "end_ms",
+            "resolution_ms"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "assertion": {
+      "type": "object",
+      "properties": {
+        "tag_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*[.][a-z][a-z0-9_.]*(?![\\s\\S])"
+        },
+        "state": {
+          "enum": [
+            "observed",
+            "candidate",
+            "not_observed_in_samples"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "performer_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^performer-[1-9][0-9]*(?![\\s\\S])"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "extent": {
+          "$ref": "#/$defs/extent"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "tag_id",
+        "state",
+        "confidence",
+        "performer_ref",
+        "extent",
+        "evidence_ids",
+        "note"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "candidate"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "confidence": {
+                "enum": [
+                  "low",
+                  "medium"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "not_observed_in_samples"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "extent": {
+                "properties": {
+                  "kind": {
+                    "const": "sample_points"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "facet": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "sampled_review",
+            "signal_measured",
+            "insufficient_evidence",
+            "not_run",
+            "not_applicable"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "status",
+        "evidence_ids",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "observations": {
+      "type": "object",
+      "properties": {
+        "performer_count": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "facets": {
+          "type": "object",
+          "properties": {
+            "content": {
+              "$ref": "#/$defs/facet"
+            },
+            "movement": {
+              "$ref": "#/$defs/facet"
+            },
+            "visibility": {
+              "$ref": "#/$defs/facet"
+            },
+            "framing": {
+              "$ref": "#/$defs/facet"
+            },
+            "camera": {
+              "$ref": "#/$defs/facet"
+            },
+            "scene": {
+              "$ref": "#/$defs/facet"
+            },
+            "props": {
+              "$ref": "#/$defs/facet"
+            },
+            "interaction": {
+              "$ref": "#/$defs/facet"
+            },
+            "audio": {
+              "$ref": "#/$defs/facet"
+            },
+            "text": {
+              "$ref": "#/$defs/facet"
+            },
+            "quality": {
+              "$ref": "#/$defs/facet"
+            }
+          },
+          "required": [
+            "content",
+            "movement",
+            "visibility",
+            "framing",
+            "camera",
+            "scene",
+            "props",
+            "interaction",
+            "audio",
+            "text",
+            "quality"
+          ],
+          "additionalProperties": false
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/assertion"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "performer_count",
+        "facets",
+        "labels",
+        "limitations"
+      ],
+      "additionalProperties": false
+    },
+    "signal": {
+      "type": "object",
+      "properties": {
+        "analysis_sample_rate_hz": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "analysis_channels": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "samples": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "analyzed_duration_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "rms_dbfs": {
+          "type": "number"
+        },
+        "peak_dbfs": {
+          "type": "number"
+        },
+        "quiet_threshold_dbfs": {
+          "type": "number"
+        },
+        "quiet_window_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "quiet_windows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "complete_windows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "semantic_analysis": {
+          "enum": [
+            "not_run",
+            "inconclusive",
+            "separately_reviewed"
+          ]
+        },
+        "evidence_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+        }
+      },
+      "required": [
+        "analysis_sample_rate_hz",
+        "analysis_channels",
+        "samples",
+        "analyzed_duration_ms",
+        "rms_dbfs",
+        "peak_dbfs",
+        "quiet_threshold_dbfs",
+        "quiet_window_ms",
+        "quiet_windows",
+        "complete_windows",
+        "semantic_analysis",
+        "evidence_id"
+      ],
+      "additionalProperties": false
+    },
+    "pulse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "candidates_only",
+            "not_run",
+            "insufficient_signal",
+            "not_applicable"
+          ]
+        },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bpm": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 400
+              },
+              "lag_ms": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "score": {
+                "type": "number",
+                "minimum": -1,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "bpm",
+              "lag_ms",
+              "score"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "evidence_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "status",
+        "candidates",
+        "evidence_id",
+        "note"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "candidates_only"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "candidates": {
+                "minItems": 1
+              },
+              "evidence_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "candidates": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "alignment": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "search_max_offset_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "output_delay_ms": {
+          "type": "number"
+        },
+        "compared_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "normalized_correlation": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "at_search_limit": {
+          "type": "boolean"
+        },
+        "evidence_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+        }
+      },
+      "required": [
+        "method",
+        "search_max_offset_ms",
+        "output_delay_ms",
+        "compared_ms",
+        "normalized_correlation",
+        "at_search_limit",
+        "evidence_id"
+      ],
+      "additionalProperties": false
+    },
+    "comparison": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "sampled_correspondence",
+            "sampled_difference",
+            "signal_similarity",
+            "inconclusive",
+            "not_compared",
+            "not_applicable"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "status",
+        "evidence_ids",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "type": "object",
+          "properties": {
+            "platform": {
+              "enum": [
+                "bilibili",
+                "x",
+                "douyin"
+              ]
+            },
+            "work_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "selection_kind": {
+              "enum": [
+                "work_page_default",
+                "explicit_part",
+                "explicit_media",
+                "unknown"
+              ]
+            },
+            "selected_part": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "platform_media_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "work_url": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "platform",
+            "work_id",
+            "selection_kind",
+            "selected_part",
+            "platform_media_id",
+            "work_url"
+          ],
+          "additionalProperties": false
+        },
+        "capture": {
+          "type": "object",
+          "properties": {
+            "adapter": {
+              "type": "string",
+              "minLength": 1
+            },
+            "adapter_version": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "captured_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "time_basis": {
+              "enum": [
+                "download_record",
+                "snapshot_capture",
+                "unknown"
+              ]
+            },
+            "snapshot_evidence_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+            },
+            "download_evidence_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+            }
+          },
+          "required": [
+            "adapter",
+            "adapter_version",
+            "captured_at",
+            "time_basis",
+            "snapshot_evidence_id",
+            "download_evidence_id"
+          ],
+          "additionalProperties": false
+        },
+        "platform_fields": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "const": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "const": ""
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "description": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "const": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "const": ""
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "creator_name": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "const": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "const": ""
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "creator_id": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "const": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "const": ""
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "published_at": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        {
+                          "const": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "const": ""
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "upload_date": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        {
+                          "const": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "format": "date"
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "const": ""
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "categories": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "minItems": 1
+                        },
+                        {
+                          "type": "array",
+                          "maxItems": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "minItems": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "maxItems": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "native_tags": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "minItems": 1
+                        },
+                        {
+                          "type": "array",
+                          "maxItems": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "minItems": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "maxItems": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "platform_hashtags": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "minItems": 1
+                        },
+                        {
+                          "type": "array",
+                          "maxItems": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "minItems": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "maxItems": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "text_hashtags": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "minItems": 1
+                        },
+                        {
+                          "type": "array",
+                          "maxItems": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "minItems": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "maxItems": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "subtitle_languages": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "minItems": 1
+                        },
+                        {
+                          "type": "array",
+                          "maxItems": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "minItems": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "maxItems": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "automatic_caption_languages": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "minItems": 1
+                        },
+                        {
+                          "type": "array",
+                          "maxItems": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "minItems": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "array",
+                        "maxItems": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "language": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "const": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "const": ""
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "track": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "const": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "const": ""
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "artist": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "const": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "const": ""
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "declared_duration_ms": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": false
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "view_count": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": false
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "like_count": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": false
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "comment_count": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": false
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "repost_count": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "present",
+                    "empty",
+                    "not_obtained",
+                    "unsupported",
+                    "not_applicable",
+                    "invalid"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "origin": {
+                  "enum": [
+                    "snapshot",
+                    "derived_from_snapshot"
+                  ]
+                },
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+                },
+                "source_pointers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^/(?:[^~/]|~[01]|/)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "state",
+                "value",
+                "origin",
+                "evidence_id",
+                "source_pointers"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "present"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "empty"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": false
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "not_obtained",
+                          "unsupported",
+                          "not_applicable",
+                          "invalid"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "title",
+            "description",
+            "creator_name",
+            "creator_id",
+            "published_at",
+            "upload_date",
+            "categories",
+            "native_tags",
+            "platform_hashtags",
+            "text_hashtags",
+            "subtitle_languages",
+            "automatic_caption_languages",
+            "language",
+            "track",
+            "artist",
+            "declared_duration_ms",
+            "view_count",
+            "like_count",
+            "comment_count",
+            "repost_count"
+          ],
+          "additionalProperties": false
+        },
+        "media": {
+          "$ref": "#/$defs/media"
+        },
+        "observations": {
+          "$ref": "#/$defs/observations"
+        },
+        "audio_signal": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/signal"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pulse": {
+          "$ref": "#/$defs/pulse"
+        },
+        "routing": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "enum": [
+                "recorded_route",
+                "candidate",
+                "not_available"
+              ]
+            },
+            "framing": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "half_body",
+                    "full_body"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "posture": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "standing",
+                    "seated",
+                    "other"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "performer_count": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidence_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            },
+            "note": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "framing",
+            "posture",
+            "performer_count",
+            "evidence_ids",
+            "note"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "identity",
+        "capture",
+        "platform_fields",
+        "media",
+        "observations",
+        "audio_signal",
+        "pulse",
+        "routing"
+      ],
+      "additionalProperties": false
+    },
+    "rendition": {
+      "type": "object",
+      "properties": {
+        "variant": {
+          "enum": [
+            "SA02",
+            "BM01"
+          ]
+        },
+        "attempt_id": {
+          "type": "string",
+          "pattern": "^attempt-[0-9]+(?![\\s\\S])"
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+        },
+        "receipt_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "const": "retrieved"
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "run_evidence_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+        },
+        "delivery_evidence_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "framing": {
+              "enum": [
+                "half_body",
+                "full_body"
+              ]
+            },
+            "scene_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "scene_revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "target_images": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "image_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+                  }
+                },
+                "required": [
+                  "image_id",
+                  "revision",
+                  "sha256"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            },
+            "audio_treatment": {
+              "enum": [
+                "source",
+                "muted",
+                "generated",
+                "unknown"
+              ]
+            },
+            "execution_graph_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+            },
+            "branch": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "framing",
+            "scene_id",
+            "scene_revision",
+            "target_images",
+            "audio_treatment",
+            "execution_graph_sha256",
+            "branch"
+          ],
+          "additionalProperties": false
+        },
+        "acceptance": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "enum": [
+                "user_accepted_sample",
+                "pending_user_review",
+                "not_recorded"
+              ]
+            },
+            "evidence_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?![\\s\\S])"
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            },
+            "note": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "evidence_ids",
+            "note"
+          ],
+          "additionalProperties": false
+        },
+        "media": {
+          "$ref": "#/$defs/media"
+        },
+        "observations": {
+          "$ref": "#/$defs/observations"
+        },
+        "audio_signal": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/signal"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "audio_alignment_to_source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/alignment"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "comparison": {
+          "type": "object",
+          "properties": {
+            "motion": {
+              "$ref": "#/$defs/comparison"
+            },
+            "footwork": {
+              "$ref": "#/$defs/comparison"
+            },
+            "camera": {
+              "$ref": "#/$defs/comparison"
+            },
+            "scene": {
+              "$ref": "#/$defs/comparison"
+            },
+            "audio": {
+              "$ref": "#/$defs/comparison"
+            }
+          },
+          "required": [
+            "motion",
+            "footwork",
+            "camera",
+            "scene",
+            "audio"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "variant",
+        "attempt_id",
+        "source_sha256",
+        "receipt_id",
+        "status",
+        "retrieved_at",
+        "run_evidence_id",
+        "delivery_evidence_id",
+        "configuration",
+        "acceptance",
+        "media",
+        "observations",
+        "audio_signal",
+        "audio_alignment_to_source",
+        "comparison"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

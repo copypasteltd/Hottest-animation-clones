@@ -16,6 +16,10 @@ The first full-body redraw corrected the footwear but still kept the legs crosse
 
 Across 16 matched time samples, the second redraw showed the feet apart at 6.0, 6.5, 7.0, and 8.0 seconds, while retaining the crossed pose at about 4.5 seconds and the matching low-cut Mary Jane shoes. The stills do not establish exact landings, absence of foot sliding, or weight transfer throughout playback. [Repair setup and verification limits](<docs/operations/h3-4090.md#bm01-f06-footwork-repair>)
 
+### Motion profiles and evidence-based tags
+
+A profile separates retained platform text and native tags, observations of the whole source, and observations of each retrieved rendition. A first offline pass covers two retained Bilibili sources with both SA02 and BM01 versions. Labels carry nominal sample times, evidence and uncertainty; the profile does not feed or block generation. [Collection and validation contract](<docs/operations/motion-profile.md>)
+
 ## Reference characters and S02
 
 S02 uses a plain white background and a fine light-gray floor grid. The four current compositions cover standing single performers. Half-body uses knee-length framing. Full-body includes the shoes and floor. [S02 and target images](<docs/assets/reference-images.md>)

@@ -9,6 +9,7 @@ import sys
 
 from jsonschema import Draft202012Validator
 
+from check_motion_profiles import EXAMPLE as PROFILE_EXAMPLE, load_json, validate_profile
 from documentation import ACCEPTANCE_PATH, EXAMPLE_PATH, REQUIREMENTS_PATH, SCHEMA_PATH, read_public_markdown, validate_local_links
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -164,6 +165,7 @@ def validate() -> dict:
         "requirements": len(requirements), "planned_acceptance_cases": len(cases),
         "schema_negative_checks": check_contract(schema, example), "local_links_checked": link_count,
         "public_markdown_pages": len(texts),
+        "illustrative_profile_checked": validate_profile(load_json(ROOT / PROFILE_EXAMPLE))["status"] == "passed",
     }
 
 

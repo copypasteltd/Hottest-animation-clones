@@ -17,6 +17,7 @@ TOPIC_PAGES = (
     "docs/operations/runbook.md",
     "docs/operations/h3-4090.md",
     "docs/operations/run-record.md",
+    "docs/operations/motion-profile.md",
     "docs/assets/reference-images.md",
     "docs/assets/sa02.md",
     "docs/assets/bm01.md",
@@ -47,7 +48,11 @@ PUBLIC_MARKDOWN = (
     "docs/18-开源发布与持续同步规范.md",
     "docs/19-BM01真实角色替换与JK03退役约束.md",
 )
-PUBLIC_DOC_PATHS = frozenset((*PUBLIC_MARKDOWN, SCHEMA_PATH, EXAMPLE_PATH))
+PUBLIC_DOC_PATHS = frozenset((
+    *PUBLIC_MARKDOWN, SCHEMA_PATH, EXAMPLE_PATH,
+    "docs/schemas/motion-video-profile.schema.json", "docs/schemas/motion-tags.v1.json",
+    "docs/examples/motion-video-profile.example.json",
+))
 PUBLIC_LINK_TARGETS = PUBLIC_DOC_PATHS | PUBLIC_IMAGES | {
     MANIFEST_PATH, "LICENSE", "configs/project.example.toml",
 }

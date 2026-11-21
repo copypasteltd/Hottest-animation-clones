@@ -1,5 +1,10 @@
 # 变更记录
 
+## 动作迁移画像 v1 · Motion video profiles v1（2026-11-22）
+
+- 增加画像契约、双语受控词表、离线校验与虚构样例。两条既有 Bilibili 原片及四份成片完成离线画像；平台原始字段、抽样标签与成片观察分开，以文件哈希绑定，不把候选作确认标签。真实快照、媒体、证据和画像仍私有。
+- Added the profile contract, bilingual vocabulary, offline validation, and a fictitious example. The first local pass covers two retained Bilibili sources and four renditions. Sampling is not exhaustive; OCR/ASR, automatic semantic tagging, X/Douyin extraction, and production integration have not been validated in this pass.
+
 ## 新任务归类与自动同步 · Task classification and automatic synchronization（2026-11-21）
 
 - 固化本项目的接单归类、结果归档和 GitHub 正常推送规则。公开变更通过检查后默认同步，无公开差异则不推送；私有媒体、工作流回执和既有本地改动不纳入本次发布。

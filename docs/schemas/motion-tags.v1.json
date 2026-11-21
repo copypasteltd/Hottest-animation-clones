@@ -1,0 +1,516 @@
+{
+  "taxonomy_version": "motion-tags/1.0",
+  "revision_policy": "Machine IDs are stable. Additions require a new vocabulary revision; never repurpose or translate an ID in place.",
+  "facets": [
+    "content",
+    "movement",
+    "visibility",
+    "framing",
+    "camera",
+    "scene",
+    "props",
+    "interaction",
+    "audio",
+    "text",
+    "quality"
+  ],
+  "tags": [
+    {
+      "id": "content.choreographed_dance",
+      "facet": "content",
+      "zh": "编舞表演",
+      "en": "Choreographed dance",
+      "definition": "整片呈有组织的重复或连贯舞蹈组合，不从标题推断。"
+    },
+    {
+      "id": "content.gesture_dance",
+      "facet": "content",
+      "zh": "手势舞",
+      "en": "Gesture-led dance",
+      "definition": "整段以有组织的上肢与手势表演为主，单次手势不足。"
+    },
+    {
+      "id": "content.high_energy_dance",
+      "facet": "content",
+      "zh": "热舞／高能舞蹈",
+      "en": "High-energy dance",
+      "definition": "风格或力度标签，需连续、显著的全身体力动态及多次动作证据；不按服装或 BPM 判断。"
+    },
+    {
+      "id": "content.cosplay_performance",
+      "facet": "content",
+      "zh": "角色装扮表演",
+      "en": "Costumed character performance",
+      "definition": "服装、发饰等呈现可见的角色化造型，不推定具体人物。"
+    },
+    {
+      "id": "movement.arm_sweep",
+      "facet": "movement",
+      "zh": "摆臂／扫臂",
+      "en": "Arm sweep",
+      "definition": "对比相邻观察见手臂弧形或横向移过身体。"
+    },
+    {
+      "id": "movement.arm_extension",
+      "facet": "movement",
+      "zh": "伸臂",
+      "en": "Arm extension",
+      "definition": "一臂或双臂明显向外伸展。"
+    },
+    {
+      "id": "movement.arm_raise",
+      "facet": "movement",
+      "zh": "抬臂",
+      "en": "Arm raise",
+      "definition": "臂或肘抬起，或有明确高位姿态。"
+    },
+    {
+      "id": "movement.pointing",
+      "facet": "movement",
+      "zh": "指向",
+      "en": "Pointing",
+      "definition": "可见伸指出方向；仅伸臂不能确认指向。"
+    },
+    {
+      "id": "movement.open_palm_display",
+      "facet": "movement",
+      "zh": "张掌展示",
+      "en": "Open-palm display",
+      "definition": "可见张开的手掌，不自动判定挥手。"
+    },
+    {
+      "id": "movement.wave",
+      "facet": "movement",
+      "zh": "挥手",
+      "en": "Wave",
+      "definition": "需可见手腕／手掌往返或连续挥动，不仅是张掌。"
+    },
+    {
+      "id": "movement.chest_hand_gesture",
+      "facet": "movement",
+      "zh": "胸前手势",
+      "en": "Chest-level gesture",
+      "definition": "可见手靠近胸前做动作，不推断特定手形。"
+    },
+    {
+      "id": "movement.heart_gesture",
+      "facet": "movement",
+      "zh": "比心（未分型）",
+      "en": "Heart gesture, unspecified",
+      "definition": "清楚心形才能记 observed；疑似轮廓可以 candidate。"
+    },
+    {
+      "id": "movement.finger_heart",
+      "facet": "movement",
+      "zh": "指尖比心",
+      "en": "Finger heart",
+      "definition": "清楚见拇食指交叉或捏合形成指尖心形。"
+    },
+    {
+      "id": "movement.two_hand_heart",
+      "facet": "movement",
+      "zh": "双手胸前比心",
+      "en": "Two-hand chest heart",
+      "definition": "两手形成清楚闭合心形轮廓。"
+    },
+    {
+      "id": "movement.overhead_heart",
+      "facet": "movement",
+      "zh": "头顶比心",
+      "en": "Overhead heart",
+      "definition": "双臂或手在头顶形成清楚心形。"
+    },
+    {
+      "id": "movement.knee_bend",
+      "facet": "movement",
+      "zh": "屈膝",
+      "en": "Knee bend",
+      "definition": "可见膝部弯曲，不由上身起伏反推。"
+    },
+    {
+      "id": "movement.crossed_feet",
+      "facet": "movement",
+      "zh": "交错脚位",
+      "en": "Crossed foot placement",
+      "definition": "腿脚投影有可辨交错，不断言实际触地。"
+    },
+    {
+      "id": "movement.separated_feet",
+      "facet": "movement",
+      "zh": "分脚／恢复并列",
+      "en": "Separated or parallel feet",
+      "definition": "两脚在投影中各自可辨，不断言承重。"
+    },
+    {
+      "id": "movement.foot_lift",
+      "facet": "movement",
+      "zh": "抬脚",
+      "en": "Foot lift",
+      "definition": "可见足与地面关系变化，静帧不能证明连续时序。"
+    },
+    {
+      "id": "movement.foot_contact",
+      "facet": "movement",
+      "zh": "足部触地",
+      "en": "Foot contact",
+      "definition": "判断需要连续证据和可见地面，不能仅凭影子。"
+    },
+    {
+      "id": "movement.weight_transfer",
+      "facet": "movement",
+      "zh": "换重心",
+      "en": "Weight transfer",
+      "definition": "需连续承重、离地或姿态证据，不能只凭单张静帧。"
+    },
+    {
+      "id": "movement.trunk_lean",
+      "facet": "movement",
+      "zh": "躯干倾斜",
+      "en": "Trunk lean",
+      "definition": "躯干姿态相对主体基准明显倾斜。"
+    },
+    {
+      "id": "movement.turn",
+      "facet": "movement",
+      "zh": "人物转身",
+      "en": "Body turn",
+      "definition": "人物身体转向，不能用背景旋转单独推断。"
+    },
+    {
+      "id": "movement.squat",
+      "facet": "movement",
+      "zh": "下蹲",
+      "en": "Squat",
+      "definition": "可辨下沉、明显膝髋屈曲，不把轻微屈膝算下蹲。"
+    },
+    {
+      "id": "movement.jump",
+      "facet": "movement",
+      "zh": "跳跃",
+      "en": "Jump",
+      "definition": "需连续可见离地和落地线索。"
+    },
+    {
+      "id": "visibility.hands_visible",
+      "facet": "visibility",
+      "zh": "手部可见",
+      "en": "Hands visible",
+      "definition": "在所指证据中可见，不保证手指分辨率。"
+    },
+    {
+      "id": "visibility.feet_visible",
+      "facet": "visibility",
+      "zh": "足部可见",
+      "en": "Feet visible",
+      "definition": "在所指证据中看得到脚或鞋。"
+    },
+    {
+      "id": "visibility.feet_out_of_frame",
+      "facet": "visibility",
+      "zh": "足部出框",
+      "en": "Feet out of frame",
+      "definition": "明确因构图不可见，不否定原片存在脚步。"
+    },
+    {
+      "id": "visibility.edge_crop",
+      "facet": "visibility",
+      "zh": "主体贴边或局部裁切",
+      "en": "Subject at edge or clipped",
+      "definition": "部位明确贴近边缘或被切到；说明部位和范围。"
+    },
+    {
+      "id": "visibility.limb_occlusion",
+      "facet": "visibility",
+      "zh": "肢体遮挡",
+      "en": "Limb occlusion",
+      "definition": "肢体相互或被外物遮住，不能推未知动作。"
+    },
+    {
+      "id": "framing.portrait",
+      "facet": "framing",
+      "zh": "竖屏",
+      "en": "Portrait",
+      "definition": "实际显示画幅为竖；无 SAR 时注明仅编码栅格。"
+    },
+    {
+      "id": "framing.landscape",
+      "facet": "framing",
+      "zh": "横屏",
+      "en": "Landscape",
+      "definition": "实际显示画幅为横；不自动认定精确 16:9。"
+    },
+    {
+      "id": "framing.full_body",
+      "facet": "framing",
+      "zh": "全身构图",
+      "en": "Full-body framing",
+      "definition": "主要按头至脚构图；单独记录某些画面裁切。"
+    },
+    {
+      "id": "framing.upper_body",
+      "facet": "framing",
+      "zh": "半身构图",
+      "en": "Upper-body framing",
+      "definition": "上身和手势为主，脚步通常不可评价。"
+    },
+    {
+      "id": "camera.high_angle",
+      "facet": "camera",
+      "zh": "略俯拍",
+      "en": "High angle",
+      "definition": "从可见地面、人物比例等证据判断，不报告未知角度。"
+    },
+    {
+      "id": "camera.perspective_change",
+      "facet": "camera",
+      "zh": "透视变化",
+      "en": "Perspective change",
+      "definition": "地面或静物几何关系在观察间明显变化。"
+    },
+    {
+      "id": "camera.lateral_sweep",
+      "facet": "camera",
+      "zh": "横向背景扫动",
+      "en": "Lateral scene sweep",
+      "definition": "静态场景特征横向移动，只描述屏幕证据。"
+    },
+    {
+      "id": "camera.orbit",
+      "facet": "camera",
+      "zh": "环绕运镜",
+      "en": "Orbit around subject",
+      "definition": "需连续的场景视差与人物相机相对证据；不能用地面线旋动或身体转向单独确认。"
+    },
+    {
+      "id": "camera.locked_off",
+      "facet": "camera",
+      "zh": "固定机位",
+      "en": "Locked-off shot",
+      "definition": "需连续静态特征支持，不从少量静帧推断固定。"
+    },
+    {
+      "id": "camera.pan",
+      "facet": "camera",
+      "zh": "原地摇摄",
+      "en": "Pan",
+      "definition": "区分旋转与平移，无分离证据留候选。"
+    },
+    {
+      "id": "camera.roll",
+      "facet": "camera",
+      "zh": "画面滚转",
+      "en": "Camera roll",
+      "definition": "见整体地平线转动，不等同绕人物。"
+    },
+    {
+      "id": "camera.zoom",
+      "facet": "camera",
+      "zh": "变焦",
+      "en": "Zoom",
+      "definition": "需区别主体前后运动或相机推拉。"
+    },
+    {
+      "id": "camera.reframe",
+      "facet": "camera",
+      "zh": "构图或尺度变化",
+      "en": "Reframing or scale change",
+      "definition": "主体画面位置或大小改变，不断言相机动作种类。"
+    },
+    {
+      "id": "camera.no_obvious_cut",
+      "facet": "camera",
+      "zh": "抽样未见明显切镜",
+      "en": "No obvious cut in review",
+      "definition": "只描述审查覆盖，不保证无快速切镜。"
+    },
+    {
+      "id": "scene.poolside",
+      "facet": "scene",
+      "zh": "泳池边",
+      "en": "Poolside setting",
+      "definition": "可见泳池及邻近台面。"
+    },
+    {
+      "id": "scene.commercial_concourse",
+      "facet": "scene",
+      "zh": "商业步道／商场通道",
+      "en": "Commercial concourse",
+      "definition": "可见店面、走道等视觉线索，不识别地点。"
+    },
+    {
+      "id": "scene.white_void",
+      "facet": "scene",
+      "zh": "白色空场",
+      "en": "White void",
+      "definition": "可见白色无场景装饰空间。"
+    },
+    {
+      "id": "scene.floor_grid",
+      "facet": "scene",
+      "zh": "地面网格",
+      "en": "Floor grid",
+      "definition": "网格位于可见地面，不包括池砖。"
+    },
+    {
+      "id": "props.no_visible_action_prop",
+      "facet": "props",
+      "zh": "抽样未见动作道具",
+      "en": "No visible action prop in samples",
+      "definition": "只约束审查时点，不把服饰、贴纸或背景陈设当道具。"
+    },
+    {
+      "id": "props.handheld_action_prop",
+      "facet": "props",
+      "zh": "手持动作道具",
+      "en": "Handheld action prop",
+      "definition": "直接被表演者操作、影响动作的物体。"
+    },
+    {
+      "id": "props.costume_tail",
+      "facet": "props",
+      "zh": "服饰尾饰",
+      "en": "Costume tail",
+      "definition": "附着在服饰上的尾饰，不等同手持道具。"
+    },
+    {
+      "id": "props.platform_overlay",
+      "facet": "props",
+      "zh": "片中贴图／叠加图",
+      "en": "Embedded graphic overlay",
+      "definition": "画面中可见独立图像叠加，不计为第二表演者。"
+    },
+    {
+      "id": "props.plants_in_background",
+      "facet": "props",
+      "zh": "背景植物",
+      "en": "Plants in background",
+      "definition": "可见植被或盆栽，不计动作道具。"
+    },
+    {
+      "id": "props.escalator_in_background",
+      "facet": "props",
+      "zh": "背景扶梯",
+      "en": "Escalator in background",
+      "definition": "可见扶梯，用作场景证据。"
+    },
+    {
+      "id": "interaction.solo",
+      "facet": "interaction",
+      "zh": "单人表演",
+      "en": "Solo performance",
+      "definition": "表演动作主线由一人承担，背景路人另记。"
+    },
+    {
+      "id": "interaction.background_bystanders",
+      "facet": "interaction",
+      "zh": "背景路人",
+      "en": "Background bystanders",
+      "definition": "出现不参与表演的背景人物。"
+    },
+    {
+      "id": "interaction.duet",
+      "facet": "interaction",
+      "zh": "双人共同表演",
+      "en": "Duet",
+      "definition": "两位共同参与表演，不把贴纸或背景路人计入。"
+    },
+    {
+      "id": "interaction.synchronized_movement",
+      "facet": "interaction",
+      "zh": "多人同步",
+      "en": "Synchronized performers",
+      "definition": "至少两位演员有可见同步动作。"
+    },
+    {
+      "id": "audio.track_present",
+      "facet": "audio",
+      "zh": "有音轨",
+      "en": "Audio track present",
+      "definition": "媒体探测有音轨，不推断语义。"
+    },
+    {
+      "id": "audio.periodic_envelope",
+      "facet": "audio",
+      "zh": "候选音频周期",
+      "en": "Candidate audio periodicity",
+      "definition": "短窗包络的周期估计，不是曲目 BPM 或踩点。"
+    },
+    {
+      "id": "audio.music",
+      "facet": "audio",
+      "zh": "音乐",
+      "en": "Music",
+      "definition": "需听辨或专项模型，不由振幅或标题断言。"
+    },
+    {
+      "id": "audio.speech",
+      "facet": "audio",
+      "zh": "口语／对白",
+      "en": "Speech",
+      "definition": "需听辨或转写，不把歌词字幕当口语。"
+    },
+    {
+      "id": "audio.beat_aligned_motion",
+      "facet": "audio",
+      "zh": "动作与节拍对齐",
+      "en": "Motion aligned to beat",
+      "definition": "需音频节拍与动作事件均有证据且时钟可比。"
+    },
+    {
+      "id": "text.platform_watermark",
+      "facet": "text",
+      "zh": "平台水印",
+      "en": "Platform watermark",
+      "definition": "可见平台标记，不转写作者标识。"
+    },
+    {
+      "id": "text.scene_signage",
+      "facet": "text",
+      "zh": "场景招牌",
+      "en": "Scene signage",
+      "definition": "在画面里有招牌，不推断精确 OCR 文本。"
+    },
+    {
+      "id": "text.subtitle",
+      "facet": "text",
+      "zh": "可见字幕",
+      "en": "Visible subtitle",
+      "definition": "区分画面文字、平台字幕轨和 ASR。"
+    },
+    {
+      "id": "quality.source_scene_leak",
+      "facet": "quality",
+      "zh": "原场景回流",
+      "en": "Source scene leakage",
+      "definition": "生成画面再现源场景物件。可按采样范围记录未见，不保证全片。"
+    },
+    {
+      "id": "quality.floor_grid_confined",
+      "facet": "quality",
+      "zh": "网格限于地面",
+      "en": "Grid confined to floor",
+      "definition": "所指样本没有墙顶网格；不作全片保证。"
+    },
+    {
+      "id": "quality.stable_footwear",
+      "facet": "quality",
+      "zh": "观察到鞋形一致",
+      "en": "Consistent footwear in samples",
+      "definition": "所指样本鞋型可读且一致，不等同逐帧动作精确。"
+    },
+    {
+      "id": "quality.foot_slide",
+      "facet": "quality",
+      "zh": "脚滑",
+      "en": "Foot sliding",
+      "definition": "需连续证据或几何分析，单张静帧不可判定。"
+    },
+    {
+      "id": "quality.identity_drift",
+      "facet": "quality",
+      "zh": "角色外观漂移",
+      "en": "Identity drift",
+      "definition": "与参考的外观有可见变化，不代表识别真人身份。"
+    }
+  ]
+}
