@@ -1,5 +1,10 @@
 # 变更记录
 
+## 真人／动漫混排与详情索引 · Mixed renditions and detail search（2026-11-22）
+
+- 首页改为逐份成片混排，提供「只看定稿」筛选；按作品归组仍可选。定稿按已验证画像与验收记录绑定，不把取回或待复核算作定稿。扩展作者、规格、配置及可选观察与复核说明检索，保留标签的来源与候选状态。
+- The default gallery mixes individual photographic and anime renditions. Verified finals can be filtered without collapsing attempts. Added structured metadata and opt-in review-note matching, with candidate and source boundaries intact. Browser checks covered the current private archive and synthetic root and Pages builds; no deployment or private publication.
+
 ## 纯前端视频库 v1 · Static motion catalog v1（2026-11-22）
 
 - 实现作品／成片卡片墙、全库中英模糊检索、精确标签筛选、分页与时间／热度排序。核验根路径和 Pages 子路径的虚构数据构建，并在本机私有目录用 Chromium 播放现有四份成片。真实媒体、画像、截图及构建产物不入 Git，未部署。

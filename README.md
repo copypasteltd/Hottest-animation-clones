@@ -20,7 +20,7 @@ Across 16 matched time samples, the second redraw showed the feet apart at 6.0, 
 
 A profile separates retained platform text and native tags, observations of the whole source, and observations of each retrieved rendition. A first offline pass covers two retained Bilibili sources with both SA02 and BM01 versions. Labels carry nominal sample times, evidence and uncertainty; the profile does not feed or block generation. [Collection and validation contract](<docs/operations/motion-profile.md>)
 
-The [static video catalog v1](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>) implements the Inspiration-style gallery, paginated works and renditions, catalog-wide bilingual fuzzy search, scoped tags, and freshness-weighted popularity. Build a public synthetic example for either deployment base or a separate private loopback viewer for validated local outputs. Nothing has been deployed.
+The [static video catalog v1](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>) opens a single paginated gallery mixing anime and photographic renditions, with one card per rendition. Filter verified finals or group by work. Full-catalog search covers cleaned bilingual tags, keywords, and structured details, with optional review-note matching. Root and Pages builds contain synthetic examples only; real data stays in the separate private loopback viewer. Nothing has been deployed.
 
 ## Reference characters and S02
 

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {exampleData} from '../scripts/examples.mjs';
 import {byteRange} from '../scripts/serve.mjs';
+import {assertApprovalCoverage} from '../scripts/projection.mjs';
 import {emptyQuery, utc} from '../src/model.ts';
 import {DAY, heatScores, rankOrder, trendScore} from '../src/ranking.ts';
 import {editWithin, normalize, parseTerms, SearchIndex} from '../src/search.ts';
@@ -11,7 +12,8 @@ import {safeRelative, sourceLink, unpack, validateTags} from '../src/validate.ts
 const examples=await exampleData(async()=>{});
 const catalog={works:examples.works,renditions:examples.renditions};
 const index=new SearchIndex(catalog,examples.tags,examples.asOf);
-const run=(extra={})=>index.run({...emptyQuery(),...extra});
+const run=(extra={})=>index.run({...emptyQuery(),view:'works',...extra});
+const flat=(extra={})=>index.run({...emptyQuery(),...extra});
 const id=(x)=>x.matches.map(m=>m.id);
 const at=Date.parse(examples.asOf);
 const before=d=>new Date(at-d*DAY).toISOString();
@@ -30,6 +32,50 @@ test('paginates after sorting and visits every work exactly once',()=>{
   const v=[1,2,3].flatMap(page=>id(run({view:'renditions',page})));
   assert.equal(v.length,67);assert.equal(new Set(v).size,67);
 });
+test('the first page mixes both variants and finals never disappear into grouping',()=>{
+  const byId=new Map(catalog.renditions.map(v=>[v.id,v]));
+  const first=flat();
+  assert.equal(first.total,67);
+  assert.equal(first.matches.length,24);
+  assert.ok(first.matches.every(row=>row.id===row.videoId));
+  assert.deepEqual(new Set(first.matches.map(row=>byId.get(row.id).variant)),new Set(['SA02','BM01']));
+  const approved=catalog.renditions.filter(v=>v.reviewStatus==='approved').map(v=>v.id);
+  const finals=flat({approvedOnly:true});
+  const finalIds=Array.from({length:finals.pages},(_,i)=>id(flat({approvedOnly:true,page:i+1}))).flat();
+  assert.equal(finals.total,approved.length);
+  assert.deepEqual([...finalIds].sort(),approved.sort());
+  assert.ok(finalIds.includes('video-demo-01-sa02-1'));
+  assert.ok(id(flat({q:'真人'})).every(key=>byId.get(key).variant==='BM01'));
+  assert.ok(id(flat({q:'动漫'})).every(key=>byId.get(key).variant==='SA02'));
+  assert.equal(run({q:'DEMO-33',approvedOnly:true}).total,0);
+});
+test('final review binds to the exact indexed id, hash, receipt and approval state',()=>{
+  const review={key:'opaque-mapped-identity',sha:'test-digest',receipt:'test-receipt',path:'fixture-review.json'};
+  const row={sha:review.sha,receipt:review.receipt,status:'approved'};
+  assert.doesNotThrow(()=>assertApprovalCoverage([review],new Map([[review.key,row]])));
+  assert.throws(()=>assertApprovalCoverage([review],new Map()),/not bound/);
+  for(const alternative of [{status:'pending'},{sha:'other-digest'},{receipt:'other-receipt'}]) {
+    assert.throws(()=>assertApprovalCoverage([review],new Map([[review.key,{...row,...alternative}]])),/not bound/);
+  }
+});
+test('author and machine details are always indexed; review notes are distinct and scoped',()=>{
+  const author=flat({q:'"云端节拍档案"'});
+  assert.deepEqual(id(author).sort(),['video-demo-34-bm01-1','video-demo-34-sa02-1']);
+  assert.ok(author.matches.every(m=>m.matchedFields.includes('原片作者')));
+  assert.equal(flat({q:'"云端节拍档案"',scope:'rendition'}).total,0);
+  assert.ok(flat({q:'"S02 白场"',scope:'rendition'}).total>0);
+  assert.ok(flat({q:'"1920×1080"',scope:'source'}).total>0);
+  const query={q:'"青岚触地复核"'};
+  assert.equal(flat(query).total,0);
+  const compared=flat({...query,notes:true});
+  assert.deepEqual(id(compared),['video-demo-34-bm01-1']);
+  assert.deepEqual(compared.matches[0].matchedFields,['成片对照说明']);
+  assert.equal(flat({...query,notes:true,variant:['SA02']}).total,0);
+  assert.equal(flat({...query,notes:true,scope:'source'}).total,0);
+  assert.equal(flat({q:'"星灯胸前手形观察"',notes:true}).total,0);
+  assert.ok(flat({q:'"星灯胸前手形观察"',notes:true,candidates:true}).total>0);
+});
+
 test('search finds the last work by text outside the first page',()=>{
   assert.deepEqual(id(run({q:'"星屑回形步唯一检索词"'})),['work-demo-34']);
   assert.deepEqual(id(run({q:'ＤＥＭＯ－３４'})),['work-demo-34']);
@@ -107,7 +153,7 @@ test('ranking sorts freshness and heat independently, with deterministic final t
 });
 test('hash URL is bounded and round-trips bilingual and exact scoped filters',()=>{
   const q={...emptyQuery(),q:'"gesture dance" 比心',tag:['source:movement.heart_gesture'],variant:['BM01'],
-    platform:['bilibili'],frame:['half_body'],shape:['landscape'],scope:'source',candidates:true,sort:'hot',page:2};
+    platform:['bilibili'],frame:['half_body'],shape:['landscape'],scope:'source',candidates:true,approvedOnly:true,notes:true,view:'works',sort:'hot',page:2};
   assert.deepEqual(parseRoute(routeHash(q,'video-demo-01-bm01-1')),{query:q,detail:'video-demo-01-bm01-1',issue:null});
   assert.equal(parseRoute('#/videos?p=-2&id=%2Ftmp&tag=wrong').query.page,1);
   assert.equal(parseRoute('#/videos?id=%2Ftmp').detail,null);

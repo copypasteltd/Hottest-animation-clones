@@ -22,14 +22,18 @@ export function FilterPanel({query,tags,facets,ready,update,clear,close}:{query:
   const matching=tags.filter(t=>!needle||[t.zh,t.en,t.id,...t.aliases].some(v=>normalize(v).includes(needle)));
   return <Panel title="筛选与标签" onClose={close}>
     <div className="filter-body">
-      <p className="muted">标签需同时满足；同组的版本、平台、取景和画幅任选其一。成片条件必须命中同一份成片。</p>
+      <p className="muted">默认真人与动漫混排。标签需同时满足，不能用另一份成片的标签或详情补齐。</p>
+      <label className="candidates"><input type="checkbox" checked={query.approvedOnly} onChange={e=>update({approvedOnly:e.currentTarget.checked})}/>只看已定稿成片</label>
       <Choices title="版本" options={variants} values={query.variant} names={variantName} onChange={variant=>update({variant})}/>
       <Choices title="来源平台" options={platforms} values={query.platform} names={platformName} onChange={platform=>update({platform})}/>
       <Choices title="取景" options={framings} values={query.frame} names={frameName} onChange={frame=>update({frame})}/>
       <Choices title="画幅" options={shapes} values={query.shape} names={shapeName} onChange={shape=>update({shape})}/>
-      <fieldset className="choices"><legend>文本匹配的分析标签范围</legend><div className="choices-row">
+      <fieldset className="choices"><legend>分析标签与详情的检索范围</legend><div className="choices-row">
         {([['all','不限'],['source','原片观察'],['rendition','成片观察']] as const).map(([value,name])=><button key={value} type="button" className="choice" aria-pressed={query.scope===value} onClick={()=>update({scope:value})}>{name}</button>)}
-      </div><label className="candidates"><input type="checkbox" checked={query.candidates} onChange={e=>update({candidates:e.currentTarget.checked})}/>同时检索候选标签</label></fieldset>
+      </div><label className="candidates"><input type="checkbox" checked={query.candidates} onChange={e=>update({candidates:e.currentTarget.checked})}/>同时检索候选标签</label>
+        <label className="candidates"><input type="checkbox" checked={query.notes} onChange={e=>update({notes:e.currentTarget.checked})}/>同时检索观察与复核说明</label>
+        <p className="muted">作者、规格、配置和验收状态默认可搜；说明中提到某动作，不代表确认它出现过。</p>
+      </fieldset>
       <label className="tag-search"><Icon name="search" size={16}/><input aria-label="查找标签" placeholder="按中文、英文或别名找标签" value={text} maxLength={120} onChange={e=>setText(e.currentTarget.value)}/></label>
       <p className="muted">数字是当前条件下、分页前的匹配条数。候选不是确认标签。</p>
       {!ready?<p className="muted" role="status">等待全库标签索引…</p>:!matching.length?<p className="muted">没有这个标签。</p>:scopes.map(scope=>{

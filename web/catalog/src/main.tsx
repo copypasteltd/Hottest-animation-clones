@@ -14,7 +14,7 @@ import './style.css';
 const labels={trend:'综合',latest:'最新',hot:'最热'} as const;
 const formatter=new Intl.DateTimeFormat('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit'});
 const date=(value:string|null)=>value?formatter.format(new Date(value)):'时间未知';
-const modes=[['works','作品'],['renditions','成片']] as const;
+const modes=[['renditions','成片'],['works','按作品']] as const;
 const notes={missing:'热度未采集',stale:'热度已过期',incomparable:'暂无可比热度'};
 const initialTheme=()=>{try{const t=localStorage.getItem('motion-catalog-theme');if(t==='light'||t==='dark')return t;}catch{/* storage is optional */}return null;};
 function useTheme(){
@@ -45,7 +45,7 @@ function Card({match,work,video,eligible,wordbank,mode,eager,select,view,toggleT
   const tags=[...work.tags,...(video?.tags??[])].filter(t=>t.state==='observed')
     .sort((a,b)=>{const order=(id:string)=>id.startsWith('rendition:movement.')?0:id.startsWith('source:content.')?1:id.startsWith('source:movement.')?2:id.startsWith('native:')?3:4;return order(a.id)-order(b.id);})
     .map(t=>wordbank.get(t.id)).filter((t):t is Tag=>!!t);
-  return <article className="card" data-item={match.id} aria-label={title}>
+  return <article className="card" data-item={match.id} data-variant={video?.variant} data-review={video?.reviewStatus} aria-label={title}>
     <button className="card-main" type="button" aria-label={'查看：'+title} onClick={view}>
       <span className="card-media" data-shape={video?.shape}><Cover key={video?.id??work.id} video={video} eager={eager}/>
         {video&&<span className="media-chip" data-playable={video.playable}><Icon name={video.playable?'play':'video'} size={12}/>{displayDuration(video.durationMs)}</span>}
@@ -57,7 +57,7 @@ function Card({match,work,video,eligible,wordbank,mode,eager,select,view,toggleT
     {mode==='works'&&eligible.length>0&&<div className="version-row" aria-label={'版本：'+work.title}>
       {variants.map(v=>{const r=eligible.find(item=>item.variant===v);return r&&<button className="version" type="button" key={v} aria-pressed={video?.variant===v} onClick={()=>select(r.id)}>{variantName[v]}</button>;})}
     </div>}
-    {mode==='renditions'&&video&&<p className="rendition-caption">{variantName[video.variant]} · {video.label}</p>}
+    {video&&<div className="rendition-caption">{mode==='renditions'&&<span>{variantName[video.variant]}</span>}<span className="review-badge" data-review={video.reviewStatus}>{video.label}</span></div>}
     {tags.length>0&&<div className="card-tags">{tags.slice(0,3).map(t=><TagPill key={t.id} tag={t} showScope selected={active.includes(t.id)} onClick={()=>toggleTag(t.id)}/>)}
       {tags.length>3&&<button type="button" className="plus-tags" aria-label={'查看全部 '+tags.length+' 个标签：'+title} onClick={view}>+{tags.length-3}</button>}
     </div>}
@@ -121,8 +121,8 @@ function App(){
   const show=(id:string)=>{setPanel(null);go(query,id,{preserve:true});};
   const page=(p:number)=>{if(p!==query.page){jump.current=true;go({...query,page:p},null);}};
   const reset=()=>{setDraft('');go({...emptyQuery(),view:query.view},null,{replace:false,preserve:true});};
-  const clear=()=>update({tag:[],platform:[],variant:[],frame:[],shape:[],scope:'all',candidates:false});
-  const filterCount=query.tag.length+query.platform.length+query.variant.length+query.frame.length+query.shape.length+Number(query.candidates)+Number(query.scope!=='all');
+  const clear=()=>update({tag:[],platform:[],variant:[],frame:[],shape:[],scope:'all',candidates:false,approvedOnly:false,notes:false});
+  const filterCount=query.tag.length+query.platform.length+query.variant.length+query.frame.length+query.shape.length+Number(query.candidates)+Number(query.scope!=='all')+Number(query.approvedOnly)+Number(query.notes);
   const toggleTag=(id:string)=>{const next=flip(query.tag,id);if(next.length<=30)update({tag:next});};
   const quick=tags.filter(t=>t.scope==='source'&&['content','movement'].includes(t.facet)&&(result?.facets[t.id]??0)>0)
     .sort((a,b)=>(result?.facets[b.id]??0)-(result?.facets[a.id]??0)||cmpText(a.id,b.id)).slice(0,4);
@@ -134,7 +134,7 @@ function App(){
     <a className="skip" href="#results" onClick={e=>{e.preventDefault();heading.current?.focus();}}>跳到视频列表</a>
     <aside className="rail" aria-label="快捷入口">
       <button className="mark icon-btn" type="button" aria-label="动作迁移库首页" onClick={()=>{setDraft('');go(emptyQuery(),null);}}><Icon name="logo" size={25}/></button>
-      <button className="icon-btn rail-active" type="button" aria-label="浏览作品" onClick={()=>update({view:'works'})}><Icon name="wall"/></button>
+      <button className="icon-btn rail-active" type="button" aria-label="浏览混排成片" onClick={()=>update({view:'renditions'})}><Icon name="wall"/></button>
       <button className="icon-btn" type="button" aria-label="标签目录" onClick={()=>setPanel('filters')}><Icon name="tag"/></button>
       <button className="icon-btn" type="button" aria-label="定位搜索框" onClick={()=>input.current?.focus()}><Icon name="search"/></button>
       <button className="icon-btn rail-tail" type="button" aria-label="关于目录" onClick={()=>setPanel('info')}><Icon name="info"/></button>
@@ -153,7 +153,7 @@ function App(){
           <form className="query" role="search" onSubmit={e=>{e.preventDefault();if(!usingIME)submit(input.current?.value??draft);}}>
             <span className="query-icon"><Icon name="search" size={17}/></span>
             <input ref={input} value={draft} onChange={e=>setDraft(e.currentTarget.value)} onCompositionStart={()=>setUsingIME(true)} onCompositionEnd={e=>{setDraft(e.currentTarget.value);setUsingIME(false);}}
-              aria-label="搜索全库" aria-invalid={!!queryIssue} aria-describedby={queryIssue?'query-error':undefined} placeholder="搜标题、说明、动作或标签" autoComplete="off" maxLength={240}/>
+              aria-label="搜索全库" aria-invalid={!!queryIssue} aria-describedby={queryIssue?'query-error':undefined} placeholder="搜标题、标签、作者或媒体规格" autoComplete="off" maxLength={240}/>
             {draft?<button type="button" className="clear-input icon-btn" aria-label="清空搜索" onClick={()=>{setDraft('');submit('');input.current?.focus();}}><Icon name="close" size={15}/></button>:<kbd className="shortcut" aria-hidden="true">/</kbd>}
             <button type="submit" className="search-btn" aria-label="执行搜索"><Icon name="up" size={17}/></button>
           </form>
@@ -161,7 +161,8 @@ function App(){
           {ribbon.length>0&&<div className="ribbon" aria-label="首页缩略入口">{ribbon.map(({m,v})=><button type="button" key={m.id} aria-label={'预览：'+v!.title} onClick={()=>show(v!.id)}><Cover video={v??null} small/></button>)}<span aria-hidden="true"><Icon name="link" size={12}/></span></div>}
         </div></section>
         <section className="results" id="results" aria-labelledby="list-title" ref={section}>
-          <div className="list-head"><div><h2 id="list-title" ref={heading} tabIndex={-1}>{query.q?'搜索结果':query.view==='works'?'作品灵感墙':'成片灵感墙'}</h2><span className="counts" role="status" aria-live="polite">{result?result.total+' 条'+(result.pages>1?' · '+result.page+' / '+result.pages+' 页':''):lib.issue?'目录暂不可用':lib.ready?'正在检索全库…':'正在准备全库索引…'}</span></div>
+          <div className="list-head"><div><h2 id="list-title" ref={heading} tabIndex={-1}>{query.q?'搜索结果':query.view==='works'?'作品灵感墙':'真人与动漫成片'}</h2><span className="counts" role="status" aria-live="polite">{result?result.total+' 条'+(result.pages>1?' · '+result.page+' / '+result.pages+' 页':''):lib.issue?'目录暂不可用':lib.ready?'正在检索全库…':'正在准备全库索引…'}</span>
+            <button type="button" className="choice final-toggle" aria-pressed={query.approvedOnly} onClick={()=>update({approvedOnly:!query.approvedOnly})}>只看定稿</button></div>
             <label className="list-sort"><Icon name="sort" size={16}/><span>排序</span><select aria-label="列表排序" value={query.sort} onChange={e=>update({sort:e.currentTarget.value as Query['sort']})}>{Object.entries(labels).map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label></div>
           {route.issue&&<p className="notice" role="status">{route.issue}</p>}
           {filterCount>0&&<div className="selected-row" aria-label="已选筛选">
@@ -172,6 +173,8 @@ function App(){
             {query.shape.map(x=><button type="button" className="selection" key={x} onClick={()=>update({shape:flip(query.shape,x)})}>{shapeName[x]}<Icon name="close" size={13}/></button>)}
             {query.scope!=='all'&&<button type="button" className="selection" onClick={()=>update({scope:'all'})}>{query.scope==='source'?'只搜原片标签':'只搜成片标签'}<Icon name="close" size={13}/></button>}
             {query.candidates&&<button type="button" className="selection" onClick={()=>update({candidates:false})}>含候选<Icon name="close" size={13}/></button>}
+            {query.approvedOnly&&<button type="button" className="selection" onClick={()=>update({approvedOnly:false})}>已定稿<Icon name="close" size={13}/></button>}
+            {query.notes&&<button type="button" className="selection" onClick={()=>update({notes:false})}>含观察与复核说明<Icon name="close" size={13}/></button>}
             <button type="button" className="text-btn" onClick={clear}>清除筛选</button>
           </div>}
           {lib.issue&&<div className="notice" role="alert">{lib.issue} <button className="soft-btn" type="button" onClick={lib.refresh}>刷新目录</button></div>}
@@ -192,15 +195,16 @@ function App(){
         <Switch value={query.view} label="快捷目录视图" change={view=>update({view})}/>
         <div className="dock-tags">{quick.map(t=><TagPill key={t.id} tag={t} selected={query.tag.includes(t.id)} onClick={()=>toggleTag(t.id)}/>)}</div>
         <label className="dock-sort"><Icon name="sort" size={15}/><select aria-label="快捷排序" value={query.sort} onChange={e=>update({sort:e.currentTarget.value as Query['sort']})}>{Object.entries(labels).map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label>
-        <button className="solid-btn dock-filter" type="button" onClick={()=>setPanel('filters')}><Icon name="filter" size={17}/><span>筛选</span>{filterCount>0&&<b>{filterCount}</b>}</button>
+        <button className="solid-btn dock-filter" type="button" aria-label="筛选" aria-haspopup="dialog" aria-description={filterCount>0?'已启用 '+filterCount+' 项条件':undefined} onClick={()=>setPanel('filters')}><Icon name="filter" size={17}/><span>筛选</span>{filterCount>0&&<b aria-hidden="true">{filterCount}</b>}</button>
       </div>
     </div>
-    {!detail&&panel==='filters'&&<FilterPanel query={query} tags={tags} ready={lib.ready} facets={result?.facets??{}} update={q=>update(q,true)} clear={()=>update({tag:[],variant:[],platform:[],shape:[],frame:[],candidates:false,scope:'all'},true)} close={()=>setPanel(null)}/>}
+    {!detail&&panel==='filters'&&<FilterPanel query={query} tags={tags} ready={lib.ready} facets={result?.facets??{}} update={q=>update(q,true)} clear={()=>update({tag:[],variant:[],platform:[],shape:[],frame:[],candidates:false,scope:'all',approvedOnly:false,notes:false},true)} close={()=>setPanel(null)}/>}
     {!detail&&panel==='info'&&<Panel title="关于此目录" onClose={()=>setPanel(null)}><div className="about">
       <p>{meta?.mode==='local'?'此构建只在本机显示私有成片。没有线上账户或外部搜索请求。':'当前是可公开检查界面与检索的虚构数据集，不含真实视频、原片链接或私有画像。'}</p>
       {meta&&<p>目录快照：<time dateTime={meta.asOf}>{date(meta.asOf)}</time>，{meta.version.slice(0,10)}。</p>}
       <p>综合排序：55% 新鲜度＋45% 平台互动热度。新鲜度每 14 天减半，热度不是本站播放量。缺失、过期或不可比的热度明确标注。</p>
-      <p>观察标签只描述已有证据的范围。配置标签、原片与成片观察、候选标签均分别保存。</p>
+      <p>真人和动漫共用成片列表与排序。已定稿必须有对应成片的验收记录，取回成功不等于已定稿。</p>
+      <p>结构化详情默认可搜。观察、对照及证据限制可在筛选中纳入全文；命中说明不等于命中已确认标签。</p>
       <button type="button" className="soft-btn" onClick={()=>{setPanel(null);lib.refresh();}}><Icon name="reset" size={15}/> 重新加载目录</button>
     </div></Panel>}
     {detail&&<DetailPanel id={detail} meta={meta} tags={tags} work={work} video={video} related={related} pending={!lib.full&&!lib.issue} select={id=>go(query,id,{replace:true,preserve:true})} close={close}/>}

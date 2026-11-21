@@ -17,8 +17,9 @@ export function parseRoute(hash: string): Route {
   const many=<T extends string>(key: string, choices: readonly T[])=>choices.filter(x=>p.getAll(key).includes(x));
   q.tag=[...new Set(p.getAll('tag').filter(x=>tagIdPattern.test(x)))].slice(0,30);
   q.platform=many('platform',platforms); q.variant=many('variant',variants); q.frame=many('frame',framings); q.shape=many('shape',shapes);
-  q.scope=one('scope',['all','source','rendition'],'all');q.view=one('view',['works','renditions'],'works');
+  q.scope=one('scope',['all','source','rendition'],'all');q.view=one('view',['works','renditions'],'renditions');
   q.sort=one('sort',['trend','latest','hot'],'trend');q.candidates=p.get('candidate')==='1';
+  q.approvedOnly=p.get('approved')==='1';q.notes=p.get('notes')==='1';
   const page=p.get('p');q.page=page&&/^[1-9]\d{0,8}$/.test(page)?Number(page):1;
   const id=p.get('id');
   return {query:q,detail:id&&idPattern.test(id)?id:null,issue};
@@ -29,7 +30,9 @@ export function routeHash(query: Query,detail: string|null=null): string {
   for (const key of ['tag','platform','variant','frame','shape'] as const) for (const entry of [...query[key]].sort()) p.append(key,entry);
   if (query.scope!=='all')p.set('scope',query.scope);
   if (query.candidates)p.set('candidate','1');
-  if (query.view!=='works')p.set('view',query.view);
+  if (query.approvedOnly)p.set('approved','1');
+  if (query.notes)p.set('notes','1');
+  if (query.view!=='renditions')p.set('view',query.view);
   if (query.sort!=='trend')p.set('sort',query.sort);
   if (query.page!==1)p.set('p',String(query.page));
   if (detail)p.set('id',detail);

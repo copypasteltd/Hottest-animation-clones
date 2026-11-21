@@ -1,4 +1,4 @@
-import {framings, idPattern, PAGE_SIZE, platforms, RANKING, SCHEMA, scopes, shapes,
+import {detailKinds, framings, idPattern, PAGE_SIZE, platforms, RANKING, reviewStates, SCHEMA, scopes, shapes,
   tagIdPattern, TAXONOMY, utc, variants} from './model.ts';
 import type {Catalog, Detail, Fact, Meta, Ref, Tag, TagRef} from './model.ts';
 import type {Match, QueryResult} from './search.ts';
@@ -106,21 +106,32 @@ export function validateTags(value: unknown): Tag[] {
   }
   return value as Tag[];
 }
+function detailsIndex(value: unknown, allowed: readonly string[], at: string): void {
+  let size=0;
+  for(const row of array(value,400,at)) {
+    const d=object(row,'kind text candidate',at);
+    one(d.kind,detailKinds,at);one(d.kind,allowed,at);
+    size+=text(d.text,8000,at).length;
+    insist(typeof d.candidate==='boolean'&&(!d.candidate||d.kind==='observation'),at+' 候选来源无效');
+  }
+  insist(size<=48_000,at+' 文字量超限');
+}
 export function validateCatalog(value: unknown, tags: Tag[], meta: Meta, subset=false): Catalog {
   const c=object(value,'works renditions','目录');
   const known=new Set(tags.map(t=>t.id));
   const workIds=array(c.works,10000,'作品').map(entry=>{
-    const w=object(entry,'id title description code platform listedAt heat heatAt heatState tags','作品');
+    const w=object(entry,'id title description code platform listedAt heat heatAt heatState tags detailsIndex','作品');
     const key=id(w.id,'work');
     text(w.title,300,'作品标题');text(w.description,24_000,'作品说明',true);
     if(w.code!==null)text(w.code,120,'作品编号');
     one(w.platform,platforms,'平台');time(w.listedAt,'入库');time(w.heatAt,'热度');one(w.heatState,heatStates,'热度状态');
     insist(w.heat===null?w.heatState!=='available':typeof w.heat==='number'&&w.heat>=0&&w.heat<=1&&w.heatState==='available'&&w.heatAt!==null,'热度与状态矛盾');
-    tagIndex(w.tags,known,['native','source'],'作品标签');return key;
+    tagIndex(w.tags,known,['native','source'],'作品标签');
+    detailsIndex(w.detailsIndex,['author','platform','media','route','observation','limitation'],'原片详情索引');return key;
   });
   const works=new Set(workIds);
   const videoIds=array(c.renditions,10000,'成片').map(entry=>{
-    const r=object(entry,'id workId title description variant framing shape durationMs listedAt label poster playable tags','成片');
+    const r=object(entry,'id workId title description variant framing shape durationMs listedAt label poster playable tags reviewStatus detailsIndex','成片');
     const key=id(r.id,'video');
     insist(typeof r.workId==='string'&&works.has(r.workId),'成片没有关联作品');
     one(r.variant,variants,'成片版本');one(r.framing,framings,'成片取景');one(r.shape,shapes,'成片画幅');
@@ -133,7 +144,9 @@ export function validateCatalog(value: unknown, tags: Tag[], meta: Meta, subset=
       insist(safeRelative(p.path)&&p.path==='covers/'+key+'.'+kind,'封面路径不匹配');
       int(p.width,1,4096,'封面宽');int(p.height,1,4096,'封面高');
     }
-    tagIndex(r.tags,known,['rendition','configuration'],'成片标签');return key;
+    tagIndex(r.tags,known,['rendition','configuration'],'成片标签');
+    one(r.reviewStatus,reviewStates,'成片验收状态');
+    detailsIndex(r.detailsIndex,['media','configuration','review','observation','comparison','limitation'],'成片详情索引');return key;
   });
   const ids=[...workIds,...videoIds];
   onlyUnique(ids,'目录');
@@ -179,15 +192,16 @@ export function validateHome(value: unknown, meta: Meta): Home {
   const seen=new Set<string>();
   for(const row of array(result.matches,PAGE_SIZE,'首页结果')) {
     const m=object(row,'id workId videoId matchingVideoIds matchedFields listedAt heat relevance exactId','首页结果');
-    const work=id(m.workId,'work');
-    insist(m.id===work&&ws.has(work)&&!seen.has(work)&&m.heat===ws.get(work)!.heat&&m.relevance===0&&m.exactId===false,'首页作品绑定无效');
-    seen.add(work);time(m.listedAt,'首页入库');
-    const renditions=array(m.matchingVideoIds,10000,'首页成片编号').map(k=>id(k,'video'));
-    onlyUnique(renditions,'首页成片');
-    insist(renditions.every(k=>vs.get(k)?.workId===work)&&(m.videoId===null?!renditions.length:renditions.includes(m.videoId as string)),'首页成片绑定无效');
+    const work=id(m.workId,'work'), video=id(m.videoId,'video');
+    const rendition=vs.get(video);
+    insist(m.id===video&&ws.has(work)&&!seen.has(video)&&rendition?.workId===work&&
+      m.heat===ws.get(work)!.heat&&m.listedAt===rendition.listedAt&&m.relevance===0&&m.exactId===false,'首页成片绑定无效');
+    seen.add(video);
+    const matches=array(m.matchingVideoIds,1,'首页成片编号');
+    insist(matches.length===1&&matches[0]===video,'首页必须逐份成片展示');
     insist(!array(m.matchedFields,0,'首页命中字段').length,'无条件首页不能声明命中字段');
   }
-  insist(seen.size===Math.min(total,PAGE_SIZE)&&seen.size===ws.size,'首页结果数量不符');
+  insist(seen.size===Math.min(total,PAGE_SIZE)&&seen.size===vs.size&&ws.size===new Set(catalog.renditions.map(v=>v.workId)).size,'首页结果数量不符');
   return {catalog,tags,result:root.result as QueryResult};
 }
 export function assertMatchResult(x: QueryResult): x is QueryResult {

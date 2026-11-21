@@ -29,6 +29,7 @@ const tags=Object.keys(names).flatMap(key=>{
 });
 tags.push({id:'native:fixture-dance',scope:'native',zh:'舞蹈练习',en:'',aliases:[],facet:'platform'});
 const obs=(id,state='observed')=>({id,state});
+const info=(kind,text,candidate=false)=>({kind,text,candidate});
 const fact=(row,note,times=[])=>({...row,note,times,interval:null});
 const day=86400000;
 const date=days=>new Date(Date.parse(AS_OF)-days*day).toISOString();
@@ -62,7 +63,7 @@ export async function exampleData(save) {
     if (i%12===7) s.push(obs('source:movement.heart_gesture','candidate'));
     if (i%12===2) s.push(obs('source:camera.orbit','candidate'));
     const sf=s.filter(t=>!t.id.startsWith('native:')).map(t=>fact(t,t.state==='candidate'?'仅为虚构的待核候选。':'虚构标签，用于对照来源。',[4500,6500]));
-    const w={id:key,title,description,code:'DEMO-'+sequence,platform,listedAt,tags:s};
+    const w={id:key,title,description,code:'DEMO-'+sequence,platform,listedAt,tags:s,detailsIndex:[info('author',i===33?'虚构作者 云端节拍档案':'虚构作者 舞步练习组'),info('media','原片分辨率 1920×1080；30 fps'),...(i%12===7?[info('observation','星灯胸前手形观察',true)]:[])]};
     works.push(w);
     inputs.push({id:key,platform,samples:i%9===0?[]:[{at:i%9===1?date(32):date(1),views:800+(i*12841)%60800,likes:30+(i*37)%500,comments:i%4===0?null:i%80,reposts:platform==='x'?i:null}]});
     details[key]={id:key,sourceUrl:null,video:null,sourceFacts:sf,renditionFacts:[],acceptance:'虚构条目',notes:['虚构目录仅用于验收界面与检索，不含真实原片或成片。']};
@@ -77,10 +78,13 @@ export async function exampleData(save) {
         rTags.push(obs('rendition:movement.'+(variant==='BM01'&&i===0?'pointing':motion)));
         if (i%12===2) rTags.push(obs('rendition:camera.orbit','candidate'));
         const name=title+(variant==='SA02'?' · 动漫':' · 写实');
+        const reviewStatus=i%4===0||i===33?'approved':i%3===0?'pending':'unrecorded';
+        const label=reviewStatus==='approved'?'示例 · 已定稿':reviewStatus==='pending'?'示例 · 待复核':'示例 · 未记录验收';
+        const comparison=i===33&&variant==='BM01'?'同刻对照专例：青岚触地复核。':'仅为虚构成片的抽样对照。';
         renditions.push({id,workId:key,title:name,description:'同源动作重画的虚构版本；保留角色标签，不作为成片证据。',variant,
           framing:portrait?'full_body':'half_body',shape:portrait?'portrait':'landscape',durationMs:12500+i*273,listedAt:i===33?null:date(i*.84+1+(attempts-a)*3),
-          label:a===1&&attempts>1?'历史示例':'示例版本',poster:i===31?null:poster,playable:false,tags:rTags});
-        details[id]={id,sourceUrl:null,video:null,sourceFacts:sf,renditionFacts:rTags.filter(r=>r.id.startsWith('rendition:')).map(r=>fact(r,'虚构成片观察。',[4500])),acceptance:'虚构条目',notes:['示例封面由本站绘制，不含视频或第三方实拍素材。']};
+          label:a===1&&attempts>1?label+' · 历史':label,poster:i===31?null:poster,playable:false,tags:rTags,reviewStatus,detailsIndex:[info('configuration','S02 白场；示例配置'),info('review',label),info('comparison',comparison)]});
+        details[id]={id,sourceUrl:null,video:null,sourceFacts:sf,renditionFacts:rTags.filter(r=>r.id.startsWith('rendition:')).map(r=>fact(r,'虚构成片观察。',[4500])),acceptance:label,notes:[comparison,'示例封面由本站绘制，不含视频或第三方实拍素材。']};
       }
     }
   }

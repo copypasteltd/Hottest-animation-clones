@@ -63,7 +63,8 @@ try {
   const tags=validateTags(data.tags);
   const result=new SearchIndex(catalog,tags,data.asOf).run(emptyQuery());
   const keys=new Set(result.matches.map(m=>m.workId));
-  const hometown={works:catalog.works.filter(w=>keys.has(w.id)),renditions:catalog.renditions.filter(r=>keys.has(r.workId))};
+  const shown=new Set(result.matches.map(m=>m.videoId));
+  const hometown={works:catalog.works.filter(w=>keys.has(w.id)),renditions:catalog.renditions.filter(r=>shown.has(r.id))};
   const homeTags=new Set([...hometown.works,...hometown.renditions].flatMap(w=>w.tags.map(t=>t.id)));
   const home={catalog:hometown,tags:tags.filter(t=>homeTags.has(t.id)),result:{...result,facets:{}}};
   const version=hash(encode({schema:SCHEMA,taxonomy:TAXONOMY,ranking:RANKING,mode,asOf:data.asOf,catalog,tags,details:data.details})).slice(0,24);

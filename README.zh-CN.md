@@ -20,7 +20,7 @@
 
 画像把平台标题、简介和原始标签、原片观察、每份成片观察分别归档。首轮离线覆盖两条已有 Bilibili 原片及其 SA02／BM01 版本。标签带抽样时点、证据和不确定性；画像不参与生成、不阻挡交付。[采集与校验规范](<docs/operations/motion-profile.md>)
 
-[纯前端视频库 v1](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>)已实现「灵感」风格卡片墙、作品／成片分页、全库中英模糊检索、分来源标签筛选和时间／热度加权排序。提供公开虚构样例和独立的本机私有版，可构建根路径或 Pages 子路径；未部署。
+[纯前端视频库 v1](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>)默认真人／动漫混排，一份成片一张卡，可只看已定稿或按作品归组。全库支持清洗后的中英标签、关键词、结构化详情与可选复核说明检索。根路径和 Pages 构建仅含虚构示例，真实成片由本机私有版查看；未部署。
 
 ## 基准人物与 S02
 

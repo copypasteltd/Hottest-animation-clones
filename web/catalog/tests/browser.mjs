@@ -39,10 +39,12 @@ async function visit(target, options, test){
 try {
   await visit('root',{viewport:{width:1440,height:900},colorScheme:'light'},async({page,host,media})=>{
     await page.goto(host.url);
-    await expectTotal(page,34);
+    await expectTotal(page,67);
     await page.locator('.wall[data-positioned=true]').waitFor();
     const first=await cardIds(page);
     assert.equal(first.length,24);
+    assert.deepEqual(new Set(await page.locator('.card').evaluateAll(cards=>cards.map(c=>c.dataset.variant))),new Set(['SA02','BM01']));
+    assert.ok(first.every(key=>key.startsWith('video-')));
     assert.equal(await page.locator('.card').first().evaluate(e=>e.getBoundingClientRect().top<innerHeight),true);
     assert.equal(await page.locator('.card').evaluateAll(nodes=>new Set(nodes.slice(0,5).map(n=>Math.round(n.getBoundingClientRect().left))).size),5);
     // A tag grid is a reliable full-index readiness signal, even if the first page came from home projection.
@@ -57,9 +59,26 @@ try {
     await page.getByRole('button',{name:'第 2 页',exact:true}).getAttribute('aria-current');
     await page.locator('.paging [aria-current=page]').filter({hasText:/^2$/}).waitFor();
     const second=await cardIds(page);
-    assert.equal(second.length,10);assert.equal(new Set([...first,...second]).size,34);
+    assert.equal(second.length,24);
+    await page.getByRole('button',{name:'下一页',exact:true}).click();
+    await page.locator('.paging [aria-current=page]').filter({hasText:/^3$/}).waitFor();
+    const third=await cardIds(page);
+    assert.equal(third.length,19);assert.equal(new Set([...first,...second,...third]).size,67);
+    await page.getByRole('button',{name:'只看定稿',exact:true}).click();
+    await expectTotal(page,19);
+    assert.ok(await page.locator('.card').evaluateAll(cards=>cards.every(c=>c.dataset.review==='approved')));
+    await page.getByRole('button',{name:'只看定稿',exact:true}).click();await expectTotal(page,67);
     await search(page,'"星屑回形步唯一检索词"');
-    await expectTotal(page,1);assert.deepEqual(await cardIds(page),['work-demo-34']);
+    await expectTotal(page,2);
+    assert.deepEqual((await cardIds(page)).sort(),['video-demo-34-bm01-1','video-demo-34-sa02-1']);
+    await search(page,'"云端节拍档案"');
+    await wait(page.locator('.card-tail').filter({hasText:'原片作者'}).first());
+    await search(page,'"青岚触地复核"');await wait(page.getByRole('heading',{name:'没有符合条件的视频'}));
+    await page.getByRole('button',{name:'筛选',exact:true}).click();
+    await page.getByRole('checkbox',{name:'同时检索观察与复核说明'}).check();
+    await page.getByRole('button',{name:'查看结果'}).click();
+    await expectTotal(page,1);assert.deepEqual(await cardIds(page),['video-demo-34-bm01-1']);
+    await wait(page.locator('.card-tail').filter({hasText:'成片对照说明'}));
     await search(page,'手市舞');await page.locator('.card').first().waitFor();
     assert.ok(await page.locator('.card').count()>1);
     await search(page,'"gesture-led dance"');await page.locator('.card').first().waitFor();
@@ -67,7 +86,7 @@ try {
     await page.getByRole('button',{name:'筛选',exact:true}).click();
     await page.getByRole('checkbox',{name:'同时检索候选标签'}).check();
     await page.getByRole('button',{name:'查看结果'}).click();
-    await expectTotal(page,3);
+    await expectTotal(page,6);
     const open=page.locator('.card-main').first();await open.click();
     await wait(page.getByRole('dialog',{name:'视频详情'}));
     await wait(page.getByText('此条为虚构示例，没有可播放的真实视频。'));
@@ -79,7 +98,7 @@ try {
     assert.equal(status.status(),404);assert.deepEqual(media,[]);
     const cross=await page.request.get(host.url+'data/catalog-meta.json',{headers:{'Sec-Fetch-Site':'cross-site'}});
     assert.equal(cross.status(),403);
-    reports.push({target:'root',checks:['fiveColumns','themes','pagination','fullCatalogSearch','fuzzy','candidates','detailFocus','noPublicVideo']});
+    reports.push({target:'root',checks:['mixedRenditions','fiveColumns','themes','pagination','fullCatalogSearch','fuzzy','finalOnly','scopedDetails','candidates','detailFocus','noPublicVideo']});
   });
   await visit('pages',{viewport:{width:390,height:844},colorScheme:'light',isMobile:true,hasTouch:true},async({page,host})=>{
     await page.goto(host.url+'#/videos?view=renditions&sort=latest&p=2');
@@ -101,7 +120,7 @@ try {
     reports.push({target:'pages',checks:['subpath','deepLinkReload','noHorizontalOverflow','fullScreenDetail','backRestoresPage']});
   });
   await visit('root',{viewport:{width:1280,height:800},colorScheme:'dark'},async({page,host})=>{
-    await page.goto(host.url);await expectTotal(page,34);
+    await page.goto(host.url);await expectTotal(page,67);
     await page.locator('.wall[data-positioned=true]').waitFor();
     assert.equal(await page.locator('.card').evaluateAll(nodes=>new Set(nodes.slice(0,4).map(n=>Math.round(n.getBoundingClientRect().left))).size),4);
     assert.equal(await page.locator('.card').nth(4).evaluate(e=>e.getBoundingClientRect().top>e.parentElement.getBoundingClientRect().top),true);
@@ -110,12 +129,19 @@ try {
     reports.push({target:'root-compact',checks:['fourColumns','1280x800','noHorizontalOverflow']});
   });
   if(local)await visit('local',{viewport:{width:1440,height:900},colorScheme:'light'},async({page,host,media})=>{
-    await page.goto(host.url);await expectTotal(page,2);
+    await page.goto(host.url);await expectTotal(page,4);
     assert.equal(host.report.playable,4);
+    assert.deepEqual(new Set(await page.locator('.card').evaluateAll(cards=>cards.map(c=>c.dataset.variant))),new Set(['SA02','BM01']));
     await page.locator('.card img').first().waitFor();
     await shot(page,'local-desktop-light');
-    await page.getByRole('group',{name:'目录视图',exact:true}).getByRole('button',{name:'成片',exact:true}).click();
-    await expectTotal(page,4);assert.equal((await cardIds(page)).length,4);
+    await page.getByRole('button',{name:'只看定稿',exact:true}).click();
+    await expectTotal(page,1);
+    assert.deepEqual(await page.locator('.card').evaluateAll(cards=>cards.map(c=>[c.dataset.variant,c.dataset.review])),[['SA02','approved']]);
+    await shot(page,'local-approved-light');
+    await page.getByRole('button',{name:'只看定稿',exact:true}).click();await expectTotal(page,4);
+    const views=page.getByRole('group',{name:'目录视图',exact:true});
+    await views.getByRole('button',{name:'按作品',exact:true}).click();await expectTotal(page,2);
+    await views.getByRole('button',{name:'成片',exact:true}).click();await expectTotal(page,4);assert.equal((await cardIds(page)).length,4);
     const wall=await cardIds(page);
     const decoded=new Set();
     const dialog=page.getByRole('dialog',{name:'视频详情'});
@@ -147,7 +173,25 @@ try {
       await expectTotal(page,4);
     }
     assert.equal(decoded.size,4);
-    reports.push({target:'local',checks:['twoWorkCards','fourRenditions','gestureGatedPlayback','decodedAllFour','seek','rangeServing','variantStopsPlayback']});
+    const lookup=async (fields)=>{
+      const p=new URLSearchParams(fields);
+      await page.goto(host.url+'#/videos?'+p.toString());
+    };
+    await lookup({tag:'source:content.gesture_dance'});await expectTotal(page,2);
+    const gesture=await cardIds(page);
+    assert.deepEqual(new Set(await page.locator('.card').evaluateAll(cards=>cards.map(c=>c.dataset.variant))),new Set(['SA02','BM01']));
+    await lookup({tag:'rendition:quality.stable_footwear',variant:'BM01'});await expectTotal(page,1);
+    const foot=await cardIds(page);
+    assert.ok(!gesture.includes(foot[0]));
+    await lookup({q:'"768×1376"',scope:'rendition'});await expectTotal(page,2);
+    await wait(page.locator('.card-tail').filter({hasText:'成片媒体规格'}).first());
+    assert.ok((await cardIds(page)).includes(foot[0]));
+    await lookup({q:'"抽样脚位相符"',scope:'rendition'});
+    await wait(page.getByRole('heading',{name:'没有符合条件的视频'}));
+    await lookup({q:'"抽样脚位相符"',scope:'rendition',notes:'1'});await expectTotal(page,1);
+    assert.deepEqual(await cardIds(page),foot);
+    await wait(page.locator('.card-tail').filter({hasText:'成片对照说明'}));
+    reports.push({target:'local',checks:['defaultMixedFour','verifiedFinalOnly','twoWorkCards','gestureGatedPlayback','decodedAllFour','seek','rangeServing','variantStopsPlayback']});
   });
   console.log(JSON.stringify({status:'passed',reports,screenshots:out},null,2));
 } finally {await browser.close();}

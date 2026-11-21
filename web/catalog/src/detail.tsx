@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {flushSync} from 'react-dom';
-import {frameName,platformName,shapeName,variantName,variants} from './model.ts';
-import type {Detail,Fact,Meta,Rendition,Tag,Work} from './model.ts';
+import {detailName,frameName,noteKind,platformName,shapeName,variantName,variants} from './model.ts';
+import type {Detail,Fact,IndexedDetail,Meta,Rendition,Tag,Work} from './model.ts';
 import {fetchDetail,resource} from './data.ts';
 import {Cover,displayDuration,Icon,Panel} from './ui.tsx';
 import {TagPill} from './filters.tsx';
@@ -27,6 +27,11 @@ function Player({video,path}:{video:Rendition;path:string}){
   </div>;
 }
 const timeCode=(ms:number)=>{const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')+'.'+String(ms%1000).padStart(3,'0').replace(/0{1,2}$/,'');};
+function Metadata({title,items}:{title:string;items:IndexedDetail[]}) {
+  const rows=items.filter(row=>!noteKind(row.kind));
+  if(!rows.length)return null;
+  return <section className="detail-notes detail-fields"><h3>{title}</h3><dl>{rows.map((row,i)=><div key={row.kind+'-'+i}><dt>{detailName[row.kind]}</dt><dd>{row.text}</dd></div>)}</dl></section>;
+}
 function Observations({title,items,wordbank}:{title:string;items:Fact[];wordbank:Map<string,Tag>}){
   return <section className="facts"><h3>{title}</h3>{!items.length?<p className="muted">没有已归档的观察。</p>:items.map((fact,i)=>{
     const tag=wordbank.get(fact.id);if(!tag)return null;
@@ -74,6 +79,8 @@ export function DetailPanel({id,meta,tags,work,video,related,pending,select,clos
         <section className="detail-notes"><h3>说明</h3>{work.description?<p>{work.description}</p>:<p className="muted">平台未提供说明，或未纳入当前目录。</p>}
           {d?.sourceUrl&&<a className="source-link" href={d.sourceUrl} target="_blank" rel="noopener noreferrer">查看原站作品 <Icon name="link" size={14}/></a>}
         </section>
+        <Metadata title="原片资料" items={work.detailsIndex}/>
+        {video&&<Metadata title="成片资料" items={video.detailsIndex}/>}
         <div className="detail-tags">{[...work.tags,...(video?.tags??[])].filter(t=>t.id.startsWith('native:')||t.id.startsWith('configuration:')).map(t=>{
           const tag=names.get(t.id);return tag&&<TagPill key={t.id} tag={tag} showScope/>;
         })}</div>

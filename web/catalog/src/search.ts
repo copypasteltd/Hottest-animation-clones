@@ -1,5 +1,5 @@
-import {cmpText, frameName, PAGE_SIZE, platformName, shapeName, utc, variantName} from './model.ts';
-import type {Catalog, Query, Rendition, Tag, TagRef, Work} from './model.ts';
+import {cmpText, detailName, frameName, noteKind, PAGE_SIZE, platformName, shapeName, utc, variantName} from './model.ts';
+import type {Catalog, IndexedDetail, Query, Rendition, Tag, TagRef, Work} from './model.ts';
 import {listedTime, rankOrder} from './ranking.ts';
 import type {RankItem} from './ranking.ts';
 
@@ -74,13 +74,16 @@ function factor(atom: Atom, term: Term, needle: string[]): number {
   return 0;
 }
 
-type Field = {atom: Atom; weight: number; label: string; tag?: Tag};
+type Field = {atom: Atom; weight: number; label: string; tag?: Tag; detail?: {scope:'source'|'rendition'; row:IndexedDetail}};
 type Indexed = {work: Work; video: Rendition | null; fixed: Field[]; tags: TagRef[]};
 type Hit = {record: Indexed; relevance: number; exactId: boolean; fields: string[]; ids: Set<string>};
 export type Match = RankItem & {workId: string; videoId: string | null; matchingVideoIds: string[]; matchedFields: string[]};
 export type QueryResult = {matches: Match[]; total: number; pages: number; page: number; facets: Record<string,number>; hotAvailable: boolean};
 const has = <T>(choices: T[], value: T): boolean => !choices.length || choices.includes(value);
 const scopeAllows = (scope: Tag['scope'], q: Query) => scope==='native' || q.scope==='all' || scope===q.scope || scope==='configuration' && q.scope==='rendition';
+const detailAllows = (f: Field, q: Query) => !f.detail || (scopeAllows(f.detail.scope,q) &&
+  (q.notes || !noteKind(f.detail.row.kind)) && (!f.detail.row.candidate || q.candidates));
+const variantWords = {SA02:'动漫 二次元 anime animation', BM01:'真人 真人风格 写实 photographic photorealistic live action'};
 
 export class SearchIndex {
   private records: Indexed[] = [];
@@ -105,10 +108,11 @@ export class SearchIndex {
     for (const work of catalog.works) {
       const videos=byWork.get(work.id) ?? [];
       const common=[this.field(work.title,1,'作品标题'),this.field(work.description,.65,'原片说明'),
-        this.field(platformName[work.platform]+' '+work.platform,.55,'平台')];
+        this.field(platformName[work.platform]+' '+work.platform,.55,'平台'), ...this.details(work.detailsIndex,'source')];
       for (const video of videos.length ? videos : [null]) {
         const fixed=video ? [...common,this.field(video.title,1,'成片标题'),this.field(video.description,.65,'成片摘要'),
-          this.field(variantName[video.variant]+' '+frameName[video.framing]+' '+video.framing+' '+shapeName[video.shape]+' '+video.shape,.55,'版本与构图')]
+          this.field(variantName[video.variant]+' '+variantWords[video.variant]+' '+frameName[video.framing]+' '+video.framing+' '+shapeName[video.shape]+' '+video.shape,.55,'版本与构图'),
+          ...this.details(video.detailsIndex,'rendition')]
           : common;
         const tags=[...work.tags,...(video?.tags??[])];
         const record={work,video,fixed,tags};
@@ -126,6 +130,10 @@ export class SearchIndex {
         }
       }
     }
+  }
+  private details(rows: IndexedDetail[],scope: 'source'|'rendition'): Field[] {
+    return rows.map(row=>({...this.field(row.text,noteKind(row.kind) ? .46 : .60,
+      (scope==='source'?'原片':'成片')+detailName[row.kind]),detail:{scope,row}}));
   }
   private field(text: string,weight: number,label: string,tag?: Tag): Field {
     const key=normalize(text);
@@ -148,10 +156,11 @@ export class SearchIndex {
     const cache=terms.map(()=>new Map<Atom,number>());
     const needles=terms.map(t=>[...t.text]);
     const hits: Hit[]=[];
-    const wantsVideo=q.view==='renditions'||!!(q.variant.length||q.frame.length||q.shape.length||q.tag.some(id=>id.startsWith('rendition:')||id.startsWith('configuration:')));
+    const wantsVideo=q.view==='renditions'||q.approvedOnly||!!(q.variant.length||q.frame.length||q.shape.length||q.tag.some(id=>id.startsWith('rendition:')||id.startsWith('configuration:')));
     for (const i of possible??this.records.keys()) {
       const record=this.records[i], v=record.video;
       if ((!v&&wantsVideo)||!has(q.platform,record.work.platform)||v&&(!has(q.variant,v.variant)||!has(q.frame,v.framing)||!has(q.shape,v.shape))) continue;
+      if (q.approvedOnly&&v?.reviewStatus!=='approved') continue;
       const refs=record.tags.filter(t=>q.candidates||t.state==='observed');
       const ids=new Set(refs.map(t=>t.id));
       if (!q.tag.every(t=>ids.has(t))) continue;
@@ -160,7 +169,7 @@ export class SearchIndex {
       let relevance=0;
       if (exactId) { relevance=1; fields.add('编号'); }
       else if (terms.length) {
-        const searchable=[...record.fixed,...refs.flatMap(r=>(this.fields.get(r.id)??[]).filter(f=>f.tag&&scopeAllows(f.tag.scope,q)))];
+        const searchable=[...record.fixed.filter(f=>detailAllows(f,q)),...refs.flatMap(r=>(this.fields.get(r.id)??[]).filter(f=>f.tag&&scopeAllows(f.tag.scope,q)))];
         let sum=0;
         for (const [j,term] of terms.entries()) {
           let best=0; let from='';

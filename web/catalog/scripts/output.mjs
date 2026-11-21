@@ -54,7 +54,8 @@ export async function auditOutput(dir,target,{includePaths=false}={}){
   const exact=new SearchIndex(catalog,tags,meta.asOf).run(emptyQuery());
   if(JSON.stringify(home.result)!==JSON.stringify({...exact,facets:{}}))reject('Home selection does not match the full search index');
   const homeWorks=new Set(exact.matches.map(m=>m.workId));
-  const projection={works:catalog.works.filter(w=>homeWorks.has(w.id)),renditions:catalog.renditions.filter(v=>homeWorks.has(v.workId))};
+  const shown=new Set(exact.matches.map(m=>m.videoId));
+  const projection={works:catalog.works.filter(w=>homeWorks.has(w.id)),renditions:catalog.renditions.filter(v=>shown.has(v.id))};
   const tagged=new Set([...projection.works,...projection.renditions].flatMap(w=>w.tags.map(t=>t.id)));
   if(JSON.stringify(home.catalog)!==JSON.stringify(projection)||JSON.stringify(home.tags)!==JSON.stringify(tags.filter(t=>tagged.has(t.id))))
     reject('Home data is not an exact projection of the full catalog');
