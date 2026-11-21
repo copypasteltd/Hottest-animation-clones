@@ -10,6 +10,12 @@ Use `/ra-video-download` to obtain the complete source video, select framing and
 
 A two-source Bilibili trial retrieved both SA02 and BM01 for the standing half-body and full-body routes. The trial covered source download or reuse, grouped queue submission, and receipt-based retrieval. The contour-guided route has one user-accepted vertical SA02 full-body sample; content acceptance is per output. Automated production orchestration is pending implementation. X and Douyin integration and the two-performer routes still need live trials. [Current status](<docs/product/status.md>) · [Workflow test cases](<docs/verification/acceptance.md>)
 
+### Case study: BM01 F06 footwork repair
+
+The first full-body redraw corrected the footwear but still kept the legs crossed when the source feet had separated. The second used a full-length grayscale motion reference and stronger leg and foot contours in both sampling passes, with an F06 shoe detail reference. H3 redrew the whole shot in S02 with the original soundtrack; no visual compositing was used.
+
+Across 16 matched time samples, the second redraw showed the feet apart at 6.0, 6.5, 7.0, and 8.0 seconds, while retaining the crossed pose at about 4.5 seconds and the matching low-cut Mary Jane shoes. The stills do not establish exact landings, absence of foot sliding, or weight transfer throughout playback. [Repair setup and verification limits](<docs/operations/h3-4090.md#bm01-f06-footwork-repair>)
+
 ## Reference characters and S02
 
 S02 uses a plain white background and a fine light-gray floor grid. The four current compositions cover standing single performers. Half-body uses knee-length framing. Full-body includes the shoes and floor. [S02 and target images](<docs/assets/reference-images.md>)

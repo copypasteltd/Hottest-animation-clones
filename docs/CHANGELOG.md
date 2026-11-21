@@ -1,5 +1,10 @@
 # 变更记录
 
+## BM01 F06 足部时序修复 · BM01 F06 footwork repair（2026-11-21）
+
+- 两轮整片重画分别针对鞋型和脚步时序。第二轮接入整段灰度动作参考、两遍腿脚轮廓引导和 F06 鞋部细节，不合成画面，保留 S02 和原音。16 个同时间抽样显示分脚与交错姿态有改善；连续落地、脚滑和重心转换仍需播放验收。
+- Two full-length redraws addressed footwear and step timing. The second used a grayscale motion reference, leg and foot edge guidance in both passes, and an F06 footwear detail reference. It retained S02 and the source soundtrack without compositing. Sixteen matched stills show better correspondence for foot separation and crossings; playback is still needed to assess landings, foot sliding, and weight transfer.
+
 ## S02 轮廓引导纯重画定稿 · Approved S02 contour-guided redraw（2026-11-21）
 
 - 一条站立单人 SA02 F02 竖屏全身样片获用户验收。定稿使用全片前景轮廓作一采引导、独立 S02 空场作唯一环境参考；源视频 RGB 不接生成参考，无背景合成。
