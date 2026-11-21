@@ -35,6 +35,8 @@ S02 采用纯白背景和细浅灰地面网格。当前四张构图覆盖站立�
 
 ## 工作区与离线检查
 
+本项目的新任务接单时先归类，完成后按类别归档。可公开的变更通过检查后自动推送到 GitHub `main`；原片、成片和运行回执仍只留本地。[任务归类与发布规则](<docs/maintenance/publication.md#task-classification>)
+
 在项目根使用 Python 3.11+ 和 Git，并在项目环境安装开发依赖。[工作区与维护命令](<docs/maintenance/workspace.md>)
 
 ```bash

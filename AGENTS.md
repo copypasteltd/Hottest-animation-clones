@@ -26,13 +26,17 @@
 
 ## Required update and synchronization workflow
 
-The user requested that completed project work keep the specified GitHub repository, documentation and update notes synchronized. This grants normal repository synchronization, not permission to create additional features.
+The user has given standing authorization to classify and archive each new task handled in this project, and to synchronize verified, publication-eligible changes to the authorized GitHub `main` without waiting for a separate push request. This is a project maintenance rule, not permission for new features, scheduled jobs, deployment or wider publication.
+
+- At intake, distinguish a new media batch, a rerun or repair, asset or workflow maintenance, code or documentation maintenance, and read-only investigation. For media, record the source, observed framing and performer count, variant, and batch or attempt; follow the existing batch rules. Keep old outputs and receipts when opening a new attempt.
+- Archive actual outputs, receipts and review evidence in the designated private project paths. Record pending, failed and verified results distinctly. Only update public documentation or code when there is an authorized, substantive, non-sensitive change. A read-only task, a private-only result or no public diff does not require a commit or push.
+- Use the [task classification and synchronization policy](<docs/maintenance/publication.md#task-classification>) for the public/private split.
 
 1. Inspect worktree status and remote refs before editing. Preserve unrelated local changes and unknown remote history.
 2. Update both root README languages and relevant detailed docs when behavior, schema, CLI, structure, scope or capability claims change. Do not add new implementation merely to decorate documentation.
 3. Add a scoped bilingual entry to `docs/CHANGELOG.md`, stating actual verification and untested model behavior.
 4. Run `python scripts/check_project_docs.py`, `python scripts/check_release.py`, and `python -m unittest discover -s tests -v`. Explicitly stage reviewed files, then run `python scripts/check_repository.py` and `git diff --cached --check`.
-5. Commit only authorized changes, normal-push within the user's synchronization request, then verify the remote branch points at the intended commit.
+5. Commit only the reviewed changes for this task. Automatically normal-push eligible changes to `main` of `copypasteltd/Hottest-animation-clones` after the checks pass, then verify the actual remote ref points to the intended commit. Never include unrelated worktree or staged changes.
 6. A newer user instruction to hold a push or request review wins. Never force-push, erase history, expose secrets or change unrelated remotes. If a push fails, preserve the local commit and report the failure instead of claiming synchronization.
 
 ## Local commands

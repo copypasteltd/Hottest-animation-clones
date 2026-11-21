@@ -35,6 +35,8 @@ Production uses the registered local originals. The manifest records the display
 
 ## Workspace and offline checks
 
+New project tasks are classified and filed when handled. Verified public changes are pushed to GitHub `main` after the checks pass; source media, generated outputs, and run receipts stay local. [Task classification and publication rules](<docs/maintenance/publication.md#task-classification>)
+
 Use Python 3.11+ and Git from the project root. Install the development dependencies in the project environment first. [Workspace layout and checks](<docs/maintenance/workspace.md>)
 
 ```bash

@@ -1,5 +1,10 @@
 # 变更记录
 
+## 新任务归类与自动同步 · Task classification and automatic synchronization（2026-11-21）
+
+- 固化本项目的接单归类、结果归档和 GitHub 正常推送规则。公开变更通过检查后默认同步，无公开差异则不推送；私有媒体、工作流回执和既有本地改动不纳入本次发布。
+- Documented classification and archiving for new project tasks and automatic GitHub synchronization for verified public changes. No push is needed without a public diff. This is a maintenance rule, not a background job; no rendering behavior changed.
+
 ## BM01 F06 足部时序修复 · BM01 F06 footwork repair（2026-11-21）
 
 - 两轮整片重画分别针对鞋型和脚步时序。第二轮接入整段灰度动作参考、两遍腿脚轮廓引导和 F06 鞋部细节，不合成画面，保留 S02 和原音。16 个同时间抽样显示分脚与交错姿态有改善；连续落地、脚滑和重心转换仍需播放验收。
