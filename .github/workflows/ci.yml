@@ -32,3 +32,23 @@ jobs:
         run: python scripts/check_release.py
       - name: Run repository tests
         run: python -m unittest discover -s tests -v
+
+  catalog-static:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web/catalog
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/catalog/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+      - run: npm run build:pages

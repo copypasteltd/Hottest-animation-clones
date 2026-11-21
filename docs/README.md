@@ -14,7 +14,7 @@
 
 - 记录一次任务时使用填写模板，机器记录按 Schema 核对字段及状态。[任务与交付模板](<templates/动作迁移任务与交付模板.md>) · [运行记录 Schema](<schemas/motion-transfer-run.schema.json>) · [未执行的虚构样例](<examples/motion-transfer-run.example.json>)
 - 查看 [动作迁移画像规范](<operations/motion-profile.md>)、[画像 Schema](<schemas/motion-video-profile.schema.json>) 和 [受控词表](<schemas/motion-tags.v1.json>)。实际采集与成片证据私有归档。
-- 查看[动作迁移视频库前端设计](<operations/motion-catalog-frontend.md>)：灵感页视觉基准、全库检索与分页、新鲜度和热度排序、静态发布边界。当前仅为设计。
+- 查看[动作迁移视频库设计与运行说明](<operations/motion-catalog-frontend.md#run-catalog-v1>)：灵感页视觉基准、全库检索、排序、公开虚构示例与本机私有版。未部署。
 - 查看已授权展示的静态参考，按清单核对图片身份及发布时的记录。[展示清单](<images/characters/manifest.json>)
 - 回查历史实验和早期方案的变更过程。私有档案、设备定位说明和运行证据的位置见工作区说明。[H3 历史摘要](<evidence/H3基础用例公开摘要.md>) · [本地资料位置](<maintenance/workspace.md#layout>)
 

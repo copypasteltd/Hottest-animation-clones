@@ -17,6 +17,32 @@ from documentation import PUBLIC_DOC_PATHS
 
 ROOT = Path(__file__).resolve().parents[1]
 ROOT_FILES = {".gitignore", ".gitattributes", ".editorconfig", "LICENSE", "pyproject.toml", "README.md", "README.zh-CN.md", "AGENTS.md"}
+CATALOG_SOURCE_PATHS = frozenset("web/catalog/" + name for name in (
+    "index.html",
+    "package-lock.json",
+    "package.json",
+    "scripts/build.mjs",
+    "scripts/examples.mjs",
+    "scripts/output.mjs",
+    "scripts/projection.mjs",
+    "scripts/serve.mjs",
+    "src/data.ts",
+    "src/detail.tsx",
+    "src/filters.tsx",
+    "src/hooks.ts",
+    "src/main.tsx",
+    "src/model.ts",
+    "src/ranking.ts",
+    "src/route.ts",
+    "src/search.ts",
+    "src/style.css",
+    "src/ui.tsx",
+    "src/validate.ts",
+    "src/worker.ts",
+    "tests/browser.mjs",
+    "tests/core.test.mjs",
+    "tsconfig.json",
+))
 BINARY_EXTENSIONS = {
     ".mp4", ".mov", ".mkv", ".avi", ".webm", ".wav", ".mp3", ".png", ".jpg", ".jpeg",
     ".webp", ".gif", ".npz", ".npy", ".safetensors", ".ckpt", ".pt", ".pth", ".onnx",
@@ -33,6 +59,8 @@ def allowed_path(name: str) -> bool:
     parts = path.parts
     if not parts or "." in parts or ".." in parts:
         return False
+    if parts[0] == "web":
+        return name in CATALOG_SOURCE_PATHS
     if parts[0] in {"src", "tests", "scripts"}:
         return path.suffix in {".py", ".typed"} or path.name in {".gitkeep", "py.typed"}
     if parts[0] == "configs":

@@ -1,5 +1,10 @@
 # 变更记录
 
+## 纯前端视频库 v1 · Static motion catalog v1（2026-11-22）
+
+- 实现作品／成片卡片墙、全库中英模糊检索、精确标签筛选、分页与时间／热度排序。核验根路径和 Pages 子路径的虚构数据构建，并在本机私有目录用 Chromium 播放现有四份成片。真实媒体、画像、截图及构建产物不入 Git，未部署。
+- Added the standalone read-only catalog with work and rendition pagination, bilingual fuzzy search, scoped tags, and weighted ranking. Local browser tests covered the root and project-subpath fixtures and playback of four retained renditions in the separate private build. No real data or generated site was published, and no deployment was run.
+
 ## 视频库前端设计 · Static motion catalog design（2026-11-22）
 
 - 记录灵感页视觉基准、作品／成片分页、双语模糊检索与标签来源、时间／热度加权，以及 GitHub Pages／Vercel 发布边界。仅文档设计，未实施前端、发布媒体或部署。

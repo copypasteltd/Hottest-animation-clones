@@ -15,6 +15,42 @@
 !/configs/
 !/docs/
 
+# Explicit source files for the authorized standalone catalog; no data or builds.
+!/web/
+/web/*
+!/web/catalog/
+/web/catalog/*
+!/web/catalog/index.html
+!/web/catalog/package-lock.json
+!/web/catalog/package.json
+!/web/catalog/tsconfig.json
+!/web/catalog/scripts/
+/web/catalog/scripts/*
+!/web/catalog/scripts/build.mjs
+!/web/catalog/scripts/examples.mjs
+!/web/catalog/scripts/output.mjs
+!/web/catalog/scripts/projection.mjs
+!/web/catalog/scripts/serve.mjs
+!/web/catalog/src/
+/web/catalog/src/*
+!/web/catalog/src/data.ts
+!/web/catalog/src/detail.tsx
+!/web/catalog/src/filters.tsx
+!/web/catalog/src/hooks.ts
+!/web/catalog/src/main.tsx
+!/web/catalog/src/model.ts
+!/web/catalog/src/ranking.ts
+!/web/catalog/src/route.ts
+!/web/catalog/src/search.ts
+!/web/catalog/src/style.css
+!/web/catalog/src/ui.tsx
+!/web/catalog/src/validate.ts
+!/web/catalog/src/worker.ts
+!/web/catalog/tests/
+/web/catalog/tests/*
+!/web/catalog/tests/browser.mjs
+!/web/catalog/tests/core.test.mjs
+
 # Historical notes, source media, device logs and generated reports stay local.
 /docs/*
 !/docs/README.md

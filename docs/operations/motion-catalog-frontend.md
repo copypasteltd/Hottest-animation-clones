@@ -1,6 +1,6 @@
 # 动作迁移视频库 · 前端开发与设计文档 v1.0
 
-状态：**设计稿，未开发、未部署**。目标是让访客一进站就能看到近期又有热度的动作迁移成片，并能在全库通过标题、说明、关键词和标签找到想要的动作。以 [DeepSeek Harness 自媒体工作台的「灵感」页](https://bozhufarm.com/dsh/)为视觉基准，不改变现行整片重画、双版本交付或画像数据契约。
+状态：**v1 已实现并通过本地验收；未部署**。目标是让访客一进站就能看到近期又有热度的动作迁移成片，并能在全库通过标题、说明、关键词和标签找到想要的动作。以 [DeepSeek Harness 自媒体工作台的「灵感」页](https://bozhufarm.com/dsh/)为视觉基准，不改变现行整片重画、双版本交付或画像数据契约。
 
 ## 1. 产品范围
 
@@ -87,14 +87,14 @@ v1 仍实现完整的综合、最新和最热排序。若整个快照无可比�
 
 ## 7. 工程结构、性能与静态部署
 
-**建议栈**：Vite + TypeScript + React，用普通 CSS 自绘参考视觉，不引入重型 UI 套件。纯函数实现投影契约、排序、标签与字符串匹配；Web Worker 在浏览器内建索引和检索。拟议代码范围 `web/catalog/`；`catalog/` 下按职责拆为读取与校验、索引/筛选、路由、工作台组件、播放器、主题样式/令牌、测试夹具。真实目录只在明确的数据发布步骤交给构建，不作为项目默认 public 目录或测试夹具。发布后是一份静态站点，不依赖 DeepSeek Harness 注入、API 服务、凭据或本机路径。
+**实现栈**：Vite + TypeScript + React，用普通 CSS 自绘参考视觉，不引入重型 UI 套件。纯函数实现投影契约、排序、标签与字符串匹配；Web Worker 在浏览器内建索引和检索。代码位于 `web/catalog/`；`catalog/` 下按职责拆为读取与校验、索引/筛选、路由、工作台组件、播放器、主题样式/令牌、测试夹具。真实目录只在明确的数据发布步骤交给构建，不作为项目默认 public 目录或测试夹具。发布后是一份静态站点，不依赖 DeepSeek Harness 注入、API 服务、凭据或本机路径。
 
 - **取数与缓存**：默认无条件首页可先用可信 `home` 投影显示首屏；搜索、过滤、其它模式／页码及直达链接按对应快照等待全库索引。首屏关键资源优先，完整索引在其后低优先级加载；准备好才给出完整检索结果。没有 `home` 时只能显示加载状态，不能拿局部索引冒充全量。详情和当前页之外的封面不请求；首排封面可优先，其余懒加载且预留宽高。索引可分片；失败则提示恢复，不混用不同版本。轻量存储仅保留主题及非敏感偏好；不把本机私有目录缓存进公共 PWA 或跨构建复用。用原生播放器及 `playsinline`、`preload=none`，不自动播放；关闭清理播放资源。仅用授权发布的 MP4（v1 优先 H.264/AAC）或兼容静态资源，验证 HTTPS、Content-Type、Range 和适用的 CORS。
 - **性能目标（待实现实测）**：以 2,000 作品、4,000 成片的中英测试目录、Chrome 桌面 4× CPU 降速、1.6 Mbps/150 ms 网络为参考。默认空查询首屏 LCP ≤3 s；首屏关键路径压缩传输总量 ≤320 KiB（含入口、壳、首页投影与首排海报，JS ≤180 KiB gzip）。完整检索索引/词表初始测试预算 ≤600 KiB gzip，不让首页等待索引完整下载；冷启动另测完整索引可用时间（目标 ≤8 s），索引就绪后查询 p95 ≤150 ms（不含输入防抖），Worker 不阻塞输入。直达搜索链接的索引等待须明示。390 px 真机补测首屏、触屏、详情和失败恢复。超过合成测试预算先拆数据或压缩详情/海报，不裁掉授权索引字段、不改成只搜当页。
 
 | 目标 | 构建与上线设计 |
 | --- | --- |
-| **GitHub Pages（首选）** | Vite 输出 `dist`。项目站 `base='/Hottest-animation-clones/'`，独立域名则 `base='/'`；目录和媒体相对路径统一按部署 base 解析。路由用 Hash，列表与详情链接刷新不依赖服务器重写。后续经批准才新增手动部署工作流，验证并上传精确构建产物，用受控 Pages 环境部署，不把 Git 推送变成隐式部署。Pages 当前官方发布站点上限 1 GB；不把它当批量视频分发仓。 |
+| **GitHub Pages（首选）** | 当前 `npm run build:pages` 输出 `dist-pages`。项目站 `base='/Hottest-animation-clones/'`，独立域名则 `base='/'`；目录和媒体相对路径统一按部署 base 解析。路由用 Hash，列表与详情链接刷新不依赖服务器重写。后续经批准才新增手动部署工作流，验证并上传精确构建产物，用受控 Pages 环境部署，不把 Git 推送变成隐式部署。Pages 当前官方发布站点上限 1 GB；不把它当批量视频分发仓。 |
 | **Vercel（备选）** | 将 Vite 项目公开构建为静态 `dist`，根路径 base 为 `/`，同一 Hash 路由无需 catch-all；不用 Functions 或 SSR。连接项目、预览与生产发布分别获准并检查，不因导入仓库就公开已有目录。构建环境只能收到明确批准的静态数据；不能访问本机私有盘。 |
 
 站点只承担目录和轻封面。批量播放用独立、已授权的静态 HTTPS 媒体宿主，单独核验容量、带宽与下架流程；无合规宿主时展示明确的不可播放状态，不从 Git LFS 或源站签名 URL 隐式回退。验证根路径和项目子路径的 CSS/字体/JSON/详情/刷新/前进回退；部署产物做白名单扫描，保留上一个授权版本供回滚，但已撤权内容不得回滚上线。部署参考：[Vite 静态部署](https://vite.dev/guide/static-deploy.html) · [GitHub Pages 工作流](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) · [Pages 限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits) · [Vercel Vite 指南](https://vercel.com/docs/frameworks/frontend/vite)。
@@ -104,4 +104,40 @@ v1 仍实现完整的综合、最新和最热排序。若整个快照无可比�
 1. **静态数据与契约**：先写导出/校验及虚构夹具（两种画幅、两版本、历史尝试、缺封面、缺热度、候选比心、同名标签不同来源）。断言真实画像和媒体引用不会渗入公开构建，空目录可运行；不改原片、生成图或双版本运行契约。
 2. **搜索与排序**：用同一输入快照在两种部署 base 得到相同结果。测试查询「手势舞」「gesture-led dance」「比心」及中文三字错别字、英文 typos，命中跨原分页的末尾记录；来源不同的同名标签不串、候选默认不计，多个成片标签必须同版本满足。验证最新/最热/综合、缺值、并列、时钟固定、重复与跨页不漏，检查综合虚构算例。
 3. **视觉与交互**：照第 2 节校准标志性布局和浅深主题。测试窄屏、混合比例、Tab、Escape、回退恢复、筛选状态分享、播放器失败/切换、不自动播放及内容无横向溢出；无参考时不虚报视觉一致。
-4. **发布门禁**：开发、公开某些标签/媒体、站点部署是三个单独授权点。之后只有明确确认平台、范围、可公开数据与宿主才执行部署；第三方媒体授权未清理不得先上线播放。当前交付只有此设计文档，不创建前端工程、预览站、公开数据、媒体或部署工作流。
+4. **发布门禁**：开发、公开某些标签/媒体、站点部署是三个单独授权点。之后只有明确确认平台、范围、可公开数据与宿主才执行部署；第三方媒体授权未清理不得先上线播放。当前交付前端源码、可构建的虚构示例与本机私有预览，不公开真实数据或媒体，不创建部署工作流。
+
+<a name="run-catalog-v1"></a>
+
+## 9. 运行、更新与验收 v1
+
+| 目标 | 产物 | 数据 |
+| --- | --- | --- |
+| `build` | `web/catalog/dist/` | 根路径示例，34 条虚构作品、67 条虚构成片记录。用原创矢量占位封面，不含 MP4 或真实平台资料。 |
+| `build:pages` | `web/catalog/dist-pages/` | 相同虚构快照，资源位于 `/Hottest-animation-clones/` 子路径，含 `.nojekyll`，Hash 链接可直接刷新。 |
+| `build:local` | `tmp/motion-catalog-v1/local/` | 本机私有版。读取已归档画像，复核回执、相关资产及成片复制件的字节数和 SHA-256；从实际成片取本机封面，不改媒体原件。**不得提交、上传或部署。** |
+
+需要 Node.js 24。确认 `node --version` 和 npm 使用同一套 Node 24 环境。下列命令在仓库根执行。公开示例不需要 Python、FFmpeg、参考图或真实档案：
+
+```bash
+npm --prefix web/catalog ci --ignore-scripts
+npm --prefix web/catalog run check
+npm --prefix web/catalog test
+node web/catalog/scripts/build.mjs --target root
+node web/catalog/scripts/build.mjs --target pages
+node web/catalog/scripts/serve.mjs --target root
+```
+
+根路径默认地址是 http://127.0.0.1:4173/；将最后一行的目标改为 `pages`，访问 http://127.0.0.1:4174/Hottest-animation-clones/。预览只绑定回环地址、只提供静态文件，终端 Ctrl+C 可关闭。后续经批准使用 Vercel 时，项目根设为 `web/catalog`，构建命令用 `npm run build`、输出 `dist`；GitHub Pages 只发布 `dist-pages`，不上传工作区。目前没有部署工作流。
+
+**更新本机目录**：配置项目 Python 开发依赖、原生 FFmpeg／ffprobe，按[画像规范](<motion-profile.md>)核验 `runs/<run_id>/<item_id>/motion-profile-v1.json`。新增成片需先写入画像；未归档、待取回的尝试不会因文件存在而进入目录。最多读取 150 份本机画像，不能把超限误当作完整目录。关闭旧预览再重建和启动，避免正读的快照被切换：
+
+```bash
+python -m pip install -e ".[dev]"
+python -B scripts/check_character_lock.py
+node web/catalog/scripts/build.mjs --target local
+node web/catalog/scripts/serve.mjs --target local
+```
+
+本机版默认地址是 http://127.0.0.1:4176/。只播放已验证的迁移成片；原片显示归档资料及可指向的原站链接，不复制原片进预览包。点击「播放成片」才请求媒体，切版时卸载旧播放器。检索覆盖目录简表中允许检索的标题、说明、标签及别名；私有复验长说明只放详情，不用「候选」或「抽样未见」的描述制造确认命中。互动热度来自构建时已归档快照，更新目录时重算；不抓实时指标。稳定本机 ID 绑定源媒体与实际尝试，不充当将来的公开发布 ID。
+
+**验收与未覆盖项**：已构建根路径、Pages 子路径与私有版。隔离 Chromium 在 1440×900 测试浅深主题、分页、跨页检索、候选开关和详情焦点；在 1280×800 和 390×844 测试列数、溢出、子路径直达刷新、详情及返回。四份本机成片均实际起播，另验证了跳转到片中、HTTP 范围响应和切版停播。参照的是插件作者公开截图，未验证当前本机工作台的像素一致性；真机及 2,000 作品／4,000 成片限网性能指标仍待验证。公共 CI 只做离线回归和示例构建，不运行私有构建或部署。已有 Chromium 时，可在 `web/catalog` 指定 `CATALOG_BROWSER` 为浏览器的可执行文件，运行 `node tests/browser.mjs`；本机三个目标均已构建时追加 `--local`。

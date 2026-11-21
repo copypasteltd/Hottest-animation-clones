@@ -8,6 +8,8 @@
 
 公开内容包括项目原创文档、维护源码、测试、无敏感配置示例、虚构记录和脱敏实验摘要。媒体只允许两份 README 内嵌的八张既有 PNG 字节一致副本，以及对应的展示清单。清单记录发布时的文件路径、状态、尺寸和哈希。资产页记录现行定稿用途，发布检查核对图像身份及双语内嵌引用。[展示清单](<../images/characters/manifest.json>) · [人物与构图状态](<../assets/reference-images.md>)
 
+视频库 v1 只把经明确白名单审核的前端源码、锁文件、测试与虚构夹具生成器纳入 Git。公开示例与本机私有预览隔离，生成站点、截图和私有媒体均不入 Git。源码同步不扩大媒体许可，也不代表批准部署。[构建与验证](<../operations/motion-catalog-frontend.md#run-catalog-v1>)
+
 实际源片及侧车、正式资产清单、设备和模型配置、上游工作流、凭据、运行回执和生产成片留在项目私有区域。媒体授权与第三方许可按用途核对。[目录规则](<workspace.md#layout>) · [第三方材料](<../THIRD_PARTY_NOTICES.md>)
 
 <a name="task-classification"></a>
