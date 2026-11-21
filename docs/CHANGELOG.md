@@ -1,5 +1,10 @@
 # 变更记录
 
+## 视频库前端设计 · Static motion catalog design（2026-11-22）
+
+- 记录灵感页视觉基准、作品／成片分页、双语模糊检索与标签来源、时间／热度加权，以及 GitHub Pages／Vercel 发布边界。仅文档设计，未实施前端、发布媒体或部署。
+- Specified the Inspiration-style gallery, catalog-wide fuzzy search and tag filters, freshness and popularity ranking, and the static hosting boundary. Documentation only; no frontend, media release, or deployment.
+
 ## 动作迁移画像 v1 · Motion video profiles v1（2026-11-22）
 
 - 增加画像契约、双语受控词表、离线校验与虚构样例。两条既有 Bilibili 原片及四份成片完成离线画像；平台原始字段、抽样标签与成片观察分开，以文件哈希绑定，不把候选作确认标签。真实快照、媒体、证据和画像仍私有。

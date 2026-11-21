@@ -20,6 +20,8 @@ Across 16 matched time samples, the second redraw showed the feet apart at 6.0, 
 
 A profile separates retained platform text and native tags, observations of the whole source, and observations of each retrieved rendition. A first offline pass covers two retained Bilibili sources with both SA02 and BM01 versions. Labels carry nominal sample times, evidence and uncertainty; the profile does not feed or block generation. [Collection and validation contract](<docs/operations/motion-profile.md>)
 
+The [static video catalog design](<docs/operations/motion-catalog-frontend.md>) specifies an Inspiration-style gallery, full-catalog bilingual search and tag filters, and freshness-weighted popularity. It is a design only; no frontend or deployment is included.
+
 ## Reference characters and S02
 
 S02 uses a plain white background and a fine light-gray floor grid. The four current compositions cover standing single performers. Half-body uses knee-length framing. Full-body includes the shoes and floor. [S02 and target images](<docs/assets/reference-images.md>)
