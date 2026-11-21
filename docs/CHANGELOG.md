@@ -1,5 +1,19 @@
 # 变更记录
 
+## S02 轮廓引导纯重画定稿 · Approved S02 contour-guided redraw（2026-11-21）
+
+- 一条站立单人 SA02 F02 竖屏全身样片获用户验收。定稿使用全片前景轮廓作一采引导、独立 S02 空场作唯一环境参考；源视频 RGB 不接生成参考，无背景合成。
+- 提取六段式 Prompt、画幅适配、轮廓与采样参数；逐次留存执行图、提示词、种子、回执和最终文件。其他角色、构图和源片不继承该样片的内容验收。
+- One standing SA02 F02 vertical full-body sample was user-accepted. The recipe uses full-timeline foreground contours for the first pass, a separate S02 scene reference, and no raw source RGB video reference or background compositing.
+- Documented the reusable six-section prompt, framing-specific inputs and sampling parameters. Content acceptance does not carry over to other renders.
+
+## B 站两条整片双版本试跑 · Two-source Bilibili trial（2026-11-20）
+
+- 两条原片分别走 9:16 全身和 16:9 半身路线，各提交 SA02 和 BM01。指定 4090 共接收四项，按角色成组入队。
+- 四份 MP4 均按各自的原回执取回，核对了输入配对、交付回执和本地文件身份。最后一份在本地监视超时后按原回执续接取回。实跑不含成片画面审查。
+- Queued both SA02 and BM01 for two complete sources: 9:16 full-body and 16:9 half-body. Verified all four retrieval receipts and their local file identities. The last result was recovered by its original receipt after the local watcher timed out.
+- Live coverage is limited to the tested standing single-performer routes and the Bilibili intake used here. Automated production orchestration, the other platforms and two-performer routes remain unverified.
+
 ## 本地半身双版本试跑 · Local half-body dual-variant trial（2026-11-20）
 
 - 指定 4090 已从同一条约 9.1 秒的完整本地原片取回 SA02 F01 和 BM01 F05 两份 MP4。SA02 补跑接入原片音轨，BM01 沿用已取回的版本。

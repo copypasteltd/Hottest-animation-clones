@@ -6,9 +6,9 @@
 
 ## 从作品链接到成片
 
-用 `/ra-video-download` 下载完整原片，判断取景和表演人数，为 SA02 和 BM01 分别匹配目标图。将两版的整片输入提交到指定 4090 的 ComfyUI 队列，镜头跟随原片。每条包含作品链接的消息默认开一个有编号的新批次，明确要求时可追加。多条视频按同一版本、每组两条入队。逐次反馈生成结果，批次运行中取回 MP4 即交付。[批次规则](<docs/operations/h3-4090.md#queue-and-stop>) · [产品需求](<docs/product/requirements.md>) · [执行手册](<docs/operations/runbook.md>)
+用 `/ra-video-download` 下载完整原片，判断取景和表演人数，为 SA02 和 BM01 分别匹配目标图。将两版的整片输入提交到指定 4090 的 ComfyUI 队列，动作和取景以原片为参考。站立单人 S02 使用[轮廓引导纯重画](<docs/operations/h3-4090.md#s02-contour-redraw>)，源片彩色画面不进入生成参考槽。每条包含作品链接的消息默认开一个有编号的新批次，明确要求时可追加。多条视频按同一版本、每组两条入队。逐次反馈生成结果，批次运行中取回 MP4 即交付。[批次规则](<docs/operations/h3-4090.md#queue-and-stop>) · [产品需求](<docs/product/requirements.md>) · [执行手册](<docs/operations/runbook.md>)
 
-本地站立单人半身试跑已从同一条完整原片取回 SA02（F01）和 BM01（F05）两版。后续每条原片在同一批次安排两版。链接到成片的生产编排仍待实现，单人全身和双人路线待实跑。[当前进度](<docs/product/status.md>) · [流程用例](<docs/verification/acceptance.md>)
+两条 Bilibili 原片的整片试跑已覆盖站立单人半身和全身，各取回 SA02 与 BM01 两版。本次实际验证了原片下载或复用、成组入队和按回执取回。轮廓引导方案已通过一条竖屏 SA02 全身样片的用户验收，其他成片单独验收。自动化生产编排仍待实现，X、抖音接入和双人路线待实跑。[当前进度](<docs/product/status.md>) · [流程用例](<docs/verification/acceptance.md>)
 
 ## 基准人物与 S02
 
