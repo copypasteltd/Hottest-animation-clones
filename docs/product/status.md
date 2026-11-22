@@ -18,7 +18,7 @@
 | S02 轮廓引导纯重画 | 一条竖屏 SA02 F02 全身样片获用户验收。全片轮廓只作一采控制，独立 S02 空场作环境参考，不合成画面。复用方案的成片须单独判断内容。[定稿接线](<../operations/h3-4090.md#s02-contour-redraw>) |
 | BM01 F06 足部修复 | 一条写实全身片完成两轮纯重画。第二轮的 16 个同时间抽样显示，部分时段的分脚和交错姿态更贴近原片，保持低帮搭扣鞋；连续落脚和重心转换尚不能由静帧确认。[足部时序案例](<../operations/h3-4090.md#bm01-f06-footwork-repair>) |
 | 动作迁移画像 | 已离线归档并验证两个 Bilibili 源片及四份取回成片。平台快照、原片观察、每版观测和候选分开；未接生产自动打标。[画像规范](<../operations/motion-profile.md>) |
-| 纯前端视频库 v1 | 默认混排本机归档的真人与动漫成片，支持定稿过滤和清洗标签／详情匹配。实测当前两条作品、四份成片，其中一份明确验收；公开根路径／Pages 仅使用虚构示例，未部署。[运行与验证](<../operations/motion-catalog-frontend.md#run-catalog-v1>) |
+| 纯前端视频库 v1 | 默认混排本机归档的真人与动漫成片，支持定稿过滤和清洗标签／详情匹配。实测当前两条作品、四份成片，其中一份明确验收；公开根路径及 [GitHub Pages 示例](https://copypasteltd.github.io/Hottest-animation-clones/)只使用虚构数据；发布状态见 [Pages 工作流](https://github.com/copypasteltd/Hottest-animation-clones/actions/workflows/pages.yml)。[运行与验证](<../operations/motion-catalog-frontend.md#run-catalog-v1>) |
 | 双人半身、双人全身 | 已确定 SA02 与 BM01 的双人交叉绑定。组合图或逐人输入配置以及工作流的实际支持待验证。 |
 | 坐姿、其他姿态和动作道具 | 按原片需求匹配目标图与整片工作流，缺少的配置按版本登记。 |
 | 会话内执行 | 已用本地试跑入口将两条原片的四份任务按同角色成组提交并取回。最后一份在本地监视超时后按原回执续接，未重复提交。自动化生产编排、批次停止与恢复及会话自动补发仍待实现和试跑。 |

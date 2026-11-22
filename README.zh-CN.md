@@ -26,6 +26,8 @@
 
 ## 浏览动作迁移视频库
 
+[打开 GitHub Pages 公开示例](https://copypasteltd.github.io/Hottest-animation-clones/)，体验混排、分页和标签检索。公开页仅含虚构示例，不包含本机私有视频库。
+
 **一份成片一张卡。** 首页默认将 SA02 动漫和 BM01 真人风格成片放在同一个列表里排序、分页。点 **按作品** 可按原片归组；点 **只看定稿** 可查看所有已索引且有验收记录的定稿。成功取回不等于验收通过，后续尝试也不会覆盖已验收的旧定稿。
 
 - **全库检索**：可搜标题、简介、关键词、清洗后的中英文标签和别名、作者或 `768×1376` 等媒体规格。到 **筛选** 里可精确选标签；平台原始标签、原片观察、成片观察和生成配置分开。例如，筛选原片标签 **手势舞** 可同时找到匹配作品的真人和动漫成片。
@@ -40,7 +42,7 @@ node web/catalog/scripts/build.mjs --target local
 node web/catalog/scripts/serve.mjs --target local
 ```
 
-打开[本机私有视频库](http://127.0.0.1:4176/)。新增成片或定稿验收记录归档后，停止旧预览，再重建并启动。根路径和 GitHub Pages 构建仅含虚构示例，未部署。[运行与更新说明](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>)
+打开[本机私有视频库](http://127.0.0.1:4176/)。新增成片或定稿验收记录归档后，停止旧预览，再重建并启动。本机私有目录与公开示例独立更新。[运行与更新说明](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>)
 
 ## 基准人物与 S02
 

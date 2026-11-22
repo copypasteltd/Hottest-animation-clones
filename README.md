@@ -26,6 +26,8 @@ A profile separates retained platform text and native tags, observations of the 
 
 ## Browse the motion catalog
 
+[Open the public GitHub Pages demo](https://copypasteltd.github.io/Hottest-animation-clones/) to try mixed browsing, pagination, and search. It contains synthetic examples only, not the private video archive.
+
 **One card per rendition.** The default gallery mixes SA02 anime and BM01 photographic-style renditions in the same paginated list. Choose **按作品** to group by source, or **只看定稿** to show all indexed, verified finals. A retrieved file is not automatically approved, and a later attempt does not hide an earlier verified final.
 
 - **Search the whole catalog.** Use a title, description, keyword, cleaned Chinese or English tag, alias, author, or media detail such as `768×1376`. For an exact match, select a tag in **筛选**. Source observations, rendition observations, and generation settings remain separate. For example, filter the source tag **手势舞** to find both renditions of a matching work.
@@ -40,7 +42,7 @@ node web/catalog/scripts/build.mjs --target local
 node web/catalog/scripts/serve.mjs --target local
 ```
 
-Open [the private local viewer](http://127.0.0.1:4176/). To pick up newly archived renditions or approvals, stop the preview, rebuild, and restart. The root and GitHub Pages builds contain synthetic examples only; the site has not been deployed. [Operating and update guide](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>)
+Open [the private local viewer](http://127.0.0.1:4176/). To pick up newly archived renditions or approvals, stop the preview, rebuild, and restart. The private viewer is independent of the public demo. [Operating and update guide](<docs/operations/motion-catalog-frontend.md#run-catalog-v1>)
 
 ## Reference characters and S02
 

@@ -1,5 +1,10 @@
 # 变更记录
 
+## GitHub Pages 公开示例 · Public GitHub Pages demo（2026-11-22）
+
+- 新增仅可从主分支手动运行的 Pages 工作流，构建并审计虚构示例目录。双语入口与维护文档补齐；真实媒体和私有档案不进入部署产物。
+- Added a manual, main-only GitHub Pages workflow for the audited synthetic catalog and linked the demo from both READMEs. No real media or private archive data is included.
+
 ## 全局技能安装与用法 · Global skill setup and usage（2026-11-22）
 
 - 双语 README 增加 `/update-ai-clone` 入口，文档说明全局导入、工作区绑定、随包下载组件、回执与定稿、目录更新和排障。本次复核已安装 v1.0.0 的命令与离线测试，不安装新包、不下载或渲染。

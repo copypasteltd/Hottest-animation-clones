@@ -1,6 +1,6 @@
 # 动作迁移视频库 · 前端开发与设计文档 v1.0
 
-状态：**v1 已实现并通过本地验收；未部署**。目标是让访客一进站就能看到近期又有热度的动作迁移成片，并能在全库通过标题、说明、关键词和标签找到想要的动作。以 [DeepSeek Harness 自媒体工作台的「灵感」页](https://bozhufarm.com/dsh/)为视觉基准，不改变现行整片重画、双版本交付或画像数据契约。
+状态：**v1 已实现并通过本地验收；公开示例使用 GitHub Pages 手动发布**。目标是让访客一进站就能看到近期又有热度的动作迁移成片，并能在全库通过标题、说明、关键词和标签找到想要的动作。以 [DeepSeek Harness 自媒体工作台的「灵感」页](https://bozhufarm.com/dsh/)为视觉基准，不改变现行整片重画、双版本交付或画像数据契约。
 
 ## 1. 产品范围
 
@@ -94,7 +94,7 @@ v1 仍实现完整的综合、最新和最热排序。若整个快照无可比�
 
 | 目标 | 构建与上线设计 |
 | --- | --- |
-| **GitHub Pages（首选）** | 当前 `npm run build:pages` 输出 `dist-pages`。项目站 `base='/Hottest-animation-clones/'`，独立域名则 `base='/'`；目录和媒体相对路径统一按部署 base 解析。路由用 Hash，列表与详情链接刷新不依赖服务器重写。后续经批准才新增手动部署工作流，验证并上传精确构建产物，用受控 Pages 环境部署，不把 Git 推送变成隐式部署。Pages 当前官方发布站点上限 1 GB；不把它当批量视频分发仓。 |
+| **GitHub Pages（首选）** | 当前 `npm run build:pages` 输出 `dist-pages`。项目站 `base='/Hottest-animation-clones/'`，独立域名则 `base='/'`；目录和媒体相对路径统一按部署 base 解析。路由用 Hash，列表与详情链接刷新不依赖服务器重写。[公开示例入口](https://copypasteltd.github.io/Hottest-animation-clones/)；[Pages 工作流](https://github.com/copypasteltd/Hottest-animation-clones/actions/workflows/pages.yml)只允许本仓库主分支手动运行，验证站点路径与产物后才上传，不随普通推送部署。Pages 当前官方发布站点上限 1 GB；不把它当批量视频分发仓。 |
 | **Vercel（备选）** | 将 Vite 项目公开构建为静态 `dist`，根路径 base 为 `/`，同一 Hash 路由无需 catch-all；不用 Functions 或 SSR。连接项目、预览与生产发布分别获准并检查，不因导入仓库就公开已有目录。构建环境只能收到明确批准的静态数据；不能访问本机私有盘。 |
 
 站点只承担目录和轻封面。批量播放用独立、已授权的静态 HTTPS 媒体宿主，单独核验容量、带宽与下架流程；无合规宿主时展示明确的不可播放状态，不从 Git LFS 或源站签名 URL 隐式回退。验证根路径和项目子路径的 CSS/字体/JSON/详情/刷新/前进回退；部署产物做白名单扫描，保留上一个授权版本供回滚，但已撤权内容不得回滚上线。部署参考：[Vite 静态部署](https://vite.dev/guide/static-deploy.html) · [GitHub Pages 工作流](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) · [Pages 限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits) · [Vercel Vite 指南](https://vercel.com/docs/frameworks/frontend/vite)。
@@ -104,7 +104,7 @@ v1 仍实现完整的综合、最新和最热排序。若整个快照无可比�
 1. **静态数据与契约**：先写导出/校验及虚构夹具（两种画幅、两版本、历史尝试、缺封面、缺热度、候选比心、同名标签不同来源）。断言真实画像和媒体引用不会渗入公开构建，空目录可运行；不改原片、生成图或双版本运行契约。
 2. **搜索与排序**：用同一输入快照在两种部署 base 得到相同结果。测试查询「手势舞」「gesture-led dance」「比心」及中文三字错别字、英文 typos，命中跨原分页的末尾记录；来源不同的同名标签不串、候选默认不计，多个成片标签必须同版本满足。验证最新/最热/综合、缺值、并列、时钟固定、重复与跨页不漏，检查综合虚构算例。
 3. **视觉与交互**：照第 2 节校准标志性布局和浅深主题。测试窄屏、混合比例、Tab、Escape、回退恢复、筛选状态分享、播放器失败/切换、不自动播放及内容无横向溢出；无参考时不虚报视觉一致。
-4. **发布门禁**：开发、公开某些标签/媒体、站点部署是三个单独授权点。之后只有明确确认平台、范围、可公开数据与宿主才执行部署；第三方媒体授权未清理不得先上线播放。当前交付前端源码、可构建的虚构示例与本机私有预览，不公开真实数据或媒体，不创建部署工作流。
+4. **发布门禁**：开发、公开某些标签/媒体、站点部署是三个单独授权点。之后只有明确确认平台、范围、可公开数据与宿主才执行部署；第三方媒体授权未清理不得先上线播放。当前交付前端源码、可构建的虚构示例与本机私有预览，另以手动工作流发布虚构示例，不公开真实数据或媒体。
 
 <a name="run-catalog-v1"></a>
 
@@ -127,7 +127,7 @@ node web/catalog/scripts/build.mjs --target pages
 node web/catalog/scripts/serve.mjs --target root
 ```
 
-根路径默认地址是 http://127.0.0.1:4173/；将最后一行的目标改为 `pages`，访问 http://127.0.0.1:4174/Hottest-animation-clones/。预览只绑定回环地址、只提供静态文件，终端 Ctrl+C 可关闭。后续经批准使用 Vercel 时，项目根设为 `web/catalog`，构建命令用 `npm run build`、输出 `dist`；GitHub Pages 只发布 `dist-pages`，不上传工作区。目前没有部署工作流。
+根路径默认地址是 http://127.0.0.1:4173/；将最后一行的目标改为 `pages`，访问 http://127.0.0.1:4174/Hottest-animation-clones/。预览只绑定回环地址、只提供静态文件，终端 Ctrl+C 可关闭。后续经批准使用 Vercel 时，项目根设为 `web/catalog`，构建命令用 `npm run build`、输出 `dist`；GitHub Pages 只发布 `dist-pages`，不上传工作区。授权维护者在仓库 **Settings → Pages** 将来源设为 **GitHub Actions**，再从 [Pages 工作流](https://github.com/copypasteltd/Hottest-animation-clones/actions/workflows/pages.yml)选择 **Run workflow → main**。等待构建、产物审计及 `github-pages` 部署通过，再用[公开示例地址](https://copypasteltd.github.io/Hottest-animation-clones/)验证子路径刷新、分页、标签与详情。普通推送或本机重建不触发部署。
 
 **更新本机目录**：配置项目 Python 开发依赖、原生 FFmpeg／ffprobe，按[画像规范](<motion-profile.md>)核验 `runs/<run_id>/<item_id>/motion-profile-v1.json`。新成片必须纳入相应画像；定稿将该画像中对应尝试的状态设为 `user_accepted_sample` 并绑定 `review_record` 证据。构建复核批次级已验收配方以及每次尝试的 `content-review.json`；若已定稿的记录未进入画像或文件身份不符，构建拒绝输出缺漏目录。所有已归档的定稿尝试都保留，后续新尝试不覆盖旧定稿。未归档、待取回的尝试不会因文件存在而进入目录。最多读取 150 份本机画像，不能把超限误当作完整目录。关闭旧预览再重建和启动，避免正读的快照被切换：
 
