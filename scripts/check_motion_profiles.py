@@ -222,6 +222,15 @@ def validate_profile(profile: dict, root: Path = ROOT, verify_assets: bool = Fal
     need(len(hashes) == len(assets), "duplicate media digest within this profile")
     keys = [(r["variant"], r["attempt_id"]) for r in renditions]
     need(len(keys) == len(set(keys)), "duplicate rendition attempt")
+    # jsonschema's date-time format support is optional. Check the calendar
+    # with the standard library after the schema has checked the syntax.
+    for i, row in enumerate(renditions):
+        clock = row["retrieved_at"]
+        if clock is not None:
+            try:
+                datetime.fromisoformat(clock.upper().replace("Z", "+00:00"))
+            except ValueError as exc:
+                raise ValueError(f"schema violation at /renditions/{i}/retrieved_at: date-time") from exc
     need(all(r["source_sha256"] == source_hash and r["media"]["asset"]["sha256"] != source_hash for r in renditions), "rendition is not bound to this source")
     index = {e["id"]: e for e in profile["evidence"]}
     need(len(index) == len(profile["evidence"]), "duplicate evidence ID")

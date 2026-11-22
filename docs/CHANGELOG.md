@@ -1,5 +1,10 @@
 # 变更记录
 
+## 历史回执的取回时间 · Missing historical retrieval time（2026-11-23）
+
+- 允许保留已核验的历史成片而不补造取回时刻。缺失的时间在画像及归一后的回执中为 `null`，不作为本机排序的新鲜度依据；验收与公开范围不变。
+- Verified legacy renditions can be archived with an unknown retrieval timestamp. Known times still require a matching receipt; an unknown time never receives an inferred freshness date. No real media or archive records are published.
+
 ## GitHub Pages 公开示例 · Public GitHub Pages demo（2026-11-22）
 
 - 新增仅可从主分支手动运行的 Pages 工作流，构建并审计虚构示例目录。双语入口与维护文档补齐；真实媒体和私有档案不进入部署产物。

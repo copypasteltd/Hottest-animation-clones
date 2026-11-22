@@ -18,7 +18,7 @@ Across 16 matched time samples, the second redraw showed the feet apart at 6.0, 
 
 ### Motion profiles and evidence-based tags
 
-A profile separates retained platform text and native tags, observations of the whole source, and observations of each retrieved rendition. A first offline pass covers two retained Bilibili sources with both SA02 and BM01 versions. Labels carry nominal sample times, evidence and uncertainty; the profile does not feed or block generation. [Collection and validation contract](<docs/operations/motion-profile.md>)
+A profile separates retained platform text and native tags, observations of the whole source, and observations of each retrieved rendition. A first offline pass covers two retained Bilibili sources with both SA02 and BM01 versions. Labels carry nominal sample times, evidence and uncertainty; the profile does not feed or block generation. Historical renditions with no recorded retrieval time retain an unknown time rather than an inferred date. [Collection and validation contract](<docs/operations/motion-profile.md>)
 
 ## Update the library from DSH
 

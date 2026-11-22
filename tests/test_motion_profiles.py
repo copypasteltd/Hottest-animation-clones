@@ -105,6 +105,19 @@ class MotionProfileTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "acceptance state has no review record"):
             validate_profile(self.profile)
 
+    def test_unknown_retrieval_clock_does_not_prevent_archiving(self):
+        row = self.profile["renditions"][0]
+        row["retrieved_at"] = None
+        self.assertEqual(validate_profile(self.profile)["renditions"], 2)
+        for clock in ("", "2026-11-23", "unknown", 0, "2026-02-30T12:00:00Z", "2026-11-23T12:00:00+01:60"):
+            with self.subTest(clock=clock):
+                row["retrieved_at"] = clock
+                with self.assertRaisesRegex(ValueError, "schema violation at /renditions/0/retrieved_at"):
+                    validate_profile(self.profile)
+        del row["retrieved_at"]
+        with self.assertRaisesRegex(ValueError, "schema violation at /renditions/0: required"):
+            validate_profile(self.profile)
+
     def test_path_and_json_admission(self):
         self.profile["evidence"][0]["artifact"]["path"] = "runs/../unsafe.json"
         with self.assertRaisesRegex(ValueError, "schema violation"):
