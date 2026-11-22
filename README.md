@@ -20,6 +20,10 @@ Across 16 matched time samples, the second redraw showed the feet apart at 6.0, 
 
 A profile separates retained platform text and native tags, observations of the whole source, and observations of each retrieved rendition. A first offline pass covers two retained Bilibili sources with both SA02 and BM01 versions. Labels carry nominal sample times, evidence and uncertainty; the profile does not feed or block generation. [Collection and validation contract](<docs/operations/motion-profile.md>)
 
+## Update the library from DSH
+
+**`/update-ai-clone` v1.0.0** is the global DeepSeek Harness entry point for source intake, paired motion-transfer planning, receipt recovery, verified finals, and private catalog refresh. Install the complete trusted local bundle with `/dsh-skill-installer`, bind your existing checkout, then run `/update-ai-clone` without arguments for preflight or pass a work link to begin a batch. The downloader is included in the local bundle; this repository publishes documentation only. [Installation, usage and troubleshooting](<docs/operations/update-ai-clone-skill.md#install>)
+
 ## Browse the motion catalog
 
 **One card per rendition.** The default gallery mixes SA02 anime and BM01 photographic-style renditions in the same paginated list. Choose **按作品** to group by source, or **只看定稿** to show all indexed, verified finals. A retrieved file is not automatically approved, and a later attempt does not hide an earlier verified final.

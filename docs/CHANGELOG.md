@@ -1,5 +1,10 @@
 # 变更记录
 
+## 全局技能安装与用法 · Global skill setup and usage（2026-11-22）
+
+- 双语 README 增加 `/update-ai-clone` 入口，文档说明全局导入、工作区绑定、随包下载组件、回执与定稿、目录更新和排障。本次复核已安装 v1.0.0 的命令与离线测试，不安装新包、不下载或渲染。
+- Added bilingual discovery and a setup guide for the installed `/update-ai-clone` v1.0.0 skill, including package layout, workflow, CLI, and publication boundaries. This change publishes documentation only, not the local skill bundle or media.
+
 ## README 视频库使用说明 · Catalog quick start（2026-11-22）
 
 - 双语 README 补充真人与动漫混排、定稿筛选、标签和复核说明检索、本机启动与更新步骤。只修改文档，不变更索引逻辑或部署。

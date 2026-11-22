@@ -19,6 +19,7 @@ TOPIC_PAGES = (
     "docs/operations/run-record.md",
     "docs/operations/motion-profile.md",
     "docs/operations/motion-catalog-frontend.md",
+    "docs/operations/update-ai-clone-skill.md",
     "docs/assets/reference-images.md",
     "docs/assets/sa02.md",
     "docs/assets/bm01.md",
